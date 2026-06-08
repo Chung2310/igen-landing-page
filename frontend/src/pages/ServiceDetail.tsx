@@ -73,7 +73,7 @@ const MOCK_SERVICES: ServiceData[] = [
   },
 ];
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const ServiceDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();

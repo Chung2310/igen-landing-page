@@ -25,7 +25,7 @@ const MOCK_SERVICES: ServiceData[] = [
   { title: 'Tư vấn & Chuyển đổi Số', slug: 'tu-van-chuyen-doi-so', shortDesc: 'Chiến lược số hóa toàn diện cho doanh nghiệp.', icon: 'trending_up', category: 'Consulting', features: ['Đánh giá', 'Roadmap', 'ERP/CRM'] },
 ];
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const Solutions: React.FC = () => {
   const [services, setServices] = useState<ServiceData[]>(MOCK_SERVICES);

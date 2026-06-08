@@ -57,7 +57,7 @@ const MOCK_ARTICLES: ArticleData[] = [
   },
 ];
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const News: React.FC = () => {
   const [articles, setArticles] = useState<ArticleData[]>(MOCK_ARTICLES);

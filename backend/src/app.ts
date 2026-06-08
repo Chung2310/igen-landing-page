@@ -10,23 +10,39 @@ import Service from './models/service.model';
 
 const app: Application = express();
 
+// Trust reverse proxy headers (X-Forwarded-For, X-Forwarded-Proto, etc.)
+app.set('trust proxy', true);
+
 // Configure CORS using allowed origins from environment variable
 const allowedOrigins = process.env.LINK_COR 
   ? process.env.LINK_COR.split(',').map(item => item.trim()) 
-  : ['http://localhost:5173'];
+  : ['http://localhost:5173', 'http://localhost:5001'];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, postman, curl)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = `CORS Policy: Origin ${origin} không có quyền truy cập.`;
-      return callback(new Error(msg), false);
+const corsOptionsDelegate = (req: Request, callback: (err: Error | null, options?: cors.CorsOptions) => void) => {
+  const origin = req.header('Origin');
+  let isAllowed = false;
+
+  if (!origin) {
+    isAllowed = true;
+  } else {
+    const host = req.header('Host');
+    const protocol = req.protocol;
+    const sameOrigin = origin === `${protocol}://${host}`;
+
+    if (sameOrigin || allowedOrigins.indexOf(origin) !== -1) {
+      isAllowed = true;
     }
-    return callback(null, true);
-  },
-  credentials: true,
-}));
+  }
+
+  if (isAllowed) {
+    callback(null, { origin: true, credentials: true });
+  } else {
+    console.warn(`CORS Warning: Origin ${origin} không có quyền truy cập.`);
+    callback(null, { origin: false });
+  }
+};
+
+app.use(cors(corsOptionsDelegate));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

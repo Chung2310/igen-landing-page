@@ -9,24 +9,12 @@ services:
     restart: always
     ports:
       - "5001:5001"
+    env_file:
+      - ./backend/.env
     environment:
       - NODE_ENV=production
-      - PORT=5001
       - MONGODB_URI=mongodb://db:27017/igentech
-      - MONGODB_USER=
-      - MONGODB_PASS=
       - MONGODB_AUTH_SOURCE=admin
-      - LINK_COR=http://localhost:5001,http://localhost:5173,http://14.225.224.205:5173
-      - JWT_ACCESS_SECRET=igen_technology_super_secret_access_token_key_999
-      - JWT_REFRESH_SECRET=igen_technology_super_secret_refresh_token_key_888
-      - JWT_ACCESS_EXPIRATION=15m
-      - JWT_REFRESH_EXPIRATION=7d
-      - ADMIN_USERNAME=admin
-      - ADMIN_EMAIL=admin@igen.vn
-      - ADMIN_PASSWORD=Admin@123456
-      - CLOUDINARY_CLOUD_NAME=duytlcqif
-      - CLOUDINARY_KEY_API=774444582719195
-      - CLOUDINARY_SECRET_API=h-DkVRhtccQr6sWDmbY1yHwvndM
     networks:
       - default_network
 networks:
