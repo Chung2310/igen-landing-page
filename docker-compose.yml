@@ -24,21 +24,8 @@ services:
       - CLOUDINARY_CLOUD_NAME=duytlcqif
       - CLOUDINARY_KEY_API=774444582719195
       - CLOUDINARY_SECRET_API=h-DkVRhtccQr6sWDmbY1yHwvndM
-    depends_on:
-      - db
-
-  db:
-    image: mongo:6.0
-    container_name: igen-db
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-
-volumes:
-  mongo-data:
-
+    networks:
+      - default_network
 networks:
   default_network:
     external: true

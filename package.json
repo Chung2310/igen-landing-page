@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npx concurrently -n \"backend,frontend\" -c \"blue,green\" \"yarn --cwd backend dev\" \"yarn --cwd frontend dev\"",
+    "dev": "npx concurrently -n \"backend,frontend\" -c \"blue,green\" \"yarn --cwd backend dev\" \"yarn --cwd frontend watch\"",
+    "dev:split": "npx concurrently -n \"backend,frontend\" -c \"blue,green\" \"yarn --cwd backend dev\" \"yarn --cwd frontend dev\"",
     "build": "yarn --cwd frontend build && yarn --cwd backend build",
     "start": "yarn --cwd backend start"
   }

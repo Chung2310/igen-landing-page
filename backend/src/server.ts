@@ -16,8 +16,8 @@ const startServer = async () => {
   // Seed default services
   await seedServices();
 
-  // Start listening
-  app.listen(PORT, () => {
+  // Start listening on 0.0.0.0 for Docker/external access
+  app.listen(Number(PORT), '0.0.0.0', () => {
     console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
     console.log(`Swagger API Docs available at http://localhost:${PORT}/api-docs`);
   });
