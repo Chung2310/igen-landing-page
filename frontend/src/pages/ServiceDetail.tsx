@@ -1,0 +1,240 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
+import gsap from 'gsap';
+
+interface ServiceData {
+  title: string;
+  slug: string;
+  shortDesc: string;
+  description: string;
+  icon: string;
+  thumbnail?: string;
+  category: string;
+  features: string[];
+  status: string;
+  order: number;
+}
+
+const MOCK_SERVICES: ServiceData[] = [
+  {
+    title: 'Thiết kế Website',
+    slug: 'thiet-ke-website',
+    shortDesc: 'Website chuyên nghiệp, tối ưu SEO, hiệu suất cao cho doanh nghiệp.',
+    description: 'Chúng tôi thiết kế và phát triển website từ landing page đến hệ thống thương mại điện tử phức tạp. Đội ngũ iGen đảm bảo mỗi sản phẩm đạt chuẩn UX/UI hiện đại, tải nhanh và thân thiện với công cụ tìm kiếm.',
+    icon: 'language', category: 'Web',
+    features: ['Responsive Design', 'Tối ưu SEO', 'CMS dễ sử dụng', 'Bảo mật SSL', 'Tốc độ tải nhanh'],
+    status: 'active', order: 1,
+  },
+  {
+    title: 'Phát triển Ứng dụng Di động',
+    slug: 'phat-trien-ung-dung-di-dong',
+    shortDesc: 'App iOS & Android chất lượng cao, trải nghiệm người dùng vượt trội.',
+    description: 'iGen phát triển ứng dụng di động native và cross-platform cho iOS và Android. Từ thiết kế UI/UX đến triển khai trên App Store và Google Play.',
+    icon: 'phone_android', category: 'Mobile',
+    features: ['iOS & Android', 'React Native / Flutter', 'Push Notification', 'Offline Support', 'Analytics tích hợp'],
+    status: 'active', order: 2,
+  },
+  {
+    title: 'Mini App Zalo',
+    slug: 'mini-app-zalo',
+    shortDesc: 'Tiếp cận 75 triệu người dùng Zalo với Mini App tích hợp.',
+    description: 'Mini App Zalo giúp doanh nghiệp tiếp cận khách hàng trực tiếp trên nền tảng Zalo — không cần cài đặt, tức thì, tiện lợi.',
+    icon: 'chat', category: 'Mobile',
+    features: ['Tích hợp ZaloPay', 'Zalo OA liên kết', 'Không cần cài đặt', 'Tốc độ cao', 'Tiếp cận 75M user'],
+    status: 'active', order: 3,
+  },
+  {
+    title: 'Giải pháp AI & Automation',
+    slug: 'giai-phap-ai-automation',
+    shortDesc: 'Tự động hóa quy trình, tích hợp AI vào vận hành doanh nghiệp.',
+    description: 'Ứng dụng trí tuệ nhân tạo để tự động hóa quy trình, phân tích dữ liệu và cải thiện hiệu suất doanh nghiệp.',
+    icon: 'psychology', category: 'AI',
+    features: ['Chatbot AI', 'Phân tích dữ liệu', 'Automation workflow', 'NLP tiếng Việt', 'Computer Vision'],
+    status: 'active', order: 4,
+  },
+  {
+    title: 'Hệ thống E-Commerce',
+    slug: 'he-thong-e-commerce',
+    shortDesc: 'Nền tảng thương mại điện tử toàn diện, tích hợp thanh toán đa kênh.',
+    description: 'iGen xây dựng hệ thống E-Commerce từ cửa hàng trực tuyến đơn giản đến marketplace phức tạp.',
+    icon: 'shopping_cart', category: 'E-Commerce',
+    features: ['Thanh toán đa kênh', 'Quản lý kho', 'Omnichannel', 'Flash Sale', 'Báo cáo thống kê'],
+    status: 'active', order: 5,
+  },
+  {
+    title: 'Tư vấn & Chuyển đổi Số',
+    slug: 'tu-van-chuyen-doi-so',
+    shortDesc: 'Tư vấn chiến lược và triển khai chuyển đổi số toàn diện cho doanh nghiệp.',
+    description: 'Đội ngũ chuyên gia iGen đồng hành cùng doanh nghiệp trong hành trình chuyển đổi số: đánh giá hiện trạng, hoạch định chiến lược, lựa chọn công nghệ phù hợp.',
+    icon: 'trending_up', category: 'Consulting',
+    features: ['Đánh giá hiện trạng', 'Roadmap số hóa', 'Triển khai ERP/CRM', 'Đào tạo nhân sự', 'Hỗ trợ hậu triển khai'],
+    status: 'active', order: 6,
+  },
+];
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
+
+export const ServiceDetail: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const [service, setService] = useState<ServiceData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchService = useCallback(async () => {
+    try {
+      const res = await axios.get(`${API_URL}/services/${slug}`);
+      if (res.data?.success) {
+        setService(res.data.data);
+      }
+    } catch {
+      // Fallback to mock data when API offline
+      const found = MOCK_SERVICES.find((s) => s.slug === slug);
+      setService(found || null);
+    } finally {
+      setLoading(false);
+    }
+  }, [slug]);
+
+  useEffect(() => {
+    const run = async () => {
+      await Promise.resolve();
+      await fetchService();
+    };
+    run();
+  }, [fetchService]);
+
+  useEffect(() => {
+    if (!loading && service) {
+      gsap.fromTo(
+        '.sd-reveal',
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out' }
+      );
+    }
+  }, [loading, service]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#05090a] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-14 w-14 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!service) {
+    return (
+      <div className="min-h-screen bg-[#05090a] text-slate-100 flex flex-col items-center justify-center gap-6">
+        <span className="material-symbols-outlined text-primary text-7xl">search_off</span>
+        <h1 className="text-2xl font-bold">Không tìm thấy dịch vụ</h1>
+        <Link to="/solutions" className="text-primary hover:underline">
+          ← Quay lại danh sách dịch vụ
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[#05090a] text-slate-100 font-display">
+      {/* Hero */}
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+        {/* Ambient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/8 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div className="max-w-4xl mx-auto">
+          <div className="sd-reveal mb-6">
+            <Link
+              to="/solutions"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#82a1a8] hover:text-primary transition-colors"
+            >
+              <span className="material-symbols-outlined text-base">arrow_back</span>
+              Sản phẩm &amp; Dịch vụ
+            </Link>
+          </div>
+
+          <div className="sd-reveal flex items-center gap-4 mb-4">
+            <span className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary text-3xl">{service.icon}</span>
+            </span>
+            <span className="text-xs px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary uppercase tracking-widest font-bold">
+              {service.category}
+            </span>
+          </div>
+
+          <h1 className="sd-reveal text-4xl md:text-5xl font-black text-white leading-tight mb-6">
+            {service.title}
+          </h1>
+
+          <p className="sd-reveal text-lg text-[#82a1a8] leading-relaxed max-w-2xl">
+            {service.shortDesc}
+          </p>
+        </div>
+      </section>
+
+      {/* Content */}
+      <section className="px-6 pb-20">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main description */}
+          <div className="lg:col-span-2 sd-reveal">
+            <div className="bg-[#0a1315] border border-[#1a2e33] rounded-3xl p-8">
+              <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">info</span>
+                Mô tả chi tiết
+              </h2>
+              <p className="text-[#82a1a8] leading-relaxed text-base whitespace-pre-line">
+                {service.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Features sidebar */}
+          <div className="sd-reveal">
+            <div className="bg-[#0a1315] border border-[#1a2e33] rounded-3xl p-8 sticky top-28">
+              <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">checklist</span>
+                Tính năng nổi bật
+              </h2>
+              <ul className="space-y-3">
+                {service.features.map((f, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-slate-300">
+                    <span className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                      <span className="material-symbols-outlined text-primary text-xs">check</span>
+                    </span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="px-6 pb-28">
+        <div className="max-w-3xl mx-auto sd-reveal">
+          <div className="bg-gradient-to-r from-primary/10 to-[#0a1315] border border-primary/20 rounded-3xl p-10 text-center">
+            <h2 className="text-2xl font-bold text-white mb-3">Sẵn sàng bắt đầu?</h2>
+            <p className="text-[#82a1a8] mb-8">
+              Hãy để iGen đồng hành cùng bạn trong dự án <span className="text-primary font-semibold">{service.title}</span>.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/contact"
+                className="interactable inline-flex items-center gap-2 px-8 py-4 bg-primary hover:bg-[#008199] text-white rounded-xl font-bold uppercase tracking-wider shadow-glow transition-all"
+              >
+                <span className="material-symbols-outlined text-base">mail</span>
+                Liên hệ tư vấn
+              </Link>
+              <Link
+                to="/solutions"
+                className="interactable inline-flex items-center gap-2 px-8 py-4 border border-[#1a2e33] text-[#82a1a8] hover:text-white hover:border-primary/50 rounded-xl font-bold uppercase tracking-wider transition-all"
+              >
+                <span className="material-symbols-outlined text-base">grid_view</span>
+                Xem tất cả dịch vụ
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};

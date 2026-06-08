@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: igen-app
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - MONGODB_URI=mongodb://db:27017/igentech
+      - LINK_COR=http://localhost:5001,http://localhost:5173,http://14.225.224.205:5173
+      - JWT_ACCESS_SECRET=igen_technology_super_secret_access_token_key_999
+      - JWT_REFRESH_SECRET=igen_technology_super_secret_refresh_token_key_888
+      - JWT_ACCESS_EXPIRATION=15m
+      - JWT_REFRESH_EXPIRATION=7d
+      - ADMIN_USERNAME=admin
+      - ADMIN_EMAIL=admin@igen.vn
+      - ADMIN_PASSWORD=Admin@123456
+      - CLOUDINARY_CLOUD_NAME=duytlcqif
+      - CLOUDINARY_KEY_API=774444582719195
+      - CLOUDINARY_SECRET_API=h-DkVRhtccQr6sWDmbY1yHwvndM
+    depends_on:
+      - db
+
+  db:
+    image: mongo:6.0
+    container_name: igen-db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+
+networks:
+  default_network:
+    external: true
