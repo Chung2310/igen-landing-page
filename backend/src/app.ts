@@ -106,7 +106,7 @@ export const seedServices = async () => {
         category: 'Web',
         features: ['Responsive Design', 'Tối ưu SEO', 'CMS dễ sử dụng', 'Bảo mật SSL', 'Tốc độ tải nhanh'],
         status: 'active',
-        order: 1,
+        order: 5,
       },
       {
         title: 'Phát triển Ứng dụng Di động',
@@ -117,7 +117,7 @@ export const seedServices = async () => {
         category: 'Mobile',
         features: ['iOS & Android', 'React Native / Flutter', 'Push Notification', 'Offline Support', 'Analytics tích hợp'],
         status: 'active',
-        order: 2,
+        order: 6,
       },
       {
         title: 'Mini App Zalo',
@@ -128,7 +128,7 @@ export const seedServices = async () => {
         category: 'Mobile',
         features: ['Tích hợp ZaloPay', 'Zalo OA liên kết', 'Không cần cài đặt', 'Tốc độ cao', 'Tiếp cận 75M user'],
         status: 'active',
-        order: 3,
+        order: 7,
       },
       {
         title: 'Giải pháp AI & Automation',
@@ -139,7 +139,7 @@ export const seedServices = async () => {
         category: 'AI',
         features: ['Chatbot AI', 'Phân tích dữ liệu', 'Automation workflow', 'NLP tiếng Việt', 'Computer Vision'],
         status: 'active',
-        order: 4,
+        order: 8,
       },
       {
         title: 'Hệ thống E-Commerce',
@@ -150,7 +150,7 @@ export const seedServices = async () => {
         category: 'E-Commerce',
         features: ['Thanh toán đa kênh', 'Quản lý kho', 'Omnichannel', 'Flash Sale', 'Báo cáo thống kê'],
         status: 'active',
-        order: 5,
+        order: 9,
       },
       {
         title: 'Tư vấn & Chuyển đổi Số',
@@ -161,7 +161,7 @@ export const seedServices = async () => {
         category: 'Consulting',
         features: ['Đánh giá hiện trạng', 'Roadmap số hóa', 'Triển khai ERP/CRM', 'Đào tạo nhân sự', 'Hỗ trợ hậu triển khai'],
         status: 'active',
-        order: 6,
+        order: 10,
       },
       {
         title: 'Học viện doanh nghiệp 1 người',
@@ -179,7 +179,7 @@ export const seedServices = async () => {
           'Hệ thống vận hành 24/7'
         ],
         status: 'active',
-        order: 7,
+        order: 1,
       },
       {
         title: 'Chuyển Đổi AI Doanh Nghiệp',
@@ -197,7 +197,7 @@ export const seedServices = async () => {
           'Đồng hành triển khai thực tế'
         ],
         status: 'active',
-        order: 8,
+        order: 2,
       },
       {
         title: 'Nền Tảng AI Theo Yêu Cầu',
@@ -215,7 +215,7 @@ export const seedServices = async () => {
           'Tùy biến theo từng ngành nghề'
         ],
         status: 'active',
-        order: 9,
+        order: 3,
       },
       {
         title: 'AI Marketing & Vận Hành',
@@ -233,7 +233,7 @@ export const seedServices = async () => {
           'Giảm chi phí tăng trưởng doanh nghiệp'
         ],
         status: 'active',
-        order: 10,
+        order: 4,
       },
     ];
 

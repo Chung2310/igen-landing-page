@@ -91,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
               className="btn-liquid interactable group relative px-8 py-3 bg-white/5 overflow-hidden rounded-full border border-white/10 backdrop-blur-xl text-white shadow-lg transition-all hover:border-primary/50 hover:bg-white/10 hidden lg:inline-block whitespace-nowrap"
             >
               <span className="relative font-bold text-xs uppercase tracking-widest z-10 flex items-center gap-2 pointer-events-none whitespace-nowrap">
-                Connect AI <span className="material-symbols-outlined text-[16px]">arrow_outward</span>
+                Liên hệ
               </span>
             </Link>
           </div>

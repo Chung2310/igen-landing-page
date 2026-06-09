@@ -62,12 +62,12 @@ export const Contact: React.FC = () => {
 
   return (
     <main className="flex flex-col w-full relative z-10">
-      
+
       {/* Hero section */}
       <section className="relative flex flex-col items-center justify-center min-h-[50vh] overflow-hidden pt-32 dof-target-section">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-900/10 via-transparent to-transparent z-0"></div>
         <div className="absolute inset-0 grid-bg-dark opacity-20 z-0"></div>
-        
+
         <div className="relative z-20 max-w-4xl mx-auto text-center px-4 flex flex-col items-center">
           <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 tracking-tight">
             <div className="overflow-hidden">
@@ -86,7 +86,7 @@ export const Contact: React.FC = () => {
       <section className="py-20 relative z-20 section-transition">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            
+
             {/* Info grid (Left: 5 cols) */}
             <div className="lg:col-span-5 flex flex-col justify-between">
               <div>
@@ -94,7 +94,7 @@ export const Contact: React.FC = () => {
                 <p className="text-gray-400 mb-10 leading-relaxed">
                   iGen Technology cam kết mang đến những sản phẩm công nghệ chất lượng hàng đầu. Bạn có thể ghé thăm văn phòng hoặc liên hệ trực tiếp qua hotline.
                 </p>
-                
+
                 <ul className="space-y-6">
                   <li className="flex items-start gap-4">
                     <span className="material-symbols-outlined text-primary text-2xl mt-1">location_on</span>
@@ -107,7 +107,7 @@ export const Contact: React.FC = () => {
                     <span className="material-symbols-outlined text-primary text-2xl mt-1">call</span>
                     <div>
                       <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-1">Hotline điện thoại</h4>
-                      <p className="text-gray-400 text-sm">0353720189</p>
+                      <p className="text-gray-400 text-sm">0353.710.189</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-4">
@@ -131,14 +131,13 @@ export const Contact: React.FC = () => {
             {/* Form sheet (Right: 7 cols) */}
             <div className="lg:col-span-7 bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-card">
               <h3 className="text-2xl font-display font-bold text-white mb-6">Gửi thông điệp</h3>
-              
+
               {alert && (
                 <div
-                  className={`p-4 rounded-xl border mb-6 text-sm flex items-center gap-3 animate-fade-in ${
-                    alert.type === 'success'
+                  className={`p-4 rounded-xl border mb-6 text-sm flex items-center gap-3 animate-fade-in ${alert.type === 'success'
                       ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                       : 'bg-red-500/10 text-red-400 border-red-500/20'
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined">
                     {alert.type === 'success' ? 'check_circle' : 'error'}
@@ -228,7 +227,7 @@ export const Contact: React.FC = () => {
           </div>
         </div>
       </section>
-      
+
     </main>
   );
 };

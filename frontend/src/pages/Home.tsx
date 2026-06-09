@@ -187,7 +187,7 @@ export const Home: React.FC = () => {
             </div>
           </h1>
           <p className="text-lg md:text-xl text-gray-400 font-light leading-relaxed tracking-wide opacity-0 reveal-hero-fade max-w-2xl mt-4">
-            Tiên phong kiến tạo hệ sinh thái AI Marketing và giải pháp chuyển đổi số thông minh hàng đầu Việt Nam.
+            Tiên phong kiến tạo hệ sinh thái AI và giải pháp chuyển đổi số cho doanh nghiệp Việt.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-6 justify-center opacity-0 reveal-hero-fade">
@@ -197,12 +197,7 @@ export const Home: React.FC = () => {
             >
               Xem giải pháp <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
-            <Link
-              to="/contact"
-              className="btn-liquid interactable px-8 py-4 bg-white/5 border border-white/10 text-white rounded-full font-bold text-sm tracking-wider hover:bg-white/10 transition-colors flex items-center gap-2"
-            >
-              Liên hệ ngay
-            </Link>
+
           </div>
         </div>
       </section>

@@ -17,6 +17,10 @@ interface ServiceData {
 }
 
 const MOCK_SERVICES: ServiceData[] = [
+  { title: 'Học viện doanh nghiệp 1 người', slug: 'hoc-vien-doanh-nghiep-1-nguoi', shortDesc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành.', icon: 'school', category: 'AI', features: ['Mô hình Doanh nghiệp 1 Người', 'Tự động hóa quy trình bằng AI', 'Xây dựng đội ngũ AI Agent'] },
+  { title: 'Chuyển Đổi AI Doanh Nghiệp', slug: 'chuyen-doi-ai-doanh-nghiep', shortDesc: 'Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp.', icon: 'business', category: 'AI', features: ['Đào tạo AI cho đội ngũ nhân sự', 'Chuyển giao quy trình vận hành AI', 'Tích hợp AI vào SOP doanh nghiệp'] },
+  { title: 'Nền Tảng AI Theo Yêu Cầu', slug: 'nen-tang-ai-theo-yeu-cau', shortDesc: 'Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu.', icon: 'settings', category: 'AI', features: ['Phát triển ứng dụng AI theo yêu cầu', 'Thiết kế hệ thống ERP thông minh', 'Chatbot & Trợ lý AI chuyên biệt'] },
+  { title: 'AI Marketing & Vận Hành', slug: 'ai-marketing-van-hanh', shortDesc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả.', icon: 'campaign', category: 'AI', features: ['AI Marketing đa kênh', 'Tự động hóa nội dung & truyền thông', 'Trợ lý AI chăm sóc khách hàng'] },
   { title: 'Thiết kế Website', slug: 'thiet-ke-website', shortDesc: 'Website chuyên nghiệp, tối ưu SEO, hiệu suất cao.', icon: 'language', category: 'Web', features: ['Responsive', 'SEO', 'SSL'] },
   { title: 'Phát triển App Di động', slug: 'phat-trien-ung-dung-di-dong', shortDesc: 'App iOS & Android chất lượng cao.', icon: 'phone_android', category: 'Mobile', features: ['iOS & Android', 'Push Notification', 'Offline'] },
   { title: 'Mini App Zalo', slug: 'mini-app-zalo', shortDesc: 'Tiếp cận 75 triệu người dùng Zalo.', icon: 'chat', category: 'Mobile', features: ['ZaloPay', 'Zalo OA', 'Không cài đặt'] },

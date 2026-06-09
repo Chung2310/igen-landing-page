@@ -61,7 +61,7 @@ export const Footer: React.FC = () => {
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="material-symbols-outlined text-primary text-[20px]">call</span>
-                  <span className="text-gray-400 text-sm">0353720189</span>
+                  <span className="text-gray-400 text-sm">0353.710.189</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="material-symbols-outlined text-primary text-[20px]">mail</span>

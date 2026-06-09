@@ -151,13 +151,13 @@ export const About: React.FC = () => {
 
   return (
     <main className="flex flex-col w-full relative z-10">
-      
+
       {/* Hero section */}
       <section className="relative flex flex-col items-center justify-center min-h-[60vh] overflow-hidden pt-32 dof-target-section" id="hero-section">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-900/10 via-transparent to-transparent z-0"></div>
         <div className="absolute inset-0 grid-bg-dark opacity-20 z-0"></div>
         <div className="bg-text-overlap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03]">MISSION</div>
-        
+
         <div className="relative z-20 max-w-4xl mx-auto text-center px-4 flex flex-col items-center">
           <h1 className="text-6xl md:text-8xl font-display font-black tracking-tighter text-white leading-none mb-6 hero-main-title">
             <div className="overflow-hidden">
@@ -167,7 +167,7 @@ export const About: React.FC = () => {
             </div>
           </h1>
           <p className="text-xl text-gray-400 font-light leading-relaxed tracking-wide opacity-0 reveal-hero-fade max-w-2xl mt-4">
-            Tiên phong kiến tạo hệ sinh thái AI Marketing và Công nghệ tại Việt Nam, mang đến giải pháp đột phá cho doanh nghiệp.
+            Kiến tạo hệ sinh thái AI thông minh, đồng hành cùng doanh nghiệp trong kỷ nguyên số.
           </p>
         </div>
       </section>
@@ -175,7 +175,7 @@ export const About: React.FC = () => {
       {/* Main Content Section */}
       <section className="py-20 relative z-20 section-transition dof-target-section" id="content-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-32">
             <div className="order-2 md:order-1 glass-premium rounded-3xl p-10 reveal-card-left tilt-card relative">
               <div className="card-particles"></div>
@@ -267,7 +267,7 @@ export const About: React.FC = () => {
 
         </div>
       </section>
-      
+
     </main>
   );
 };
