@@ -89,7 +89,7 @@ export const Solutions: React.FC = () => {
     const cards = document.querySelectorAll('.card-magnetic');
     cards.forEach((card) => {
       const particlesContainer = card.querySelector('.card-particles');
-      
+
       const handleMouseMove = (e: Event) => {
         const mouseEvent = e as MouseEvent;
         const rect = (card as HTMLElement).getBoundingClientRect();
@@ -208,7 +208,7 @@ export const Solutions: React.FC = () => {
 
   return (
     <main className="flex flex-col w-full relative z-10">
-      
+
       {/* Parallax Floating Shapes */}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden" id="shape-container">
         <div className="shape-floater shape-cube top-[15%] left-[10%] animate-float" data-speed="0.05"></div>
@@ -222,7 +222,7 @@ export const Solutions: React.FC = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent z-0"></div>
         <div className="absolute inset-0 grid-bg-dark opacity-20 z-0"></div>
         <div className="bg-text-overlap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03]">SOLUTIONS</div>
-        
+
         {/* Decorative globe wireframe */}
         <div className="absolute right-[-10%] top-[20%] w-[800px] h-[800px] rounded-full border border-primary/10 opacity-30 animate-spin-slow pointer-events-none z-0">
           <div className="absolute inset-0 rounded-full border border-white/5 transform rotate-45"></div>
@@ -245,7 +245,7 @@ export const Solutions: React.FC = () => {
           <h1 className="text-5xl md:text-8xl font-display font-black tracking-tighter text-white leading-none mb-8 select-none">
             <div className="overflow-hidden">
               <span className="block translate-y-full reveal-hero-text bg-gradient-to-b from-white via-white to-white/50 bg-clip-text text-transparent">
-                Hệ Sinh Thế
+                Hệ Sinh Thái
               </span>
             </div>
             <div className="overflow-hidden py-2">
@@ -259,7 +259,7 @@ export const Solutions: React.FC = () => {
               </span>
             </div>
           </h1>
-          
+
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl font-light leading-relaxed mb-12 tracking-wide opacity-0 reveal-hero-fade">
             Khám phá sức mạnh của trí tuệ nhân tạo được thiết kế riêng cho sự phát triển vượt bậc của doanh nghiệp bạn.
           </p>
@@ -269,7 +269,7 @@ export const Solutions: React.FC = () => {
       {/* Bento Solutions Section */}
       <section className="py-32 relative z-20 section-transition" id="ecosystem-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          
+
           <div className="mb-24 text-center max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-6 tracking-tight reveal-text">
               Bốn Trụ Cột <span className="text-primary italic relative inline-block">Cốt Lõi</span>
@@ -280,7 +280,7 @@ export const Solutions: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
+
             {/* website-ai-card */}
             <div className="group relative glass-premium rounded-3xl p-12 overflow-hidden interactable tilt-card card-magnetic" id="website-ai-card">
               <div className="card-particles"></div>
@@ -291,24 +291,21 @@ export const Solutions: React.FC = () => {
               <div className="relative z-10 max-w-lg h-full flex flex-col justify-between pointer-events-none">
                 <div>
                   <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform duration-500 shadow-glow backdrop-blur-md">
-                    <span className="material-symbols-outlined text-4xl">language</span>
+                    <span className="material-symbols-outlined text-4xl">school</span>
                   </div>
                   <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 group-hover:text-primary-light transition-colors">
-                    Website AI{' '}
-                    <span className="text-xs align-top bg-primary/20 text-primary px-3 py-1 rounded-full border border-primary/20 ml-3 tracking-wider">
-                      PRO
-                    </span>
+                    Học viện doanh nghiệp 1 người
                   </h3>
                   <p className="text-gray-400 text-base leading-relaxed">
-                    Hệ thống website thông minh tự động tối ưu hóa UI/UX dựa trên hành vi người dùng, tăng tỷ lệ chuyển đổi tối đa. Bao gồm tối ưu SEO sâu và tăng tốc độ tải trang vượt trội.
+                    Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành để một người vẫn có thể quản lý và phát triển doanh nghiệp hiệu quả.
                   </p>
                 </div>
                 <div className="mt-8 pointer-events-auto">
                   <RouterLink
-                    to="/contact"
+                    to="/solutions/hoc-vien-doanh-nghiep-1-nguoi"
                     className="text-sm uppercase tracking-widest text-primary border border-primary/50 rounded-full px-8 py-3 group-hover:bg-primary group-hover:text-white transition-all duration-300 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(0,151,178,0.3)] hover:shadow-[0_0_25px_rgba(0,151,178,0.6)]"
                   >
-                    Nhận tư vấn <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    Xem chi tiết <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </RouterLink>
                 </div>
               </div>
@@ -324,21 +321,21 @@ export const Solutions: React.FC = () => {
               <div className="relative z-10 max-w-lg h-full flex flex-col justify-between pointer-events-none">
                 <div>
                   <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_20px_rgba(0,151,178,0.2)] backdrop-blur-md">
-                    <span className="material-symbols-outlined text-4xl">switch_video</span>
+                    <span className="material-symbols-outlined text-4xl">business</span>
                   </div>
                   <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 group-hover:text-primary-light transition-colors">
-                    Studio AI
+                    Chuyển Đổi AI Doanh Nghiệp
                   </h3>
                   <p className="text-gray-400 text-base leading-relaxed">
-                    Tự động hóa sản xuất nội dung đa phương tiện. Từ hình ảnh đến video 4K chất lượng cao với người mẫu ảo (Virtual Models) chân thực chỉ trong vài giây.
+                    Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp. Giúp tăng năng suất làm việc, giảm phụ thuộc vào nhân sự và tối ưu chi phí vận hành.
                   </p>
                 </div>
                 <div className="mt-8 pointer-events-auto">
                   <RouterLink
-                    to="/contact"
+                    to="/solutions/chuyen-doi-ai-doanh-nghiep"
                     className="text-sm uppercase tracking-widest text-primary border border-primary/50 rounded-full px-8 py-3 group-hover:bg-primary group-hover:text-white transition-all duration-300 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(0,151,178,0.3)] hover:shadow-[0_0_25px_rgba(0,151,178,0.6)]"
                   >
-                    Nhận tư vấn <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    Xem chi tiết <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </RouterLink>
                 </div>
               </div>
@@ -354,21 +351,21 @@ export const Solutions: React.FC = () => {
               <div className="relative z-10 max-w-lg h-full flex flex-col justify-between pointer-events-none">
                 <div>
                   <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_20px_rgba(0,151,178,0.2)] backdrop-blur-md">
-                    <span className="material-symbols-outlined text-4xl">campaign</span>
+                    <span className="material-symbols-outlined text-4xl">settings</span>
                   </div>
                   <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 group-hover:text-primary-light transition-colors">
-                    Agency Marketing
+                    Nền Tảng AI Theo Yêu Cầu
                   </h3>
                   <p className="text-gray-400 text-base leading-relaxed">
-                    Giải pháp marketing tổng thể với sức mạnh phân tích dữ liệu AI sâu rộng. Tối ưu hóa chiến dịch Social Media và Ads performance một cách tự động và chính xác.
+                    Mỗi doanh nghiệp có một bài toán riêng. Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu và nâng cao hiệu quả vận hành theo đúng nhu cầu thực tế.
                   </p>
                 </div>
                 <div className="mt-8 pointer-events-auto">
                   <RouterLink
-                    to="/contact"
+                    to="/solutions/nen-tang-ai-theo-yeu-cau"
                     className="text-sm uppercase tracking-widest text-primary border border-primary/50 rounded-full px-8 py-3 group-hover:bg-primary group-hover:text-white transition-all duration-300 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(0,151,178,0.3)] hover:shadow-[0_0_25px_rgba(0,151,178,0.6)]"
                   >
-                    Nhận tư vấn <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    Xem chi tiết <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </RouterLink>
                 </div>
               </div>
@@ -384,21 +381,21 @@ export const Solutions: React.FC = () => {
               <div className="relative z-10 max-w-lg h-full flex flex-col justify-between pointer-events-none">
                 <div>
                   <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_20px_rgba(0,151,178,0.2)] backdrop-blur-md">
-                    <span className="material-symbols-outlined text-4xl">smart_toy</span>
+                    <span className="material-symbols-outlined text-4xl">campaign</span>
                   </div>
                   <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 group-hover:text-primary-light transition-colors">
-                    Trợ lý AI
+                    AI Marketing & Vận Hành
                   </h3>
                   <p className="text-gray-400 text-base leading-relaxed">
-                    Nhân viên ảo đa năng hoạt động 24/7. Hỗ trợ CSKH, tư vấn tự động với khả năng hiểu ngôn ngữ tự nhiên và tích hợp hệ thống thanh toán Auto-checkout mượt mà.
+                    Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả làm việc và tạo lợi thế cạnh tranh bền vững trong kỷ nguyên số.
                   </p>
                 </div>
                 <div className="mt-8 pointer-events-auto">
                   <RouterLink
-                    to="/contact"
+                    to="/solutions/ai-marketing-van-hanh"
                     className="text-sm uppercase tracking-widest text-primary border border-primary/50 rounded-full px-8 py-3 group-hover:bg-primary group-hover:text-white transition-all duration-300 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(0,151,178,0.3)] hover:shadow-[0_0_25px_rgba(0,151,178,0.6)]"
                   >
-                    Nhận tư vấn <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    Xem chi tiết <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </RouterLink>
                 </div>
               </div>
@@ -457,7 +454,7 @@ export const Solutions: React.FC = () => {
           <div className="absolute bottom-[-20%] left-[-20%] w-[140%] h-[100%] fluid-gradient rounded-[100%] blur-[100px] transform rotate-12"></div>
         </div>
       </div>
-      
+
     </main>
   );
 };

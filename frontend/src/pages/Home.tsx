@@ -71,7 +71,7 @@ export const Home: React.FC = () => {
     const magneticCards = document.querySelectorAll('.card-magnetic');
     magneticCards.forEach((card) => {
       const particlesContainer = card.querySelector('.card-particles');
-      
+
       const handleMouseMove = (e: Event) => {
         const mouseEvent = e as MouseEvent;
         const rect = (card as HTMLElement).getBoundingClientRect();
@@ -161,7 +161,7 @@ export const Home: React.FC = () => {
 
   return (
     <main className="flex flex-col w-full relative z-10">
-      
+
       {/* Scroll Progress Bar */}
       <div className="scroll-progress-container">
         <div className="scroll-progress-bar" id="scrollProgress"></div>
@@ -172,7 +172,7 @@ export const Home: React.FC = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-900/10 via-transparent to-transparent z-0"></div>
         <div className="absolute inset-0 grid-bg-dark opacity-20 z-0"></div>
         <div className="bg-text-overlap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03]">iGEN</div>
-        
+
         <div className="relative z-20 max-w-5xl mx-auto text-center px-4 flex flex-col items-center">
           <h1 className="text-5xl md:text-8xl font-display font-black tracking-tighter text-white leading-none mb-6 select-none hero-main-title">
             <div className="overflow-hidden">
@@ -182,14 +182,14 @@ export const Home: React.FC = () => {
             </div>
             <div className="overflow-hidden py-2">
               <span className="block translate-y-full reveal-hero-text text-masked-video-anim italic">
-                Kỷ Nguyên AI Marketing
+                Tiên Phong Kỷ Nguyên Doanh Nghiệp AI
               </span>
             </div>
           </h1>
           <p className="text-lg md:text-xl text-gray-400 font-light leading-relaxed tracking-wide opacity-0 reveal-hero-fade max-w-2xl mt-4">
             Tiên phong kiến tạo hệ sinh thái AI Marketing và giải pháp chuyển đổi số thông minh hàng đầu Việt Nam.
           </p>
-          
+
           <div className="mt-10 flex flex-wrap gap-6 justify-center opacity-0 reveal-hero-fade">
             <Link
               to="/solutions"
@@ -210,17 +210,20 @@ export const Home: React.FC = () => {
       {/* Intro Bento Section */}
       <section className="py-20 relative z-20 section-transition" id="content-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-32">
             <div className="order-2 md:order-1 glass-premium rounded-3xl p-10 tilt-card card-magnetic relative">
               <div className="card-particles"></div>
               <div className="relative z-10">
                 <h3 className="text-3xl font-display font-bold text-white mb-6">Tầm nhìn chiến lược</h3>
                 <p className="text-gray-400 leading-relaxed mb-4">
-                  iGen Technology ra đời với khát vọng số hóa và tự động hóa toàn diện quy trình Marketing cho doanh nghiệp. Chúng tôi không chỉ cung cấp công cụ, mà xây dựng một hệ sinh thái thông minh giúp tối ưu hóa điểm chạm khách hàng.
+                  iGen Technology được thành lập với sứ mệnh xây dựng Hệ sinh thái AI toàn diện dành cho doanh nghiệp hiện đại. Chúng tôi giúp cá nhân và doanh nghiệp ứng dụng AI vào mọi hoạt động cốt lõi, từ vận hành, quản trị, marketing, bán hàng đến chăm sóc khách hàng và phát triển sản phẩm.
+                </p>
+                <p className="text-gray-400 leading-relaxed mb-4">
+                  Không chỉ cung cấp công nghệ, iGen Technology tập trung đào tạo, chuyển giao và triển khai các giải pháp AI thực tiễn, giúp doanh nghiệp nâng cao năng suất, tối ưu chi phí và xây dựng mô hình vận hành thông minh. Với hệ sinh thái gồm đào tạo AI, giải pháp AI doanh nghiệp, ứng dụng AI theo yêu cầu và các dịch vụ tăng trưởng bằng AI, chúng tôi đồng hành cùng khách hàng trên hành trình chuyển đổi và phát triển bền vững trong kỷ nguyên trí tuệ nhân tạo.
                 </p>
                 <p className="text-gray-400 leading-relaxed">
-                  Bằng việc ứng dụng các mô hình AI tiên tiến nhất, iGen Tech cam kết đồng hành cùng các thương hiệu trong hành trình chuyển đổi số, tạo ra lợi thế cạnh tranh bền vững trong kỷ nguyên AI.
+                  Với khát vọng lan tỏa giá trị của AI đến cộng đồng doanh nghiệp Việt Nam, iGen Technology đặt mục tiêu đồng hành cùng 1.000.000 doanh nghiệp trên toàn quốc trong hành trình hiểu đúng, ứng dụng hiệu quả và từng bước xây dựng doanh nghiệp vận hành bằng AI. Chúng tôi tin rằng khi AI trở nên dễ tiếp cận và được triển khai đúng cách, mọi doanh nghiệp đều có cơ hội bứt phá, nâng cao năng lực cạnh tranh và phát triển mạnh mẽ trong kỷ nguyên mới.
                 </p>
               </div>
             </div>
@@ -248,10 +251,10 @@ export const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
-              { icon: 'language', title: 'Website AI PRO', desc: 'Hệ thống website thông minh tự động tối ưu hóa UI/UX dựa trên hành vi.' },
-              { icon: 'switch_video', title: 'Studio AI', desc: 'Tự động hóa sản xuất nội dung đa phương tiện 4K chỉ trong vài giây.' },
-              { icon: 'campaign', title: 'Agency Marketing', desc: 'Giải pháp marketing tổng thể ứng dụng sâu phân tích dữ liệu AI.' },
-              { icon: 'smart_toy', title: 'Trợ lý AI CSKH', desc: 'Hỗ trợ khách hàng tự động 24/7 với khả năng hiểu ngôn ngữ tự nhiên.' },
+              { icon: 'school', title: 'Học viện doanh nghiệp 1 người', desc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành để một người vẫn có thể quản lý và phát triển doanh nghiệp hiệu quả.' },
+              { icon: 'business', title: 'Chuyển Đổi AI Doanh Nghiệp', desc: 'Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp. Giúp tăng năng suất làm việc, giảm phụ thuộc vào nhân sự và tối ưu chi phí vận hành.' },
+              { icon: 'settings', title: 'Nền Tảng AI Theo Yêu Cầu', desc: 'Mỗi doanh nghiệp có một bài toán riêng. Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu và nâng cao hiệu quả vận hành theo đúng nhu cầu thực tế.' },
+              { icon: 'campaign', title: 'AI Marketing & Vận Hành', desc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả làm việc và tạo lợi thế cạnh tranh bền vững trong kỷ nguyên số.' },
             ].map((pillar, idx) => (
               <div
                 key={pillar.title}
@@ -277,7 +280,7 @@ export const Home: React.FC = () => {
 
         </div>
       </section>
-      
+
     </main>
   );
 };

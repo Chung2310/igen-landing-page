@@ -71,6 +71,70 @@ const MOCK_SERVICES: ServiceData[] = [
     features: ['Đánh giá hiện trạng', 'Roadmap số hóa', 'Triển khai ERP/CRM', 'Đào tạo nhân sự', 'Hỗ trợ hậu triển khai'],
     status: 'active', order: 6,
   },
+  {
+    title: 'Học viện doanh nghiệp 1 người',
+    slug: 'hoc-vien-doanh-nghiep-1-nguoi',
+    shortDesc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành.',
+    description: 'Chúng tôi đào tạo và chuyển giao hệ thống vận hành bằng AI giúp cá nhân và doanh nghiệp tối ưu nguồn lực, tự động hóa quy trình và giảm phụ thuộc vào nhân sự truyền thống. Từ marketing, bán hàng, chăm sóc khách hàng đến quản trị nội bộ, AI sẽ trở thành đội ngũ hỗ trợ giúp doanh nghiệp vận hành hiệu quả hơn.',
+    icon: 'school', category: 'AI',
+    features: [
+      'Mô hình Doanh nghiệp 1 Người',
+      'Tự động hóa quy trình bằng AI',
+      'Xây dựng đội ngũ AI Agent',
+      'Marketing & CSKH tự động',
+      'Tăng năng suất – Giảm chi phí',
+      'Hệ thống vận hành 24/7'
+    ],
+    status: 'active', order: 7,
+  },
+  {
+    title: 'Chuyển Đổi AI Doanh Nghiệp',
+    slug: 'chuyen-doi-ai-doanh-nghiep',
+    shortDesc: 'Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp.',
+    description: 'Giúp doanh nghiệp ứng dụng AI vào hoạt động thực tế thông qua chương trình đào tạo chuyên sâu và chuyển giao giải pháp phù hợp với từng mô hình kinh doanh. Chúng tôi đồng hành từ tư duy, quy trình đến triển khai, giúp doanh nghiệp nâng cao năng suất, tối ưu chi phí và xây dựng hệ thống vận hành thông minh.',
+    icon: 'business', category: 'AI',
+    features: [
+      'Đào tạo AI cho đội ngũ nhân sự',
+      'Chuyển giao quy trình vận hành AI',
+      'Tích hợp AI vào SOP doanh nghiệp',
+      'Tối ưu năng suất làm việc',
+      'Giảm chi phí vận hành',
+      'Đồng hành triển khai thực tế'
+    ],
+    status: 'active', order: 8,
+  },
+  {
+    title: 'Nền Tảng AI Theo Yêu Cầu',
+    slug: 'nen-tang-ai-theo-yeu-cau',
+    shortDesc: 'Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu.',
+    description: 'Mỗi doanh nghiệp đều có những nhu cầu và quy trình vận hành riêng biệt. iGen Technology thiết kế và phát triển các nền tảng AI theo yêu cầu, giúp tự động hóa công việc, tối ưu quản lý dữ liệu và nâng cao hiệu suất vận hành. Từ chatbot AI, trợ lý AI, ERP đến các hệ thống chuyên biệt, mọi giải pháp đều được xây dựng để phục vụ đúng mục tiêu kinh doanh của khách hàng.',
+    icon: 'settings', category: 'AI',
+    features: [
+      'Phát triển ứng dụng AI theo yêu cầu',
+      'Thiết kế hệ thống ERP thông minh',
+      'Chatbot & Trợ lý AI chuyên biệt',
+      'Tự động hóa quy trình vận hành',
+      'Tích hợp AI vào hệ thống hiện có',
+      'Tùy biến theo từng ngành nghề'
+    ],
+    status: 'active', order: 9,
+  },
+  {
+    title: 'AI Marketing & Vận Hành',
+    slug: 'ai-marketing-van-hanh',
+    shortDesc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả.',
+    description: 'iGen Technology giúp doanh nghiệp ứng dụng AI vào toàn bộ hoạt động marketing và vận hành, từ xây dựng nội dung, quảng cáo, chăm sóc khách hàng đến quản lý công việc và quy trình nội bộ. Nhờ tự động hóa bằng AI, doanh nghiệp có thể gia tăng năng suất, tối ưu chi phí và tập trung nguồn lực cho các hoạt động tạo ra doanh thu.',
+    icon: 'campaign', category: 'AI',
+    features: [
+      'AI Marketing đa kênh',
+      'Tự động hóa nội dung & truyền thông',
+      'Trợ lý AI chăm sóc khách hàng',
+      'Tối ưu quy trình vận hành',
+      'Nâng cao năng suất đội ngũ',
+      'Giảm chi phí tăng trưởng doanh nghiệp'
+    ],
+    status: 'active', order: 10,
+  },
 ];
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
@@ -105,6 +169,7 @@ export const ServiceDetail: React.FC = () => {
 
   useEffect(() => {
     if (!loading && service) {
+      document.title = `${service.title} | iGen Technology`;
       gsap.fromTo(
         '.sd-reveal',
         { opacity: 0, y: 40 },

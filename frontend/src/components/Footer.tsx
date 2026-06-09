@@ -7,15 +7,15 @@ export const Footer: React.FC = () => {
       <footer className="relative bg-black/80 backdrop-blur-xl border-t border-white/10 pt-20 pb-10 overflow-hidden dof-target-section">
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            
+
             {/* Column 1: Intro */}
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center gap-3 mb-6">
-                <span className="material-symbols-outlined text-primary text-3xl">hexagon</span>
+                <img src="https://res.cloudinary.com/dgaofuhmv/image/upload/v1775301001/unnamed_tcmlmp.png" alt="iGen Tech Logo" className="h-8 w-auto object-contain" />
                 <span className="text-white font-display font-bold text-2xl tracking-tight">iGen Technology</span>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed max-w-md mb-8">
-                Tiên phong trong lĩnh vực AI Marketing và Công nghệ tại Việt Nam, mang đến giải pháp đột phá cho doanh nghiệp.
+                Tiên phong kiến tạo hệ sinh thái AI tại Việt Nam, mang đến giải pháp đột phá cho doanh nghiệp.
               </p>
             </div>
 
@@ -73,7 +73,7 @@ export const Footer: React.FC = () => {
                 </li>
               </ul>
             </div>
-            
+
           </div>
         </div>
       </footer>

@@ -6,9 +6,7 @@ import 'lenis/dist/lenis.css';
 // Components
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { CustomCursor } from './components/CustomCursor';
 import { ParticleCanvas } from './components/ParticleCanvas';
-import { AIRobotCore } from './components/AIRobotCore';
 
 // Pages
 import { Home } from './pages/Home';
@@ -80,9 +78,7 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       {/* Global Interactive Visual FX Elements */}
-      <CustomCursor />
       <ParticleCanvas />
-      <AIRobotCore soundEnabled={soundEnabled} />
 
       {/* Global Ink Wipe Page Transition Elements */}
       <div className="page-transition-overlay">

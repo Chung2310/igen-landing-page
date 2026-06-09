@@ -16,15 +16,13 @@ export const Navbar: React.FC<NavbarProps> = () => {
 
   // Helper to check if route is active
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `text-sm uppercase tracking-widest font-medium transition-colors interactable relative group whitespace-nowrap ${
-      isActive ? 'text-white' : 'text-gray-400 hover:text-white'
+    `text-sm uppercase tracking-widest font-medium transition-colors interactable relative group whitespace-nowrap ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'
     }`;
 
   const borderSpan = (isActive: boolean) => (
     <span
-      className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
-        isActive ? 'w-full' : 'w-0 group-hover:w-full'
-      }`}
+      className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
+        }`}
     />
   );
 
@@ -35,7 +33,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center gap-3 cursor-pointer group interactable">
             <div className="size-10 text-primary transition-transform duration-700 group-hover:rotate-180 flex items-center justify-center">
-              <span className="material-symbols-outlined text-4xl">hexagon</span>
+              <img src="https://res.cloudinary.com/dgaofuhmv/image/upload/v1775301001/unnamed_tcmlmp.png" alt="iGen Tech Logo" className="w-full h-full object-contain" />
             </div>
             <span className="text-white text-2xl font-display font-bold tracking-tight">
               iGen <span className="text-primary font-light">Tech</span>

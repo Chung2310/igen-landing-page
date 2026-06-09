@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import app, { seedAdmin, seedServices } from './app';
+import app, { seedAdmin, seedServices, seedArticles } from './app';
 import { connectDB } from './config/db.config';
 
 const PORT = process.env.PORT || 5000;
@@ -15,6 +15,9 @@ const startServer = async () => {
 
   // Seed default services
   await seedServices();
+
+  // Seed default articles
+  await seedArticles();
 
   // Start listening on 0.0.0.0 for Docker/external access
   app.listen(Number(PORT), '0.0.0.0', () => {

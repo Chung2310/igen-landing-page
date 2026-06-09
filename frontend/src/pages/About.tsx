@@ -182,10 +182,13 @@ export const About: React.FC = () => {
               <div className="relative z-10">
                 <h3 className="text-3xl font-display font-bold text-white mb-6">Câu chuyện của chúng tôi</h3>
                 <p className="text-gray-400 leading-relaxed mb-4">
-                  iGen Technology ra đời với khát vọng số hóa và tự động hóa toàn diện quy trình Marketing cho doanh nghiệp. Chúng tôi không chỉ cung cấp công cụ, mà xây dựng một hệ sinh thái thông minh giúp tối ưu hóa điểm chạm khách hàng.
+                  iGen Technology được thành lập với sứ mệnh xây dựng Hệ sinh thái AI toàn diện dành cho doanh nghiệp hiện đại. Chúng tôi giúp cá nhân và doanh nghiệp ứng dụng AI vào mọi hoạt động cốt lõi, từ vận hành, quản trị, marketing, bán hàng đến chăm sóc khách hàng và phát triển sản phẩm.
+                </p>
+                <p className="text-gray-400 leading-relaxed mb-4">
+                  Không chỉ cung cấp công nghệ, iGen Technology tập trung đào tạo, chuyển giao và triển khai các giải pháp AI thực tiễn, giúp doanh nghiệp nâng cao năng suất, tối ưu chi phí và xây dựng mô hình vận hành thông minh. Với hệ sinh thái gồm đào tạo AI, giải pháp AI doanh nghiệp, ứng dụng AI theo yêu cầu và các dịch vụ tăng trưởng bằng AI, chúng tôi đồng hành cùng khách hàng trên hành trình chuyển đổi và phát triển bền vững trong kỷ nguyên trí tuệ nhân tạo.
                 </p>
                 <p className="text-gray-400 leading-relaxed">
-                  Bằng việc ứng dụng các mô hình AI tiên tiến nhất, iGen Tech cam kết đồng hành cùng các thương hiệu trong hành trình chuyển đổi số, tạo ra lợi thế cạnh tranh bền vững trong kỷ nguyên AI.
+                  Với khát vọng lan tỏa giá trị của AI đến cộng đồng doanh nghiệp Việt Nam, iGen Technology đặt mục tiêu đồng hành cùng 1.000.000 doanh nghiệp trên toàn quốc trong hành trình hiểu đúng, ứng dụng hiệu quả và từng bước xây dựng doanh nghiệp vận hành bằng AI. Chúng tôi tin rằng khi AI trở nên dễ tiếp cận và được triển khai đúng cách, mọi doanh nghiệp đều có cơ hội bứt phá, nâng cao năng lực cạnh tranh và phát triển mạnh mẽ trong kỷ nguyên mới.
                 </p>
               </div>
             </div>
@@ -200,47 +203,63 @@ export const About: React.FC = () => {
             </div>
           </div>
 
-          {/* Leaders Section */}
+          {/* Partners Section */}
           <div className="mb-20 text-center">
             <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4 reveal-text">
-              Đội ngũ <span className="text-primary italic">Chuyên gia</span>
+              Đối tác <span className="text-primary italic">Chiến lược</span>
             </h2>
-            <p className="text-gray-400 reveal-text">Những tinh hoa hội tụ để kiến tạo tương lai.</p>
+            <p className="text-gray-400 reveal-text">Đồng hành cùng sự phát triển bền vững của các doanh nghiệp hàng đầu.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {[
               {
-                name: 'Nguyễn Văn A',
-                role: 'CEO & Founder',
-                desc: 'Chuyên gia chiến lược AI với 15+ năm kinh nghiệm trong ngành công nghệ.',
+                name: 'Công ty TNHH viện Quốc tế Luxdefa',
+                logo: '/luxdefa.png',
+                desc: 'Viện thẩm mỹ công nghệ cao đạt chuẩn quốc tế, nâng tầm trải nghiệm chăm sóc sắc đẹp.',
               },
               {
-                name: 'Trần Thị B',
-                role: 'CTO',
-                desc: 'Kiến trúc sư hệ thống AI, dẫn dắt đội ngũ kỹ sư phát triển sản phẩm lõi.',
+                name: 'Công ty TNHH sản xuất nhôm đúc',
+                logo: '/sản xuất nhôm đúc.png',
+                desc: 'Doanh nghiệp sản xuất và gia công cơ khí nhôm đúc mỹ thuật công nghệ cao, uy tín và chất lượng.',
               },
               {
-                name: 'Lê Văn C',
-                role: 'Head of AI Research',
-                desc: 'Tiến sĩ khoa học máy tính, tập trung nghiên cứu ứng dụng LLM và Computer Vision.',
+                name: 'Công ty Cổ phần Sâm Ngọc Linh',
+                logo: '/sâm ngọc linh.png',
+                desc: 'Thương hiệu quốc gia phát triển và chế biến các sản phẩm từ sâm quý Ngọc Linh thượng hạng.',
               },
-            ].map((member, i) => (
+              {
+                name: 'Công ty xe điện Kaishi Việt Nhật',
+                logo: '/xe điện.png',
+                desc: 'Nhà phân phối và lắp ráp phương tiện giao thông chạy điện thông minh Kaishi tiêu chuẩn Nhật Bản.',
+              },
+            ].map((partner, i) => (
               <div
-                key={member.name}
-                className="glass-premium rounded-3xl p-8 text-center reveal-card-bottom tilt-card interactable group relative"
+                key={partner.name}
+                className="glass-premium rounded-3xl overflow-hidden reveal-card-bottom tilt-card interactable group flex flex-col"
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <div className="card-particles"></div>
-                <div className="relative z-10">
-                  <div className="w-32 h-32 mx-auto rounded-full bg-white/5 border border-primary/50 mb-6 flex items-center justify-center overflow-hidden shadow-neon">
-                    <span className="material-symbols-outlined text-5xl text-gray-500 group-hover:text-primary transition-colors">
-                      person
-                    </span>
-                  </div>
-                  <h4 className="text-2xl font-display font-bold text-white mb-2">{member.name}</h4>
-                  <p className="text-primary text-sm uppercase tracking-widest mb-4">{member.role}</p>
-                  <p className="text-gray-400 text-sm">{member.desc}</p>
+
+                {/* Image */}
+                <div className="relative w-full aspect-[4/3] overflow-hidden flex-shrink-0">
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    className="absolute inset-0 w-full h-full object-cover filter brightness-90 group-hover:scale-105 group-hover:brightness-100 transition-all duration-700 ease-out"
+                  />
+                  {/* Subtle top-fade overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a1315]/60 to-transparent pointer-events-none"></div>
+                </div>
+
+                {/* Info below image */}
+                <div className="flex flex-col flex-1 p-5 md:p-6 text-left">
+                  <h4 className="text-sm md:text-base font-display font-bold text-white mb-2 leading-snug group-hover:text-primary transition-colors duration-300">
+                    {partner.name}
+                  </h4>
+                  <p className="text-[#82a1a8] text-xs leading-relaxed font-light">
+                    {partner.desc}
+                  </p>
                 </div>
               </div>
             ))}
