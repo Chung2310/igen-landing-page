@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { ContactService } from '../services/contact.service';
 
+const getErrorMessage = (error: unknown): string =>
+  error instanceof Error ? error.message : 'Lỗi không xác định.';
+
 export class ContactController {
   static async createContact(req: Request, res: Response) {
     try {
@@ -10,10 +13,10 @@ export class ContactController {
         message: 'Gửi tin nhắn liên hệ thành công. Chúng tôi sẽ phản hồi sớm nhất có thể.',
         data: contact,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(400).json({
         success: false,
-        message: error.message || 'Lỗi khi gửi thông tin liên hệ.',
+        message: getErrorMessage(error) || 'Lỗi khi gửi thông tin liên hệ.',
       });
     }
   }
@@ -37,10 +40,10 @@ export class ContactController {
         message: 'Lấy danh sách liên hệ thành công.',
         data: result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(500).json({
         success: false,
-        message: error.message || 'Lỗi hệ thống.',
+        message: getErrorMessage(error) || 'Lỗi hệ thống.',
       });
     }
   }
@@ -63,10 +66,10 @@ export class ContactController {
         message: 'Cập nhật trạng thái liên hệ thành công.',
         data: contact,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(400).json({
         success: false,
-        message: error.message || 'Lỗi khi cập nhật trạng thái liên hệ.',
+        message: getErrorMessage(error) || 'Lỗi khi cập nhật trạng thái liên hệ.',
       });
     }
   }

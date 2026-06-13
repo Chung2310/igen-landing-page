@@ -1,5 +1,6 @@
 import Article from '../models/article.model';
 import { IArticle } from '../interfaces/article.interface';
+import { FilterQuery } from 'mongoose';
 
 export class ArticleService {
   static async createArticle(articleData: Partial<IArticle>): Promise<IArticle> {
@@ -25,7 +26,7 @@ export class ArticleService {
     search?: string;
   }) {
     const { page, limit, category, status, search } = query;
-    const filter: any = {};
+    const filter: FilterQuery<IArticle> = {};
 
     if (category) {
       filter.category = category;

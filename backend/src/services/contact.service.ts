@@ -1,5 +1,6 @@
 import Contact from '../models/contact.model';
 import { IContact } from '../interfaces/contact.interface';
+import { FilterQuery } from 'mongoose';
 
 export class ContactService {
   static async createContact(contactData: Partial<IContact>): Promise<IContact> {
@@ -14,7 +15,7 @@ export class ContactService {
     search?: string;
   }) {
     const { page, limit, status, search } = query;
-    const filter: any = {};
+    const filter: FilterQuery<IContact> = {};
 
     if (status) {
       filter.status = status;

@@ -6,6 +6,10 @@
     "dev": "npx concurrently -n \"backend,frontend\" -c \"blue,green\" \"yarn --cwd backend dev\" \"yarn --cwd frontend watch\"",
     "dev:split": "npx concurrently -n \"backend,frontend\" -c \"blue,green\" \"yarn --cwd backend dev\" \"yarn --cwd frontend dev\"",
     "build": "yarn --cwd frontend build && yarn --cwd backend build",
-    "start": "yarn --cwd backend start"
+    "start": "yarn --cwd backend start",
+    "lint": "yarn --cwd backend lint && yarn --cwd frontend lint",
+    "lint:backend": "yarn --cwd backend lint",
+    "lint:frontend": "yarn --cwd frontend lint",
+    "typecheck": "yarn --cwd frontend build --noEmit 2>/dev/null || yarn --cwd frontend tsc --noEmit"
   }
 }

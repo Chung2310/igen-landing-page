@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import { AuthService } from '../services/auth.service';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware';
 
+const getErrorMessage = (error: unknown): string =>
+  error instanceof Error ? error.message : 'Lỗi không xác định.';
+
 export class AuthController {
   static async register(req: Request, res: Response) {
     try {
@@ -18,10 +21,10 @@ export class AuthController {
           role: user.role,
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(400).json({
         success: false,
-        message: error.message || 'Lỗi đăng ký tài khoản.',
+        message: getErrorMessage(error) || 'Lỗi đăng ký tài khoản.',
       });
     }
   }
@@ -52,10 +55,10 @@ export class AuthController {
           },
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(400).json({
         success: false,
-        message: error.message || 'Lỗi đăng nhập.',
+        message: getErrorMessage(error) || 'Lỗi đăng nhập.',
       });
     }
   }
@@ -85,10 +88,10 @@ export class AuthController {
           },
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(401).json({
         success: false,
-        message: error.message || 'Refresh Token không hợp lệ.',
+        message: getErrorMessage(error) || 'Refresh Token không hợp lệ.',
       });
     }
   }
@@ -115,10 +118,10 @@ export class AuthController {
         message: 'Lấy thông tin cá nhân thành công.',
         data: user,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(500).json({
         success: false,
-        message: error.message || 'Lỗi hệ thống.',
+        message: getErrorMessage(error) || 'Lỗi hệ thống.',
       });
     }
   }

@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { ArticleService } from '../services/article.service';
 
+const getErrorMessage = (error: unknown): string =>
+  error instanceof Error ? error.message : 'Lỗi không xác định.';
+
 export class ArticleController {
   static async createArticle(req: Request, res: Response) {
     try {
@@ -10,10 +13,10 @@ export class ArticleController {
         message: 'Tạo bài viết mới thành công.',
         data: article,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(400).json({
         success: false,
-        message: error.message || 'Lỗi khi tạo bài viết.',
+        message: getErrorMessage(error) || 'Lỗi khi tạo bài viết.',
       });
     }
   }
@@ -39,10 +42,10 @@ export class ArticleController {
         message: 'Lấy danh sách bài viết thành công.',
         data: result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(500).json({
         success: false,
-        message: error.message || 'Lỗi hệ thống.',
+        message: getErrorMessage(error) || 'Lỗi hệ thống.',
       });
     }
   }
@@ -62,10 +65,10 @@ export class ArticleController {
         message: 'Lấy chi tiết bài viết thành công.',
         data: article,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(500).json({
         success: false,
-        message: error.message || 'Lỗi hệ thống.',
+        message: getErrorMessage(error) || 'Lỗi hệ thống.',
       });
     }
   }
@@ -85,10 +88,10 @@ export class ArticleController {
         message: 'Cập nhật bài viết thành công.',
         data: article,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(400).json({
         success: false,
-        message: error.message || 'Lỗi khi cập nhật bài viết.',
+        message: getErrorMessage(error) || 'Lỗi khi cập nhật bài viết.',
       });
     }
   }
@@ -107,10 +110,10 @@ export class ArticleController {
         success: true,
         message: 'Xóa bài viết thành công.',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return res.status(500).json({
         success: false,
-        message: error.message || 'Lỗi hệ thống.',
+        message: getErrorMessage(error) || 'Lỗi hệ thống.',
       });
     }
   }
