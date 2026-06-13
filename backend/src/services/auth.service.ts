@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import User from '../models/user.model';
 import { IUser } from '../interfaces/user.interface';
 
@@ -56,7 +56,7 @@ export class AuthService {
 
       const accessToken = this.generateAccessToken(user);
       return { accessToken, user };
-    } catch (error) {
+    } catch {
       throw new Error('Refresh Token không hợp lệ hoặc đã hết hạn.');
     }
   }
@@ -69,13 +69,13 @@ export class AuthService {
     return jwt.sign(
       { id: user._id, username: user.username, email: user.email, role: user.role },
       JWT_ACCESS_SECRET,
-      { expiresIn: JWT_ACCESS_EXPIRATION as any }
+      { expiresIn: JWT_ACCESS_EXPIRATION } as SignOptions
     );
   }
 
   static generateRefreshToken(user: IUser): string {
     return jwt.sign({ id: user._id }, JWT_REFRESH_SECRET, {
-      expiresIn: JWT_REFRESH_EXPIRATION as any,
-    });
+      expiresIn: JWT_REFRESH_EXPIRATION,
+    } as SignOptions);
   }
 }

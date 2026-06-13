@@ -438,7 +438,7 @@ export const seedArticles = async () => {
 };
 
 // Global error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   console.error('Global error:', err.stack);
   res.status(500).json({
     success: false,
