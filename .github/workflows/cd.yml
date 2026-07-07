@@ -46,7 +46,7 @@ jobs:
 
       # ─── STAGING (branch: develop) ───────────────────────────────────────────
 
-      - name: Copy docker-compose.prod.yml to Staging VPS
+      - name: Copy docker-compose.yml to Staging VPS
         if: github.ref_name == 'develop'
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -54,7 +54,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT || '22' }}
-          source: "docker-compose.prod.yml"
+          source: "docker-compose.yml"
           target: "/opt/igen-ldp/staging"
 
       - name: Deploy via SSH to Staging VPS
@@ -85,15 +85,15 @@ jobs:
 
             # Dừng và giải phóng hoàn toàn stack cũ (bao gồm port binding)
             export COMPOSE_PROJECT_NAME="$CONTAINER_NAME"
-            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.prod.yml down --remove-orphans || true
+            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml down --remove-orphans || true
 
             # Kéo image mới và khởi động container
-            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.prod.yml pull
-            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml pull
+            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml up -d --remove-orphans
 
       # ─── PRODUCTION (branch: production) ─────────────────────────────────────
 
-      - name: Copy docker-compose.prod.yml to Production VPS
+      - name: Copy docker-compose.yml to Production VPS
         if: github.ref_name == 'production'
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -101,7 +101,7 @@ jobs:
           username: ${{ secrets.SSH_USER_PROD }}
           key: ${{ secrets.SSH_KEY_PROD }}
           port: ${{ secrets.SSH_PORT_PROD || '22' }}
-          source: "docker-compose.prod.yml"
+          source: "docker-compose.yml"
           target: "/opt/igen-ldp/production"
 
       - name: Deploy via SSH to Production VPS
@@ -132,8 +132,8 @@ jobs:
 
             # Dừng và giải phóng hoàn toàn stack cũ (bao gồm port binding)
             export COMPOSE_PROJECT_NAME="$CONTAINER_NAME"
-            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.prod.yml down --remove-orphans || true
+            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml down --remove-orphans || true
 
             # Kéo image mới và khởi động container
-            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.prod.yml pull
-            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml pull
+            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml up -d --remove-orphans

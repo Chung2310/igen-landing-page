@@ -2,21 +2,18 @@ version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: igen-app
+    image: ghcr.io/chung2310/igen-landing-page:${IMAGE_TAG:-develop}
+    container_name: ${CONTAINER_NAME:-igen-ldp-staging}
     restart: always
     ports:
-      - "5001:5001"
+      - "${PORT:-5001}:5001"
     env_file:
-      - ./backend/.env
+      - .env
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://db:27017/igentech
-      - MONGODB_AUTH_SOURCE=admin
     networks:
       - default_network
+
 networks:
   default_network:
     external: true
