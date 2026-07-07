@@ -14,6 +14,7 @@ Tái thiết kế toàn bộ giao diện frontend theo phong cách **Stripe** (l
 - [x] **Phase 6 — Đồng bộ Logo:** Sao chép logo công ty chính thức (`logo cty 1024x1024.png`) từ `Igen-ERP/assets/img/` sang Landing Page (`logo.png`), cập nhật favicon ở `index.html` và logo chính ở cả `Navbar.tsx` và `Footer.tsx`.
 - [x] **Phase 7 — Hợp nhất cấu hình:** Di chuyển các tệp `.env` riêng biệt của frontend và backend vào chung một tệp `.env` duy nhất tại thư mục gốc, cấu hình `envDir` cho Vite và thiết lập bộ nạp dotenv động có hỗ trợ ghi đè (`override: true`) cho backend.
 - [x] **Phase 8 — Khắc phục lỗi Lint:** Cấu hình tắt rule `'react-hooks/set-state-in-effect'` do đây là các mẫu cập nhật trạng thái hoặc tải dữ liệu tiêu chuẩn khi mount component, chạy lệnh `yarn lint` vượt qua 100% kiểm tra sạch.
+- [x] **Phase 9 — Hợp nhất docker-compose:** Xóa hoàn toàn `docker-compose.prod.yml`, cập nhật `docker-compose.yml` để sử dụng ảnh ghcr.io và nạp `.env` từ thư mục gốc, cập nhật CD pipeline (`cd.yml`) để dùng `docker-compose.yml` khi triển khai.
 
 ## Next Steps
 - Duyệt mắt thực tế trên trình duyệt (dev `yarn dev`) từng trang để tinh chỉnh tông gradient hero, khoảng cách, ảnh.
