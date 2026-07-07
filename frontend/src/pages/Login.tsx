@@ -38,29 +38,30 @@ export const Login: React.FC = () => {
     }
   };
 
+  const inputClass =
+    'w-full bg-surface-alt border border-line text-ink rounded-lg py-3 px-4 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all';
+
   return (
-    <div className="min-h-screen bg-[#05090a] text-slate-100 flex items-center justify-center pt-24 px-4 font-display">
-      <div className="w-full max-w-md bg-[#0a1315] border border-[#1a2e33] rounded-3xl p-8 shadow-card relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10"></div>
-        
+    <div className="min-h-screen bg-surface-alt flex items-center justify-center px-4 py-24">
+      <div className="w-full max-w-md bg-white border border-line rounded-card p-8 shadow-card">
         <div className="text-center mb-8">
-          <span className="material-symbols-outlined text-primary text-5xl mb-4 animate-pulse">lock</span>
-          <h1 className="text-2xl font-bold text-white mb-2">iGen System Control</h1>
-          <p className="text-xs text-[#82a1a8] uppercase tracking-widest">Đăng nhập quyền quản trị viên</p>
+          <span className="inline-flex w-14 h-14 rounded-2xl bg-primary-light items-center justify-center mb-4">
+            <span className="material-symbols-outlined text-primary text-3xl">lock</span>
+          </span>
+          <h1 className="text-2xl font-bold text-ink mb-1">iGen System Control</h1>
+          <p className="text-sm text-muted">Đăng nhập quyền quản trị viên</p>
         </div>
 
         {authError && (
-          <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-sm mb-6 flex items-center gap-2 animate-fade-in">
+          <div className="p-4 rounded-xl border border-red-200 bg-red-50 text-red-700 text-sm mb-6 flex items-center gap-2">
             <span className="material-symbols-outlined text-base">error</span>
             <span>{authError}</span>
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">
-              Tên đăng nhập
-            </label>
+            <label className="block text-sm font-medium text-ink mb-2">Tên đăng nhập</label>
             <input
               type="text"
               required
@@ -68,13 +69,11 @@ export const Login: React.FC = () => {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="admin"
               autoComplete="username"
-              className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 text-sm interactable"
+              className={inputClass}
             />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">
-              Mật khẩu
-            </label>
+            <label className="block text-sm font-medium text-ink mb-2">Mật khẩu</label>
             <input
               type="password"
               required
@@ -82,19 +81,15 @@ export const Login: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               autoComplete="current-password"
-              className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 text-sm interactable"
+              className={inputClass}
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full interactable py-4 bg-primary hover:bg-[#008199] text-white rounded-xl font-bold uppercase tracking-wider shadow-glow transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-          >
+          <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 disabled:opacity-50">
             {loading ? (
               <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
             ) : (
-              'Access Command Center'
+              'Đăng nhập'
             )}
           </button>
         </form>

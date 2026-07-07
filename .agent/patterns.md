@@ -4,8 +4,8 @@
 
 ### 1. UI Styling & Theme System
 - **Framework**: Tailwind CSS is used for utility class styling.
-- **Theme Mode**: Uses dynamic class `.light-mode` on the `body` tag to switch between dark and light modes.
-- **Glassmorphism**: Custom utility classes like `.glass-premium` and `.glass-nav` (defined in `index.css`) handle dark/light transitions automatically.
+- **Theme Mode**: Defaults to `'light'`. Uses dynamic class `.light-mode` on the `body` tag and class `light`/`dark` on the `html` tag to switch between themes. The active theme is persisted in `localStorage` under the key `'theme'`.
+- **Glassmorphism**: Custom utility classes like `.glass-premium` and `.glass-nav` (defined in `index.css`) handle dark/light transitions automatically. Custom light-mode overrides in `index.css` handle text contrast for Tailwind color classes (e.g. text-white, text-gray-400) automatically when inside `.light-mode`.
 
 ### 2. Service Detail Navigation
 - **Routing**: Users navigate to `/solutions/:slug` which maps to `ServiceDetail.tsx`.
