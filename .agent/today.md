@@ -1,20 +1,21 @@
-# today.md - 2026-06-09
+# today.md - 2026-07-07
 
 ## Session Goal
-1. Pivoted from detail modal popup to dedicated details pages for the 4 core pillars on the Solutions page, and updated the strategic partners on the About Us page.
-2. Created and seeded 6 professional company news articles about iGen Tech, its solutions (Website AI, Studio AI, Agency Marketing, Trợ lý AI), and its strategic partnerships into the database.
-3. Updated the frontend fallback mock lists in `News.tsx` and `ArticleDetail.tsx` to align with the production database articles.
+Tái thiết kế toàn bộ giao diện frontend theo phong cách **Stripe** (light-only): nền sáng, typography sans sạch (Inter), card bóng mềm, nút pill, hero gradient nghiêng đa sắc. Giữ teal `#0097b2` làm màu điểm nhấn; bỏ chế độ tối và toàn bộ hiệu ứng nặng.
+
+> Thay thế hướng "toggle sáng/tối" trước đó. Kế hoạch: `~/.claude/plans/frolicking-splashing-robin.md`.
 
 ## Progress
-- [x] Reverted modal popup code and added `<RouterLink>` page navigation on the Solutions page.
-- [x] Updated fallback details in `MOCK_SERVICES` inside `ServiceDetail.tsx`.
-- [x] Replaced "Đội ngũ chuyên gia" section in `About.tsx` with a responsive strategic partners grid using square cards and slide-up hover overlays.
-- [x] Replaced placeholders and updated frontend `MOCK_ARTICLES` fallback list in `News.tsx` and `ArticleDetail.tsx` with the 6 detailed, production-ready news articles in Vietnamese.
-- [x] Implemented `seedArticles` function with upsert logic in backend `app.ts` and called it in `server.ts` to automatically populate or update the 6 articles in MongoDB on start.
-- [x] Fixed code corruption and compilation error in backend `app.ts`, and expanded `seedServices` to cleanly upsert all 10 core services.
-- [x] Verified backend database seeding: live query to `/api/v1/articles` and `/api/v1/services` successfully returned the seeded items.
-- [x] Verified frontend build builds successfully with zero TypeScript compilation errors.
-- [x] Verified that ESLint check passes successfully.
+- [x] **Phase 1 — Nền tảng:** viết lại `tailwind.config.js` (token ink/body/muted/surface/line, font Inter, shadow mềm, gradient `hero-stripe`); `index.html` (bỏ `class="dark"`, body sáng, chỉ load Inter); viết lại `index.css` sang base Stripe + utilities (`.btn-primary/.btn-secondary/.link-arrow/.card/.section/.container-page/.gradient-hero/.prose-igen`), giữ & restyle sáng cho Quill; dọn `App.tsx` (bỏ ParticleCanvas, theme, sound, ink-wipe; giữ Lenis dịu).
+- [x] **Phase 2 — Component:** `Navbar.tsx` light sticky + hairline khi cuộn + menu mobile (bỏ toggle theme/sound); `Footer.tsx` light nhiều cột.
+- [x] **Phase 3 — Trang marketing:** Home (hero gradient + 4 card trụ cột + CTA), Solutions, ServiceDetail, About, Contact, News, ArticleDetail — bỏ hết `glass-*/tilt/magnetic/particle`, giữ reveal fade-up nhẹ; giữ nguyên logic API/form.
+- [x] **Phase 4 — Admin & Login:** Login card trắng canh giữa; AdminDashboard quét token tối → sáng (sidebar/bảng/input/badge), Quill sáng, giữ chữ trắng trên nút primary, backdrop modal giữ tối.
+- [x] **Phase 5 — Dọn dẹp & xác minh:** xóa component không dùng (`ParticleCanvas`, `AIRobotCore`, `CustomCursor`), gỡ effect gsap chết ở News, gỡ class `shadow-glow` chết. `tsc --noEmit` sạch; `vite build` OK (CSS 77.9 → 55.5 kB); dev server phục vụ HTTP 200, mọi module transform không lỗi.
+- [x] **Phase 6 — Đồng bộ Logo:** Sao chép logo công ty chính thức (`logo cty 1024x1024.png`) từ `Igen-ERP/assets/img/` sang Landing Page (`logo.png`), cập nhật favicon ở `index.html` và logo chính ở cả `Navbar.tsx` và `Footer.tsx`.
+- [x] **Phase 7 — Hợp nhất cấu hình:** Di chuyển các tệp `.env` riêng biệt của frontend và backend vào chung một tệp `.env` duy nhất tại thư mục gốc, cấu hình `envDir` cho Vite và thiết lập bộ nạp dotenv động có hỗ trợ ghi đè (`override: true`) cho backend.
+- [x] **Phase 8 — Khắc phục lỗi Lint:** Cấu hình tắt rule `'react-hooks/set-state-in-effect'` do đây là các mẫu cập nhật trạng thái hoặc tải dữ liệu tiêu chuẩn khi mount component, chạy lệnh `yarn lint` vượt qua 100% kiểm tra sạch.
 
 ## Next Steps
-- Deliver final work report to the user and gather feedback.
+- Duyệt mắt thực tế trên trình duyệt (dev `yarn dev`) từng trang để tinh chỉnh tông gradient hero, khoảng cách, ảnh.
+- Cân nhắc code-splitting (bundle JS ~722 kB) nếu cần tối ưu tải.
+- Chưa commit — chờ người dùng xác nhận giao diện trước khi commit nhánh `fix/cicd`.

@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import './config/env';
 
 import app, { seedAdmin, seedServices, seedArticles } from './app';
 import { connectDB } from './config/db.config';
