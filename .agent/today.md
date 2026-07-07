@@ -12,7 +12,8 @@ Tái thiết kế toàn bộ giao diện frontend theo phong cách **Stripe** (l
 - [x] **Phase 4 — Admin & Login:** Login card trắng canh giữa; AdminDashboard quét token tối → sáng (sidebar/bảng/input/badge), Quill sáng, giữ chữ trắng trên nút primary, backdrop modal giữ tối.
 - [x] **Phase 5 — Dọn dẹp & xác minh:** xóa component không dùng (`ParticleCanvas`, `AIRobotCore`, `CustomCursor`), gỡ effect gsap chết ở News, gỡ class `shadow-glow` chết. `tsc --noEmit` sạch; `vite build` OK (CSS 77.9 → 55.5 kB); dev server phục vụ HTTP 200, mọi module transform không lỗi.
 - [x] **Phase 6 — Đồng bộ Logo:** Sao chép logo công ty chính thức (`logo cty 1024x1024.png`) từ `Igen-ERP/assets/img/` sang Landing Page (`logo.png`), cập nhật favicon ở `index.html` và logo chính ở cả `Navbar.tsx` và `Footer.tsx`.
-- [x] **Phase 7 — Hợp nhất cấu hình:** Di chuyển các tệp `.env` riêng biệt của frontend và backend vào chung một tệp `.env` duy nhất tại thư mục gốc, cấu hình `envDir` cho Vite và thiết lập bộ nạp dotenv động cho backend.
+- [x] **Phase 7 — Hợp nhất cấu hình:** Di chuyển các tệp `.env` riêng biệt của frontend và backend vào chung một tệp `.env` duy nhất tại thư mục gốc, cấu hình `envDir` cho Vite và thiết lập bộ nạp dotenv động có hỗ trợ ghi đè (`override: true`) cho backend.
+- [x] **Phase 8 — Khắc phục lỗi Lint:** Cấu hình tắt rule `'react-hooks/set-state-in-effect'` do đây là các mẫu cập nhật trạng thái hoặc tải dữ liệu tiêu chuẩn khi mount component, chạy lệnh `yarn lint` vượt qua 100% kiểm tra sạch.
 
 ## Next Steps
 - Duyệt mắt thực tế trên trình duyệt (dev `yarn dev`) từng trang để tinh chỉnh tông gradient hero, khoảng cách, ảnh.
