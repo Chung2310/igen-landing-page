@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
@@ -6,7 +6,6 @@ import 'lenis/dist/lenis.css';
 // Components
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { ParticleCanvas } from './components/ParticleCanvas';
 
 // Pages
 import { Home } from './pages/Home';
@@ -19,17 +18,14 @@ import { Contact } from './pages/Contact';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Login } from './pages/Login';
 
-const AppContent: React.FC<{
-  soundEnabled: boolean;
-  setSoundEnabled: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ soundEnabled, setSoundEnabled }) => {
+const AppContent: React.FC = () => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
 
   return (
     <>
       {/* Navigation */}
-      {!isAdminPage && <Navbar soundEnabled={soundEnabled} setSoundEnabled={setSoundEnabled} />}
+      {!isAdminPage && <Navbar />}
 
       {/* Page Content Routes */}
       <div className="min-h-screen flex flex-col justify-between">
@@ -44,7 +40,7 @@ const AppContent: React.FC<{
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
-        
+
         {/* Footer */}
         {!isAdminPage && <Footer />}
       </div>
@@ -53,12 +49,10 @@ const AppContent: React.FC<{
 };
 
 export const App: React.FC = () => {
-  const [soundEnabled, setSoundEnabled] = useState(false);
-
-  // Initialize Lenis smooth scroll globally
+  // Initialize Lenis smooth scroll globally (gentle, Stripe-like calm)
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.5,
+      duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
@@ -77,15 +71,7 @@ export const App: React.FC = () => {
 
   return (
     <BrowserRouter>
-      {/* Global Interactive Visual FX Elements */}
-      <ParticleCanvas />
-
-      {/* Global Ink Wipe Page Transition Elements */}
-      <div className="page-transition-overlay">
-        <div className="ink-wipe"></div>
-      </div>
-
-      <AppContent soundEnabled={soundEnabled} setSoundEnabled={setSoundEnabled} />
+      <AppContent />
     </BrowserRouter>
   );
 };

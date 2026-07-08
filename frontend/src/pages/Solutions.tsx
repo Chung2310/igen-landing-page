@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import axios from 'axios';
-
-gsap.registerPlugin(ScrollTrigger);
+import { SilkBackground } from '../components/SilkBackground';
+import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
 interface ServiceData {
   _id?: string;
@@ -12,22 +10,25 @@ interface ServiceData {
   slug: string;
   shortDesc: string;
   icon: string;
+  thumbnail?: string;
   category: string;
   features: string[];
 }
 
 const MOCK_SERVICES: ServiceData[] = [
-  { title: 'Học viện doanh nghiệp 1 người', slug: 'hoc-vien-doanh-nghiep-1-nguoi', shortDesc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành.', icon: 'school', category: 'AI', features: ['Mô hình Doanh nghiệp 1 Người', 'Tự động hóa quy trình bằng AI', 'Xây dựng đội ngũ AI Agent'] },
-  { title: 'Chuyển Đổi AI Doanh Nghiệp', slug: 'chuyen-doi-ai-doanh-nghiep', shortDesc: 'Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp.', icon: 'business', category: 'AI', features: ['Đào tạo AI cho đội ngũ nhân sự', 'Chuyển giao quy trình vận hành AI', 'Tích hợp AI vào SOP doanh nghiệp'] },
-  { title: 'Nền Tảng AI Theo Yêu Cầu', slug: 'nen-tang-ai-theo-yeu-cau', shortDesc: 'Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu.', icon: 'settings', category: 'AI', features: ['Phát triển ứng dụng AI theo yêu cầu', 'Thiết kế hệ thống ERP thông minh', 'Chatbot & Trợ lý AI chuyên biệt'] },
-  { title: 'AI Marketing & Vận Hành', slug: 'ai-marketing-van-hanh', shortDesc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả.', icon: 'campaign', category: 'AI', features: ['AI Marketing đa kênh', 'Tự động hóa nội dung & truyền thông', 'Trợ lý AI chăm sóc khách hàng'] },
-  { title: 'Thiết kế Website', slug: 'thiet-ke-website', shortDesc: 'Website chuyên nghiệp, tối ưu SEO, hiệu suất cao.', icon: 'language', category: 'Web', features: ['Responsive', 'SEO', 'SSL'] },
-  { title: 'Phát triển App Di động', slug: 'phat-trien-ung-dung-di-dong', shortDesc: 'App iOS & Android chất lượng cao.', icon: 'phone_android', category: 'Mobile', features: ['iOS & Android', 'Push Notification', 'Offline'] },
-  { title: 'Mini App Zalo', slug: 'mini-app-zalo', shortDesc: 'Tiếp cận 75 triệu người dùng Zalo.', icon: 'chat', category: 'Mobile', features: ['ZaloPay', 'Zalo OA', 'Không cài đặt'] },
-  { title: 'Giải pháp AI & Automation', slug: 'giai-phap-ai-automation', shortDesc: 'Tự động hóa quy trình, tích hợp AI.', icon: 'psychology', category: 'AI', features: ['Chatbot', 'NLP', 'Computer Vision'] },
-  { title: 'Hệ thống E-Commerce', slug: 'he-thong-e-commerce', shortDesc: 'Nền tảng thương mại điện tử toàn diện.', icon: 'shopping_cart', category: 'E-Commerce', features: ['Thanh toán đa kênh', 'Quản lý kho', 'CRM'] },
-  { title: 'Tư vấn & Chuyển đổi Số', slug: 'tu-van-chuyen-doi-so', shortDesc: 'Chiến lược số hóa toàn diện cho doanh nghiệp.', icon: 'trending_up', category: 'Consulting', features: ['Đánh giá', 'Roadmap', 'ERP/CRM'] },
+  { title: 'Học viện doanh nghiệp 1 người', slug: 'hoc-vien-doanh-nghiep-1-nguoi', shortDesc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành.', icon: 'school', thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['Mô hình Doanh nghiệp 1 Người', 'Tự động hóa quy trình bằng AI', 'Xây dựng đội ngũ AI Agent'] },
+  { title: 'Chuyển Đổi AI Doanh Nghiệp', slug: 'chuyen-doi-ai-doanh-nghiep', shortDesc: 'Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp.', icon: 'business', thumbnail: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['Đào tạo AI cho đội ngũ nhân sự', 'Chuyển giao quy trình vận hành AI', 'Tích hợp AI vào SOP doanh nghiệp'] },
+  { title: 'Nền Tảng AI Theo Yêu Cầu', slug: 'nen-tang-ai-theo-yeu-cau', shortDesc: 'Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu.', icon: 'settings', thumbnail: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['Phát triển ứng dụng AI theo yêu cầu', 'Thiết kế hệ thống ERP thông minh', 'Chatbot & Trợ lý AI chuyên biệt'] },
+  { title: 'AI Marketing & Vận Hành', slug: 'ai-marketing-van-hanh', shortDesc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả.', icon: 'campaign', thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['AI Marketing đa kênh', 'Tự động hóa nội dung & truyền thông', 'Trợ lý AI chăm sóc khách hàng'] },
+  { title: 'Thiết kế Website', slug: 'thiet-ke-website', shortDesc: 'Website chuyên nghiệp, tối ưu SEO, hiệu suất cao.', icon: 'language', thumbnail: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&auto=format&fit=crop&q=60', category: 'Web', features: ['Responsive', 'SEO', 'SSL'] },
+  { title: 'Phát triển App Di động', slug: 'phat-trien-ung-dung-di-dong', shortDesc: 'App iOS & Android chất lượng cao.', icon: 'phone_android', thumbnail: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=60', category: 'Mobile', features: ['iOS & Android', 'Push Notification', 'Offline'] },
+  { title: 'Mini App Zalo', slug: 'mini-app-zalo', shortDesc: 'Tiếp cận 75 triệu người dùng Zalo.', icon: 'chat', thumbnail: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=60', category: 'Mobile', features: ['ZaloPay', 'Zalo OA', 'Không cài đặt'] },
+  { title: 'Giải pháp AI & Automation', slug: 'giai-phap-ai-automation', shortDesc: 'Tự động hóa quy trình, tích hợp AI.', icon: 'psychology', thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['Chatbot', 'NLP', 'Computer Vision'] },
+  { title: 'Hệ thống E-Commerce', slug: 'he-thong-e-commerce', shortDesc: 'Nền tảng thương mại điện tử toàn diện.', icon: 'shopping_cart', thumbnail: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&auto=format&fit=crop&q=60', category: 'E-Commerce', features: ['Thanh toán đa kênh', 'Quản lý kho', 'CRM'] },
+  { title: 'Tư vấn & Chuyển đổi Số', slug: 'tu-van-chuyen-doi-so', shortDesc: 'Chiến lược số hóa toàn diện cho doanh nghiệp.', icon: 'trending_up', thumbnail: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=60', category: 'Consulting', features: ['Đánh giá', 'Roadmap', 'ERP/CRM'] },
 ];
+
+const PILLARS = MOCK_SERVICES.slice(0, 4);
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
@@ -46,418 +47,119 @@ export const Solutions: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const run = async () => {
-      await Promise.resolve();
-      await fetchServices();
-    };
-    run();
+    fetchServices();
   }, [fetchServices]);
-  useEffect(() => {
-    // Initial reveals
-    const tl = gsap.timeline();
-    tl.to('.reveal-hero-text', {
-      y: 0,
-      duration: 1.4,
-      stagger: 0.15,
-      ease: 'power4.out',
-      delay: 0.2,
-    }).to(
-      '.reveal-hero-fade',
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: 'power2.out',
-      },
-      '-=0.8'
-    );
 
-    // Mouse movement parallax for shapes
-    const handleShapeParallax = (e: MouseEvent) => {
-      const shapes = document.querySelectorAll('.shape-floater');
-      shapes.forEach((shape) => {
-        const speed = parseFloat(shape.getAttribute('data-speed') || '0.05');
-        const x = (window.innerWidth - e.pageX * speed) / 100;
-        const y = (window.innerHeight - e.pageY * speed) / 100;
-        gsap.to(shape, {
-          x,
-          y,
-          duration: 1,
-          ease: 'power1.out',
-        });
-      });
-    };
-    window.addEventListener('mousemove', handleShapeParallax);
-
-    // Card Magnetic & Particles Logic
-    const cards = document.querySelectorAll('.card-magnetic');
-    cards.forEach((card) => {
-      const particlesContainer = card.querySelector('.card-particles');
-
-      const handleMouseMove = (e: Event) => {
-        const mouseEvent = e as MouseEvent;
-        const rect = (card as HTMLElement).getBoundingClientRect();
-        const x = mouseEvent.clientX - rect.left;
-        const y = mouseEvent.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        // Magnetic Pull
-        gsap.to(card, {
-          x: (x - centerX) * 0.05,
-          y: (y - centerY) * 0.05,
-          duration: 0.5,
-          ease: 'power2.out',
-        });
-
-        // Spawn particles inside card
-        if (Math.random() > 0.8 && particlesContainer) {
-          const particle = document.createElement('div');
-          particle.className = 'micro-particle';
-          particlesContainer.appendChild(particle);
-
-          const spawnX = x + (Math.random() * 40 - 20);
-          const spawnY = y + (Math.random() * 40 - 20);
-          gsap.set(particle, { x: spawnX, y: spawnY, opacity: 0.8, scale: 0 });
-          gsap.to(particle, {
-            scale: 1.5,
-            opacity: 0,
-            x: spawnX + (Math.random() * 20 - 10),
-            y: spawnY + (Math.random() * 20 - 10),
-            duration: 0.8,
-            onComplete: () => particle.remove(),
-          });
-        }
-      };
-
-      const handleMouseLeave = () => {
-        gsap.to(card, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
-      };
-
-      card.addEventListener('mousemove', handleMouseMove);
-      card.addEventListener('mouseleave', handleMouseLeave);
-
-      return () => {
-        card.removeEventListener('mousemove', handleMouseMove);
-        card.removeEventListener('mouseleave', handleMouseLeave);
-      };
-    });
-
-    // Parallax Tilt for Cards
-    const tiltCards = document.querySelectorAll('.tilt-card');
-    tiltCards.forEach((card) => {
-      const handleMouseMove = (e: Event) => {
-        const mouseEvent = e as MouseEvent;
-        const rect = (card as HTMLElement).getBoundingClientRect();
-        const x = mouseEvent.clientX - rect.left;
-        const y = mouseEvent.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -5;
-        const rotateY = ((x - centerX) / centerX) * 5;
-
-        gsap.to(card, {
-          rotationX: rotateX,
-          rotationY: rotateY,
-          duration: 0.4,
-          ease: 'power1.out',
-          transformPerspective: 1000,
-          transformStyle: 'preserve-3d',
-        });
-      };
-
-      const handleMouseLeave = () => {
-        gsap.to(card, {
-          rotationX: 0,
-          rotationY: 0,
-          duration: 0.6,
-          ease: 'power2.out',
-        });
-      };
-
-      card.addEventListener('mousemove', handleMouseMove);
-      card.addEventListener('mouseleave', handleMouseLeave);
-
-      return () => {
-        card.removeEventListener('mousemove', handleMouseMove);
-        card.removeEventListener('mouseleave', handleMouseLeave);
-      };
-    });
-
-    // Standard scroll reveals
-    const reveals = document.querySelectorAll('.reveal-text');
-    reveals.forEach((el) => {
-      gsap.fromTo(
-        el,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      window.removeEventListener('mousemove', handleShapeParallax);
-    };
-  }, []);
+  useRevealAnimations();
 
   return (
-    <main className="flex flex-col w-full relative z-10">
-
-      {/* Parallax Floating Shapes */}
-      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden" id="shape-container">
-        <div className="shape-floater shape-cube top-[15%] left-[10%] animate-float" data-speed="0.05"></div>
-        <div className="shape-floater shape-sphere top-[25%] right-[15%] animate-float-delayed" data-speed="0.08"></div>
-        <div className="shape-floater shape-cube top-[60%] left-[5%] animate-float-reverse opacity-20 scale-75" data-speed="0.03"></div>
-        <div className="shape-floater shape-sphere top-[80%] right-[8%] animate-float opacity-20 scale-150" data-speed="0.06"></div>
-      </div>
+    <main className="flex flex-col w-full relative">
 
       {/* Hero Section */}
-      <section className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden pt-20 dof-target-section" id="hero-section">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent z-0"></div>
-        <div className="absolute inset-0 grid-bg-dark opacity-20 z-0"></div>
-        <div className="bg-text-overlap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03]">SOLUTIONS</div>
-
-        {/* Decorative globe wireframe */}
-        <div className="absolute right-[-10%] top-[20%] w-[800px] h-[800px] rounded-full border border-primary/10 opacity-30 animate-spin-slow pointer-events-none z-0">
-          <div className="absolute inset-0 rounded-full border border-white/5 transform rotate-45"></div>
-          <div className="absolute inset-0 rounded-full border border-white/5 transform -rotate-45"></div>
-          <div className="absolute top-1/2 left-0 w-full h-[1px] bg-primary/20"></div>
-          <div className="absolute top-0 left-1/2 h-full w-[1px] bg-primary/20"></div>
-        </div>
-
-        <div className="relative z-20 max-w-7xl mx-auto text-center px-4 flex flex-col items-center">
-          <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-lg mb-10 animate-float">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-            </span>
-            <span className="text-[10px] font-bold text-primary-light uppercase tracking-[0.3em]">
-              AI Solutions Suite
-            </span>
-          </div>
-
-          <h1 className="text-5xl md:text-8xl font-display font-black tracking-tighter text-white leading-none mb-8 select-none">
-            <div className="overflow-hidden">
-              <span className="block translate-y-full reveal-hero-text bg-gradient-to-b from-white via-white to-white/50 bg-clip-text text-transparent">
-                Hệ Sinh Thái
-              </span>
-            </div>
-            <div className="overflow-hidden py-2">
-              <span className="block translate-y-full reveal-hero-text text-masked-video-anim italic">
-                Giải Pháp AI
-              </span>
-            </div>
-            <div className="overflow-hidden">
-              <span className="block translate-y-full reveal-hero-text bg-gradient-to-b from-white via-white to-white/50 bg-clip-text text-transparent">
-                Toàn Diện
-              </span>
-            </div>
+      <section className="relative pt-40 pb-44 md:pt-48 md:pb-52 overflow-hidden">
+        <SilkBackground />
+        <div className="relative z-10 max-w-4xl mx-auto text-center px-4 flex flex-col items-center">
+          <span className="hero-reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-6">
+            AI Solutions Suite
+          </span>
+          <h1 className="hero-reveal text-4xl md:text-6xl font-extrabold tracking-tight text-ink leading-[1.1] mb-6">
+            Hệ sinh thái giải pháp AI toàn diện
           </h1>
-
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl font-light leading-relaxed mb-12 tracking-wide opacity-0 reveal-hero-fade">
+          <p className="hero-reveal text-lg md:text-xl text-body max-w-2xl leading-relaxed">
             Khám phá sức mạnh của trí tuệ nhân tạo được thiết kế riêng cho sự phát triển vượt bậc của doanh nghiệp bạn.
           </p>
         </div>
       </section>
 
-      {/* Bento Solutions Section */}
-      <section className="py-32 relative z-20 section-transition" id="ecosystem-section">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-
-          <div className="mb-24 text-center max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-6 tracking-tight reveal-text">
-              Bốn Trụ Cột <span className="text-primary italic relative inline-block">Cốt Lõi</span>
+      {/* Four Pillars Section */}
+      <section className="section">
+        <div className="container-page">
+          <div className="mb-14 text-center max-w-3xl mx-auto reveal-text">
+            <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4">
+              Bốn trụ cột <span className="text-primary">cốt lõi</span>
             </h2>
-            <p className="text-gray-400 text-lg font-light reveal-text">
-              Nền tảng vững chắc cho mọi chiến lược chuyển đổi số.
-            </p>
+            <p className="text-body text-lg">Nền tảng vững chắc cho mọi chiến lược chuyển đổi số.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            {/* website-ai-card */}
-            <div className="group relative glass-premium rounded-3xl p-12 overflow-hidden interactable tilt-card card-magnetic" id="website-ai-card">
-              <div className="card-particles"></div>
-              <div className="absolute inset-0 z-0">
-                <div className="w-full h-full bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#0a0f1d] opacity-90 transition-colors duration-500 group-hover:opacity-100"></div>
-                <div className="absolute inset-0 bento-card-bg bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
-              </div>
-              <div className="relative z-10 max-w-lg h-full flex flex-col justify-between pointer-events-none">
-                <div>
-                  <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform duration-500 shadow-glow backdrop-blur-md">
-                    <span className="material-symbols-outlined text-4xl">school</span>
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 group-hover:text-primary-light transition-colors">
-                    Học viện doanh nghiệp 1 người
-                  </h3>
-                  <p className="text-gray-400 text-base leading-relaxed">
-                    Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành để một người vẫn có thể quản lý và phát triển doanh nghiệp hiệu quả.
-                  </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 reveal-items-container">
+            {PILLARS.map((p) => (
+              <div key={p.slug} className="card card-hover p-8 md:p-10 flex flex-col reveal-item">
+                <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center text-primary mb-6">
+                  <span className="material-symbols-outlined text-3xl">{p.icon}</span>
                 </div>
-                <div className="mt-8 pointer-events-auto">
-                  <RouterLink
-                    to="/solutions/hoc-vien-doanh-nghiep-1-nguoi"
-                    className="text-sm uppercase tracking-widest text-primary border border-primary/50 rounded-full px-8 py-3 group-hover:bg-primary group-hover:text-white transition-all duration-300 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(0,151,178,0.3)] hover:shadow-[0_0_25px_rgba(0,151,178,0.6)]"
-                  >
-                    Xem chi tiết <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                  </RouterLink>
-                </div>
+                <h3 className="text-2xl font-bold text-ink mb-3">{p.title}</h3>
+                <p className="text-body leading-relaxed flex-1">{p.shortDesc}</p>
+                <RouterLink to={`/solutions/${p.slug}`} className="link-arrow mt-6">
+                  Xem chi tiết <span className="material-symbols-outlined text-base">arrow_forward</span>
+                </RouterLink>
               </div>
-              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors duration-700"></div>
-            </div>
-
-            {/* studio-ai-card */}
-            <div className="group relative glass-premium rounded-3xl p-12 overflow-hidden interactable tilt-card card-magnetic" id="studio-ai-card">
-              <div className="card-particles"></div>
-              <div className="absolute inset-0 z-0">
-                <div className="w-full h-full bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#0a0f1d] opacity-90 transition-colors duration-500 group-hover:opacity-100"></div>
-              </div>
-              <div className="relative z-10 max-w-lg h-full flex flex-col justify-between pointer-events-none">
-                <div>
-                  <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_20px_rgba(0,151,178,0.2)] backdrop-blur-md">
-                    <span className="material-symbols-outlined text-4xl">business</span>
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 group-hover:text-primary-light transition-colors">
-                    Chuyển Đổi AI Doanh Nghiệp
-                  </h3>
-                  <p className="text-gray-400 text-base leading-relaxed">
-                    Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp. Giúp tăng năng suất làm việc, giảm phụ thuộc vào nhân sự và tối ưu chi phí vận hành.
-                  </p>
-                </div>
-                <div className="mt-8 pointer-events-auto">
-                  <RouterLink
-                    to="/solutions/chuyen-doi-ai-doanh-nghiep"
-                    className="text-sm uppercase tracking-widest text-primary border border-primary/50 rounded-full px-8 py-3 group-hover:bg-primary group-hover:text-white transition-all duration-300 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(0,151,178,0.3)] hover:shadow-[0_0_25px_rgba(0,151,178,0.6)]"
-                  >
-                    Xem chi tiết <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                  </RouterLink>
-                </div>
-              </div>
-              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors duration-700"></div>
-            </div>
-
-            {/* agency-card */}
-            <div className="group relative glass-premium rounded-3xl p-12 overflow-hidden interactable tilt-card card-magnetic" id="agency-card">
-              <div className="card-particles"></div>
-              <div className="absolute inset-0 z-0">
-                <div className="w-full h-full bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#0a0f1d] opacity-90 transition-colors duration-500 group-hover:opacity-100"></div>
-              </div>
-              <div className="relative z-10 max-w-lg h-full flex flex-col justify-between pointer-events-none">
-                <div>
-                  <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_20px_rgba(0,151,178,0.2)] backdrop-blur-md">
-                    <span className="material-symbols-outlined text-4xl">settings</span>
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 group-hover:text-primary-light transition-colors">
-                    Nền Tảng AI Theo Yêu Cầu
-                  </h3>
-                  <p className="text-gray-400 text-base leading-relaxed">
-                    Mỗi doanh nghiệp có một bài toán riêng. Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu và nâng cao hiệu quả vận hành theo đúng nhu cầu thực tế.
-                  </p>
-                </div>
-                <div className="mt-8 pointer-events-auto">
-                  <RouterLink
-                    to="/solutions/nen-tang-ai-theo-yeu-cau"
-                    className="text-sm uppercase tracking-widest text-primary border border-primary/50 rounded-full px-8 py-3 group-hover:bg-primary group-hover:text-white transition-all duration-300 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(0,151,178,0.3)] hover:shadow-[0_0_25px_rgba(0,151,178,0.6)]"
-                  >
-                    Xem chi tiết <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                  </RouterLink>
-                </div>
-              </div>
-              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors duration-700"></div>
-            </div>
-
-            {/* assistant-ai-card */}
-            <div className="group relative glass-premium rounded-3xl p-12 overflow-hidden interactable tilt-card card-magnetic" id="assistant-ai-card">
-              <div className="card-particles"></div>
-              <div className="absolute inset-0 z-0">
-                <div className="w-full h-full bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#0a0f1d] opacity-90 transition-colors duration-500 group-hover:opacity-100"></div>
-              </div>
-              <div className="relative z-10 max-w-lg h-full flex flex-col justify-between pointer-events-none">
-                <div>
-                  <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_20px_rgba(0,151,178,0.2)] backdrop-blur-md">
-                    <span className="material-symbols-outlined text-4xl">campaign</span>
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 group-hover:text-primary-light transition-colors">
-                    AI Marketing & Vận Hành
-                  </h3>
-                  <p className="text-gray-400 text-base leading-relaxed">
-                    Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả làm việc và tạo lợi thế cạnh tranh bền vững trong kỷ nguyên số.
-                  </p>
-                </div>
-                <div className="mt-8 pointer-events-auto">
-                  <RouterLink
-                    to="/solutions/ai-marketing-van-hanh"
-                    className="text-sm uppercase tracking-widest text-primary border border-primary/50 rounded-full px-8 py-3 group-hover:bg-primary group-hover:text-white transition-all duration-300 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(0,151,178,0.3)] hover:shadow-[0_0_25px_rgba(0,151,178,0.6)]"
-                  >
-                    Xem chi tiết <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                  </RouterLink>
-                </div>
-              </div>
-              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors duration-700"></div>
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Dynamic Services from API */}
-      <section className="py-24 relative z-20" id="services-section">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4 tracking-tight reveal-text">
-              Tất cả <span className="text-primary italic">Dịch vụ</span>
+      {/* All Services */}
+      <section className="section section-alt">
+        <div className="container-page">
+          <div className="mb-12 text-center reveal-text">
+            <h2 className="text-3xl md:text-4xl font-bold text-ink mb-3">
+              Tất cả <span className="text-primary">dịch vụ</span>
             </h2>
-            <p className="text-gray-400 text-lg reveal-text">Khám phá toàn bộ danh mục giải pháp công nghệ của iGen.</p>
+            <p className="text-body text-lg">Khám phá toàn bộ danh mục giải pháp công nghệ của iGen.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((svc, i) => (
+            {services.map((svc) => (
               <RouterLink
                 key={svc.slug}
                 to={`/solutions/${svc.slug}`}
-                className="group relative bg-[#0a1315] border border-[#1a2e33] rounded-3xl p-7 overflow-hidden hover:border-primary/40 transition-all duration-300 hover:-translate-y-1 reveal-text interactable"
-                id={`service-card-${i}`}
+                className="card card-hover overflow-hidden flex flex-col group reveal-text"
               >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/15 transition-colors duration-500"></div>
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <span className="material-symbols-outlined text-primary text-2xl">{svc.icon}</span>
+                {/* Thumbnail banner at the top of the card */}
+                <div className="aspect-video w-full relative overflow-hidden bg-surface-alt border-b border-line flex-shrink-0">
+                  {svc.thumbnail ? (
+                    <img
+                      src={svc.thumbnail}
+                      alt={svc.title}
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-primary/30">
+                      <span className="material-symbols-outlined text-5xl">category</span>
+                    </div>
+                  )}
+                  <span className="absolute top-4 right-4 bg-white/90 backdrop-blur text-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full shadow-sm">
+                    {svc.category}
+                  </span>
+                </div>
+
+                {/* Content wrapper inside */}
+                <div className="p-6 flex flex-col flex-1">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-lg bg-primary-light flex items-center justify-center">
+                      <span className="material-symbols-outlined text-primary text-lg">{svc.icon}</span>
+                    </div>
+                    <span className="text-xs text-muted font-medium">iGen Solution</span>
                   </div>
-                  <span className="text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10 text-[#82a1a8] uppercase tracking-widest">{svc.category}</span>
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">{svc.title}</h3>
-                <p className="text-sm text-[#82a1a8] leading-relaxed mb-5">{svc.shortDesc}</p>
-                <div className="flex flex-wrap gap-2 mb-5">
-                  {svc.features.slice(0, 3).map((f, fi) => (
-                    <span key={fi} className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary border border-primary/10">{f}</span>
-                  ))}
-                </div>
-                <div className="flex items-center gap-1 text-xs font-bold text-primary uppercase tracking-widest group-hover:gap-2 transition-all">
-                  Xem chi tiết
-                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  
+                  <h3 className="text-lg font-semibold text-ink mb-2 group-hover:text-primary transition-colors">{svc.title}</h3>
+                  <p className="text-sm text-body leading-relaxed mb-4 line-clamp-3 flex-1">{svc.shortDesc}</p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    {svc.features.slice(0, 3).map((f, fi) => (
+                      <span key={fi} className="text-xs px-2.5 py-1 rounded-full bg-primary-light text-primary font-medium">{f}</span>
+                    ))}
+                  </div>
+                  
+                  <span className="link-arrow mt-auto">
+                    Xem chi tiết <span className="material-symbols-outlined text-base">arrow_forward</span>
+                  </span>
                 </div>
               </RouterLink>
             ))}
           </div>
         </div>
       </section>
-
-      {/* Decorative gradient overlay */}
-      <div className="relative w-full overflow-hidden" style={{ zIndex: 10 }}>
-        <div className="absolute inset-x-0 bottom-0 h-[600px] pointer-events-none z-0 mix-blend-screen opacity-60">
-          <div className="absolute bottom-[-20%] left-[-20%] w-[140%] h-[100%] fluid-gradient rounded-[100%] blur-[100px] transform rotate-12"></div>
-        </div>
-      </div>
 
     </main>
   );

@@ -18,6 +18,7 @@ export class UploadController {
           const stream = cloudinary.uploader.upload_stream(
             {
               folder: 'igentech',
+              resource_type: 'auto',
             },
             (error, result) => {
               if (error) {

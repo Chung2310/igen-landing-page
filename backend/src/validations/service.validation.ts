@@ -29,6 +29,9 @@ export const createServiceSchema = Joi.object({
   features: Joi.array().items(Joi.string()).messages({
     'array.base': 'Danh sách tính năng phải là mảng.',
   }),
+  videos: Joi.array().items(Joi.string().allow('')).messages({
+    'array.base': 'Danh sách video phải là mảng.',
+  }),
   status: Joi.string().valid('active', 'inactive').messages({
     'any.only': 'Trạng thái chỉ có thể là active hoặc inactive.',
   }),
@@ -51,6 +54,7 @@ export const updateServiceSchema = Joi.object({
     'string.empty': 'Danh mục không được để trống.',
   }),
   features: Joi.array().items(Joi.string()),
+  videos: Joi.array().items(Joi.string().allow('')),
   status: Joi.string().valid('active', 'inactive').messages({
     'any.only': 'Trạng thái chỉ có thể là active hoặc inactive.',
   }),

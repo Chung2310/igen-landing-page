@@ -229,8 +229,8 @@ export const ArticleDetail: React.FC = () => {
   if (!article) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen py-32 text-center">
-        <span className="material-symbols-outlined text-7xl text-gray-600 mb-6">warning</span>
-        <h2 className="text-2xl font-bold text-white mb-4">Bài viết không tồn tại</h2>
+        <span className="material-symbols-outlined text-7xl text-muted mb-6">warning</span>
+        <h2 className="text-2xl font-bold text-ink mb-4">Bài viết không tồn tại</h2>
         <Link to="/news" className="text-primary hover:underline font-medium">
           Quay lại trang tin tức
         </Link>
@@ -239,43 +239,38 @@ export const ArticleDetail: React.FC = () => {
   }
 
   return (
-    <main className="flex flex-col w-full relative z-10 pt-32">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        
+    <main className="flex flex-col w-full relative pt-32 bg-white">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">
-          <Link to="/" className="hover:text-primary transition-colors">
-            Trang chủ
-          </Link>
+        <div className="flex items-center gap-2 text-sm text-muted mb-8">
+          <Link to="/" className="hover:text-primary transition-colors">Trang chủ</Link>
           <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <Link to="/news" className="hover:text-primary transition-colors">
-            Tin tức
-          </Link>
+          <Link to="/news" className="hover:text-primary transition-colors">Tin tức</Link>
           <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <span className="text-white truncate max-w-[200px] sm:max-w-none">{article.title}</span>
+          <span className="text-ink truncate max-w-[200px] sm:max-w-none">{article.title}</span>
         </div>
 
         {/* Thumbnail banner */}
-        <div className="relative w-full aspect-video rounded-3xl overflow-hidden glass-premium mb-12 shadow-card">
+        <div className="relative w-full aspect-video rounded-card overflow-hidden mb-10 shadow-card">
           {article.thumbnail ? (
             <img src={article.thumbnail} alt={article.title} className="object-cover w-full h-full" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-primary/30">
+            <div className="w-full h-full flex items-center justify-center bg-surface-alt text-primary/30">
               <span className="material-symbols-outlined text-9xl">article</span>
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-          <span className="absolute bottom-6 left-6 bg-primary text-white text-xs uppercase font-bold tracking-widest px-4 py-1.5 rounded-full shadow-glow">
+          <span className="absolute bottom-6 left-6 bg-primary text-white text-xs uppercase font-bold tracking-widest px-4 py-1.5 rounded-full">
             {article.category}
           </span>
         </div>
 
         {/* Article header */}
         <div className="mb-10">
-          <h1 className="article-title text-3xl sm:text-5xl font-display font-bold text-white mb-6 leading-tight">
+          <h1 className="article-title text-3xl sm:text-4xl font-bold text-ink mb-6 leading-tight">
             {article.title}
           </h1>
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 border-b border-white/10 pb-6">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted border-b border-line pb-6">
             <div className="flex items-center gap-1.5">
               <span className="material-symbols-outlined text-base text-primary">person</span>
               <span>{article.author}</span>
@@ -294,25 +289,20 @@ export const ArticleDetail: React.FC = () => {
 
         {/* Article content */}
         <article
-          className="prose prose-invert max-w-none text-gray-300 leading-relaxed space-y-6 text-base"
-          style={{
-            contentVisibility: 'auto',
-          }}
+          className="prose-igen max-w-none"
+          style={{ contentVisibility: 'auto' }}
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
         {/* Back Link */}
-        <div className="mt-16 pt-8 border-t border-white/10 flex justify-between items-center">
-          <Link
-            to="/news"
-            className="text-primary hover:text-white transition-colors font-bold text-sm inline-flex items-center gap-2"
-          >
-            <span className="material-symbols-outlined text-sm">arrow_back</span> Quay lại danh sách
+        <div className="mt-16 pt-8 border-t border-line flex justify-between items-center">
+          <Link to="/news" className="link-arrow">
+            <span className="material-symbols-outlined text-base">arrow_back</span> Quay lại danh sách
           </Link>
-          
-          <button 
+
+          <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="text-gray-400 hover:text-white transition-colors text-sm font-semibold inline-flex items-center gap-1.5"
+            className="text-body hover:text-primary transition-colors text-sm font-semibold inline-flex items-center gap-1.5"
           >
             Lên đầu trang <span className="material-symbols-outlined text-sm">expand_less</span>
           </button>

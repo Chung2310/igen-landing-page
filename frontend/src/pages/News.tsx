@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import gsap from 'gsap';
+import { SilkBackground } from '../components/SilkBackground';
+import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
 interface ArticleData {
   _id?: string;
@@ -192,6 +193,8 @@ const MOCK_ARTICLES: ArticleData[] = [
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const News: React.FC = () => {
+  useRevealAnimations();
+
   const [articles, setArticles] = useState<ArticleData[]>(MOCK_ARTICLES);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -200,16 +203,6 @@ export const News: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const categories = ['Tất cả', 'AI Trends', 'Tech Insights', 'Case Study'];
-
-  useEffect(() => {
-    // Reveal main page title
-    gsap.to('.reveal-hero-text', {
-      y: 0,
-      duration: 1.4,
-      ease: 'power4.out',
-      delay: 0.2,
-    });
-  }, []);
 
   const fetchArticles = useCallback(async () => {
     setLoading(true);
@@ -275,44 +268,38 @@ export const News: React.FC = () => {
   };
 
   return (
-    <main className="flex flex-col w-full relative z-10">
-      
+    <main className="flex flex-col w-full relative">
+
       {/* Hero Section */}
-      <section className="relative flex flex-col items-center justify-center min-h-[50vh] overflow-hidden pt-32 dof-target-section">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-900/10 via-transparent to-transparent z-0"></div>
-        <div className="absolute inset-0 grid-bg-dark opacity-20 z-0"></div>
-        
-        <div className="relative z-20 max-w-4xl mx-auto text-center px-4 flex flex-col items-center">
-          <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 tracking-tight">
-            <div className="overflow-hidden">
-              <span className="block translate-y-full reveal-hero-text bg-gradient-to-b from-white via-white to-white/50 bg-clip-text text-transparent">
-                Tin Tức & Xu Hướng
-              </span>
-            </div>
+      <section className="relative pt-40 pb-40 overflow-hidden">
+        <SilkBackground />
+        <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
+          <h1 className="hero-reveal text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight leading-[1.1]">
+            Tin tức & Xu hướng
           </h1>
-          <p className="text-lg text-gray-400 font-light max-w-2xl">
+          <p className="hero-reveal text-lg text-slate-600 max-w-2xl mx-auto">
             Cập nhật những chuyển biến và đột phá mới nhất trong thế giới trí tuệ nhân tạo.
           </p>
         </div>
       </section>
 
       {/* Articles Grid & Controls Section */}
-      <section className="py-20 relative z-20 section-transition">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+      <section className="section">
+        <div className="container-page">
+
           {/* Filters and Search toolbar */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-16">
-            
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+
             {/* Category Selectors */}
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => handleCategorySelect(cat)}
-                  className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all interactable border ${
+                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all border ${
                     selectedCategory === cat
-                      ? 'bg-primary text-white border-primary shadow-glow'
-                      : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white'
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-white text-body border-line hover:border-primary/40 hover:text-ink'
                   }`}
                 >
                   {cat}
@@ -320,9 +307,9 @@ export const News: React.FC = () => {
               ))}
             </div>
 
-            {/* Search inputs */}
+            {/* Search input */}
             <div className="relative w-full md:w-80 group">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors">
                 search
               </span>
               <input
@@ -330,7 +317,7 @@ export const News: React.FC = () => {
                 value={search}
                 onChange={handleSearchChange}
                 placeholder="Tìm kiếm bài viết..."
-                className="w-full bg-white/5 border border-white/10 text-white rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-gray-500 text-sm interactable"
+                className="w-full bg-surface-alt border border-line text-ink rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted text-sm"
               />
             </div>
 
@@ -343,64 +330,58 @@ export const News: React.FC = () => {
             </div>
           ) : articles.length === 0 ? (
             <div className="text-center py-32">
-              <span className="material-symbols-outlined text-6xl text-gray-600 mb-4">search_off</span>
-              <p className="text-gray-400">Không tìm thấy bài viết nào phù hợp.</p>
+              <span className="material-symbols-outlined text-6xl text-muted mb-4">search_off</span>
+              <p className="text-body">Không tìm thấy bài viết nào phù hợp.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {articles.map((art) => (
-                <div
+              {articles.map((art, index) => (
+                <Link
                   key={art.slug}
-                  className="glass-premium rounded-3xl overflow-hidden flex flex-col justify-between tilt-card interactable group"
+                  to={`/news/${art.slug}`}
+                  className="card card-hover overflow-hidden flex flex-col group fade-up-in"
+                  style={{ animationDelay: `${index * 90}ms` }}
                 >
-                  <div>
-                    {/* Thumbnail */}
-                    <div className="aspect-video relative overflow-hidden bg-white/5">
-                      {art.thumbnail ? (
-                        <img
-                          src={art.thumbnail}
-                          alt={art.title}
-                          className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-primary/30">
-                          <span className="material-symbols-outlined text-6xl">article</span>
-                        </div>
-                      )}
-                      <span className="absolute top-4 left-4 bg-primary/20 backdrop-blur-md text-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full border border-primary/25">
-                        {art.category}
+                  {/* Thumbnail */}
+                  <div className="aspect-video relative overflow-hidden bg-surface-alt">
+                    {art.thumbnail ? (
+                      <img
+                        src={art.thumbnail}
+                        alt={art.title}
+                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-primary/30">
+                        <span className="material-symbols-outlined text-6xl">article</span>
+                      </div>
+                    )}
+                    <span className="absolute top-4 left-4 bg-white/90 backdrop-blur text-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full">
+                      {art.category}
+                    </span>
+                  </div>
+
+                  {/* Meta */}
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="text-muted text-xs mb-3 flex items-center gap-2">
+                      <span>{art.author}</span>
+                      <span>•</span>
+                      <span>
+                        {art.publishedAt
+                          ? new Date(art.publishedAt).toLocaleDateString('vi-VN')
+                          : new Date(art.createdAt).toLocaleDateString('vi-VN')}
                       </span>
                     </div>
-
-                    {/* Meta */}
-                    <div className="p-8">
-                      <div className="text-gray-500 text-xs mb-3 flex items-center gap-2">
-                        <span>{art.author}</span>
-                        <span>•</span>
-                        <span>
-                          {art.publishedAt
-                            ? new Date(art.publishedAt).toLocaleDateString('vi-VN')
-                            : new Date(art.createdAt).toLocaleDateString('vi-VN')}
-                        </span>
-                      </div>
-                      <h3 className="text-xl font-display font-bold text-white mb-4 line-clamp-2 group-hover:text-primary transition-colors">
-                        {art.title}
-                      </h3>
-                      <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
-                        {art.excerpt}
-                      </p>
-                    </div>
+                    <h3 className="text-lg font-semibold text-ink mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                      {art.title}
+                    </h3>
+                    <p className="text-body text-sm leading-relaxed line-clamp-3 flex-1">
+                      {art.excerpt}
+                    </p>
+                    <span className="link-arrow mt-5">
+                      Đọc tiếp <span className="material-symbols-outlined text-base">arrow_forward</span>
+                    </span>
                   </div>
-
-                  <div className="p-8 pt-0">
-                    <Link
-                      to={`/news/${art.slug}`}
-                      className="text-sm font-bold text-primary group-hover:text-white transition-colors flex items-center gap-1.5"
-                    >
-                      Đọc tiếp <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </Link>
-                  </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
@@ -411,17 +392,17 @@ export const News: React.FC = () => {
               <button
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
-                className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-white hover:text-black hover:scale-110 transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400 disabled:scale-100 interactable bg-white/5"
+                className="w-12 h-12 rounded-full border border-line bg-white flex items-center justify-center text-body hover:border-primary hover:text-primary transition-all disabled:opacity-30"
               >
                 <span className="material-symbols-outlined">chevron_left</span>
               </button>
-              <span className="flex items-center text-sm font-bold tracking-widest text-gray-400">
+              <span className="flex items-center text-sm font-semibold text-body">
                 {page} / {totalPages}
               </span>
               <button
                 disabled={page === totalPages}
                 onClick={() => setPage(page + 1)}
-                className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-white hover:text-black hover:scale-110 transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400 disabled:scale-100 interactable bg-white/5"
+                className="w-12 h-12 rounded-full border border-line bg-white flex items-center justify-center text-body hover:border-primary hover:text-primary transition-all disabled:opacity-30"
               >
                 <span className="material-symbols-outlined">chevron_right</span>
               </button>
@@ -430,7 +411,7 @@ export const News: React.FC = () => {
 
         </div>
       </section>
-      
+
     </main>
   );
 };

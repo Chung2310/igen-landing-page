@@ -9,6 +9,7 @@ export interface IService extends Document {
   thumbnail: string;
   category: string;
   features: string[];
+  videos?: string[];
   status: 'active' | 'inactive';
   order: number;
   createdAt: Date;

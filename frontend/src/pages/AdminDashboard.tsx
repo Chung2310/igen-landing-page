@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { getVideoPlatform } from '../utils/videoEmbed';
 
 const quillModules = {
   toolbar: [
@@ -58,6 +59,7 @@ interface ServiceAdminData {
   description: string;
   icon: string;
   thumbnail?: string;
+  videos?: string[];
   category: string;
   features: string[];
   status: 'active' | 'inactive';
@@ -120,15 +122,15 @@ export const AdminDashboard: React.FC = () => {
         setContacts(conRes.data.data.docs);
         setStats((prev) => ({ ...prev, contactsCount: conRes.data.data.totalDocs }));
       }
-
-      // Check health
-      const healthRes = await axios.get(`${API_URL}/health`);
-      if (healthRes.data?.status === 'UP') {
-        setHealthStatus('UP');
-      }
     } catch (error) {
-      console.warn('Backend server offline or unauthorized:', error);
-      setHealthStatus('DOWN');
+      const err = error as { response?: { status?: number } };
+      if (err.response?.status === 401) {
+        // Token expired — force re-login instead of showing stale data
+        localStorage.removeItem('adminToken');
+        setToken(null);
+        return;
+      }
+      console.warn('Không tải được dữ liệu dashboard:', error);
     }
   };
 
@@ -141,9 +143,31 @@ export const AdminDashboard: React.FC = () => {
     }
   }, [token]);
 
+  // Health check runs independently of auth and re-polls every 30s
+  useEffect(() => {
+    let active = true;
+    const checkHealth = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/health`, { timeout: 5000 });
+        if (active) setHealthStatus(res.data?.status === 'UP' ? 'UP' : 'DOWN');
+      } catch {
+        if (active) setHealthStatus('DOWN');
+      }
+    };
+    checkHealth();
+    const intervalId = setInterval(checkHealth, 30000);
+    return () => {
+      active = false;
+      clearInterval(intervalId);
+    };
+  }, []);
+
   // Service state
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(null);
+  const [videoUploadProgress, setVideoUploadProgress] = useState<number | null>(null);
+  const isUploading = imageUploadProgress !== null;
+  const isUploadingVideo = videoUploadProgress !== null;
 
   // Disable body scroll when modal is open
   useEffect(() => {
@@ -157,35 +181,79 @@ export const AdminDashboard: React.FC = () => {
     };
   }, [isArticleModalOpen, isServiceModalOpen]);
 
-  const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>, targetForm: 'article' | 'service') => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Backend (multer) rejects files over this limit — check client-side for a clear message
+  const MAX_UPLOAD_MB = 25;
+
+  const uploadMedia = async (
+    file: File,
+    kind: 'image' | 'video',
+    onProgress: (percent: number) => void
+  ): Promise<string> => {
+    if (!file.type.startsWith(`${kind}/`)) {
+      throw new Error(kind === 'image' ? 'Vui lòng chọn tệp hình ảnh.' : 'Vui lòng chọn tệp video.');
+    }
+    if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
+      throw new Error(
+        `Tệp "${file.name}" nặng ${(file.size / 1024 / 1024).toFixed(1)}MB, vượt giới hạn ${MAX_UPLOAD_MB}MB.`
+      );
+    }
 
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', file); // backend expects field name "image" for both kinds
 
-    setIsUploading(true);
+    const res = await axios.post(`${API_URL}/upload`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+      onUploadProgress: (evt) => {
+        if (evt.total) onProgress(Math.round((evt.loaded / evt.total) * 100));
+      },
+    });
+
+    if (res.data?.success && res.data.url) return res.data.url;
+    throw new Error(res.data?.message || 'Tải lên thất bại.');
+  };
+
+  const getUploadErrorMessage = (error: unknown, fallback: string) => {
+    const err = error as { response?: { data?: { message?: string } }; message?: string };
+    return err.response?.data?.message || err.message || fallback;
+  };
+
+  const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>, targetForm: 'article' | 'service') => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-selecting the same file
+    if (!file || !token) return;
+
+    setImageUploadProgress(0);
     try {
-      const res = await axios.post(`${API_URL}/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
-
-      if (res.data?.success && res.data.url) {
-        const imageUrl = res.data.url;
-        if (targetForm === 'article') {
-          setArticleForm((prev) => ({ ...prev, thumbnail: imageUrl }));
-        } else {
-          setServiceForm((prev) => ({ ...prev, thumbnail: imageUrl }));
-        }
+      const imageUrl = await uploadMedia(file, 'image', setImageUploadProgress);
+      if (targetForm === 'article') {
+        setArticleForm((prev) => ({ ...prev, thumbnail: imageUrl }));
+      } else {
+        setServiceForm((prev) => ({ ...prev, thumbnail: imageUrl }));
       }
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      alert(err.response?.data?.message || 'Lỗi khi tải ảnh lên.');
+      alert(getUploadErrorMessage(error, 'Lỗi khi tải ảnh lên.'));
     } finally {
-      setIsUploading(false);
+      setImageUploadProgress(null);
+    }
+  };
+
+  const handleUploadVideo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-selecting the same file
+    if (!file || !token) return;
+
+    setVideoUploadProgress(0);
+    try {
+      const videoUrl = await uploadMedia(file, 'video', setVideoUploadProgress);
+      setServiceForm((prev) => ({ ...prev, videos: [...prev.videos, videoUrl] }));
+    } catch (error: unknown) {
+      alert(getUploadErrorMessage(error, 'Lỗi khi tải video lên.'));
+    } finally {
+      setVideoUploadProgress(null);
     }
   };
 
@@ -194,12 +262,16 @@ export const AdminDashboard: React.FC = () => {
   const [serviceForm, setServiceForm] = useState({
     title: '', slug: '', shortDesc: '', description: '',
     icon: 'category', thumbnail: '', category: 'Web',
-    features: '', status: 'active', order: 0,
+    features: '', status: 'active', order: 0, videos: [] as string[],
   });
 
   const handleOpenCreateServiceModal = () => {
     setEditingServiceId(null);
-    setServiceForm({ title: '', slug: '', shortDesc: '', description: '', icon: 'category', thumbnail: '', category: 'Web', features: '', status: 'active', order: 0 });
+    setServiceForm({
+      title: '', slug: '', shortDesc: '', description: '',
+      icon: 'category', thumbnail: '', category: 'Web',
+      features: '', status: 'active', order: 0, videos: [] as string[],
+    });
     setServiceFormError(null);
     setIsServiceModalOpen(true);
   };
@@ -211,6 +283,7 @@ export const AdminDashboard: React.FC = () => {
       description: svc.description, icon: svc.icon, thumbnail: svc.thumbnail || '',
       category: svc.category, features: svc.features.join(', '),
       status: svc.status, order: svc.order,
+      videos: svc.videos ? [...svc.videos] : [],
     });
     setServiceFormError(null);
     setIsServiceModalOpen(true);
@@ -224,6 +297,7 @@ export const AdminDashboard: React.FC = () => {
     const payload = {
       ...serviceForm,
       features: serviceForm.features.split(',').map((f) => f.trim()).filter(Boolean),
+      videos: serviceForm.videos.map((v) => v.trim()).filter(Boolean),
       order: Number(serviceForm.order),
     };
     try {
@@ -390,17 +464,17 @@ export const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#05090a] text-slate-100 flex font-display">
+    <div className="min-h-screen bg-surface-alt text-ink flex font-display">
       
       {/* Side bar */}
-      <aside className="w-64 glass-sidebar flex flex-col justify-between hidden md:flex h-screen sticky top-0">
+      <aside className="w-64 bg-white border-r border-line flex flex-col justify-between hidden md:flex h-screen sticky top-0">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/40 flex items-center justify-center shadow-lg shadow-primary/20">
               <span className="material-symbols-outlined text-white text-xl">blur_on</span>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-white text-base font-bold tracking-wide">iGen Admin</h1>
+              <h1 className="text-ink text-base font-bold tracking-wide">iGen Admin</h1>
               <p className="text-primary text-[10px] font-bold tracking-wider uppercase opacity-80">Command Suite</p>
             </div>
           </div>
@@ -411,7 +485,7 @@ export const AdminDashboard: React.FC = () => {
               className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all interactable text-left w-full ${
                 activeTab === 'overview'
                   ? 'bg-primary/10 border-primary/20 text-primary font-semibold'
-                  : 'border-transparent text-[#82a1a8] hover:text-white hover:bg-[#0a1315]'
+                  : 'border-transparent text-muted hover:text-ink hover:bg-surface-alt'
               }`}
             >
               <span className="material-symbols-outlined text-xl">dashboard</span>
@@ -423,7 +497,7 @@ export const AdminDashboard: React.FC = () => {
               className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all interactable text-left w-full ${
                 activeTab === 'articles'
                   ? 'bg-primary/10 border-primary/20 text-primary font-semibold'
-                  : 'border-transparent text-[#82a1a8] hover:text-white hover:bg-[#0a1315]'
+                  : 'border-transparent text-muted hover:text-ink hover:bg-surface-alt'
               }`}
             >
               <span className="material-symbols-outlined text-xl">article</span>
@@ -435,7 +509,7 @@ export const AdminDashboard: React.FC = () => {
               className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all interactable text-left w-full ${
                 activeTab === 'contacts'
                   ? 'bg-primary/10 border-primary/20 text-primary font-semibold'
-                  : 'border-transparent text-[#82a1a8] hover:text-white hover:bg-[#0a1315]'
+                  : 'border-transparent text-muted hover:text-ink hover:bg-surface-alt'
               }`}
             >
               <span className="material-symbols-outlined text-xl">support_agent</span>
@@ -447,7 +521,7 @@ export const AdminDashboard: React.FC = () => {
               className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all interactable text-left w-full ${
                 activeTab === 'services'
                   ? 'bg-primary/10 border-primary/20 text-primary font-semibold'
-                  : 'border-transparent text-[#82a1a8] hover:text-white hover:bg-[#0a1315]'
+                  : 'border-transparent text-muted hover:text-ink hover:bg-surface-alt'
               }`}
             >
               <span className="material-symbols-outlined text-xl">grid_view</span>
@@ -457,12 +531,12 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="p-6">
-          <div className="border-t border-[#1a2e33] pt-6 flex items-center gap-3">
+          <div className="border-t border-line pt-6 flex items-center gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-white truncate">Admin User</p>
-              <p className="text-[10px] text-[#82a1a8] truncate">admin@igen.vn</p>
+              <p className="text-xs font-bold text-ink truncate">Admin User</p>
+              <p className="text-[10px] text-muted truncate">admin@igen.vn</p>
             </div>
-            <button onClick={handleLogout} className="text-[#82a1a8] hover:text-primary transition-colors interactable">
+            <button onClick={handleLogout} className="text-muted hover:text-primary transition-colors interactable">
               <span className="material-symbols-outlined text-lg">logout</span>
             </button>
           </div>
@@ -474,12 +548,12 @@ export const AdminDashboard: React.FC = () => {
         <div className="max-w-6xl mx-auto flex flex-col gap-8">
           
           {/* Dashboard Title Header */}
-          <div className="flex justify-between items-center border-b border-[#1a2e33] pb-6">
+          <div className="flex justify-between items-center border-b border-line pb-6">
             <div>
-              <h2 className="text-2xl font-bold text-white">System Command Center</h2>
-              <p className="text-xs text-[#82a1a8]">Vận hành, điều phối hệ thống landing page</p>
+              <h2 className="text-2xl font-bold text-ink">System Command Center</h2>
+              <p className="text-xs text-muted">Vận hành, điều phối hệ thống landing page</p>
             </div>
-            <div className="flex items-center gap-3 bg-[#0a1315] border border-[#1a2e33] rounded-full px-4 py-1.5 text-xs">
+            <div className="flex items-center gap-3 bg-white border border-line rounded-full px-4 py-1.5 text-xs">
               <span className={`w-2.5 h-2.5 rounded-full ${healthStatus === 'UP' ? 'bg-emerald-500 animate-ping' : 'bg-red-500 animate-pulse'}`}></span>
               <span>API Health: {healthStatus === 'UP' ? 'Optimal' : 'Offline'}</span>
             </div>
@@ -487,33 +561,33 @@ export const AdminDashboard: React.FC = () => {
 
           {/* Cards stats grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#0a1315] border border-[#1a2e33] rounded-2xl p-6 relative overflow-hidden">
-              <h4 className="text-xs text-[#82a1a8] font-medium uppercase tracking-wider mb-2">Tổng số bài viết</h4>
-              <p className="text-3xl font-bold text-white">{stats.articlesCount}</p>
+            <div className="bg-white border border-line rounded-2xl p-6 relative overflow-hidden">
+              <h4 className="text-xs text-muted font-medium uppercase tracking-wider mb-2">Tổng số bài viết</h4>
+              <p className="text-3xl font-bold text-ink">{stats.articlesCount}</p>
             </div>
-            <div className="bg-[#0a1315] border border-[#1a2e33] rounded-2xl p-6 relative overflow-hidden">
-              <h4 className="text-xs text-[#82a1a8] font-medium uppercase tracking-wider mb-2">Liên hệ mới nhận</h4>
-              <p className="text-3xl font-bold text-white">
+            <div className="bg-white border border-line rounded-2xl p-6 relative overflow-hidden">
+              <h4 className="text-xs text-muted font-medium uppercase tracking-wider mb-2">Liên hệ mới nhận</h4>
+              <p className="text-3xl font-bold text-ink">
                 {contacts.filter((c) => c.status === 'unread').length} / {stats.contactsCount}
               </p>
             </div>
-            <div className="bg-[#0a1315] border border-[#1a2e33] rounded-2xl p-6 relative overflow-hidden">
-              <h4 className="text-xs text-[#82a1a8] font-medium uppercase tracking-wider mb-2">Dịch vụ đang hoạt động</h4>
-              <p className="text-3xl font-bold text-white">{stats.servicesCount}</p>
+            <div className="bg-white border border-line rounded-2xl p-6 relative overflow-hidden">
+              <h4 className="text-xs text-muted font-medium uppercase tracking-wider mb-2">Dịch vụ đang hoạt động</h4>
+              <p className="text-3xl font-bold text-ink">{stats.servicesCount}</p>
             </div>
           </div>
 
           {/* TAB 1: OVERVIEW */}
           {activeTab === 'overview' && (
-            <div className="bg-[#0a1315] border border-[#1a2e33] rounded-2xl p-6 md:p-8 relative overflow-hidden">
-              <div className="flex flex-col md:flex-row items-center gap-8 border border-white/5 bg-[#05090a]/50 p-6 rounded-2xl">
+            <div className="bg-white border border-line rounded-2xl p-6 md:p-8 relative overflow-hidden">
+              <div className="flex flex-col md:flex-row items-center gap-8 border border-line bg-surface-alt p-6 rounded-2xl">
                 <div className="flex-1 space-y-4">
                   <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-widest uppercase">
                     <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                     Admin Console Ready
                   </span>
-                  <h3 className="text-2xl font-bold text-white tracking-tight">Vận hành Hệ thống</h3>
-                  <p className="text-[#82a1a8] text-sm leading-relaxed max-w-md">
+                  <h3 className="text-2xl font-bold text-ink tracking-tight">Vận hành Hệ thống</h3>
+                  <p className="text-muted text-sm leading-relaxed max-w-md">
                     Bạn có thể cập nhật bài viết tin tức ở thẻ "Bài viết" để thay đổi dữ liệu trang Tin tức ngoài trang khách, hoặc xem các yêu cầu đăng ký tư vấn khách hàng ở thẻ "Liên hệ".
                   </p>
                 </div>
@@ -529,12 +603,12 @@ export const AdminDashboard: React.FC = () => {
 
           {/* TAB 2: ARTICLES (CRUD LIST) */}
           {activeTab === 'articles' && (
-            <div className="bg-[#0a1315] border border-[#1a2e33] rounded-2xl overflow-hidden flex flex-col">
-              <div className="px-6 py-5 border-b border-[#1a2e33] flex justify-between items-center bg-[#05090a]/30">
-                <h3 className="text-base font-bold text-white tracking-wide">Danh sách bài viết tin tức</h3>
+            <div className="bg-white border border-line rounded-2xl overflow-hidden flex flex-col">
+              <div className="px-6 py-5 border-b border-line flex justify-between items-center bg-surface-alt">
+                <h3 className="text-base font-bold text-ink tracking-wide">Danh sách bài viết tin tức</h3>
                 <button
                   onClick={handleOpenCreateModal}
-                  className="bg-primary hover:bg-[#008199] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 shadow-glow interactable"
+                  className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 interactable"
                 >
                   <span className="material-symbols-outlined text-lg">add</span> Thêm bài mới
                 </button>
@@ -544,25 +618,25 @@ export const AdminDashboard: React.FC = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#05090a]/50 text-[#82a1a8] text-xs uppercase tracking-wider">
+                    <tr className="bg-surface-alt text-muted text-xs uppercase tracking-wider">
                       <th className="px-6 py-4 font-semibold">Tiêu đề bài viết</th>
                       <th className="px-6 py-4 font-semibold">Danh mục</th>
                       <th className="px-6 py-4 font-semibold">Trạng thái</th>
                       <th className="px-6 py-4 font-semibold text-right">Hành động</th>
                     </tr>
                   </thead>
-                  <tbody className="text-sm divide-y divide-[#1a2e33]">
+                  <tbody className="text-sm divide-y divide-line">
                     {articles.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-6 py-8 text-center text-[#82a1a8]">
+                        <td colSpan={4} className="px-6 py-8 text-center text-muted">
                           Không có bài viết nào. Nhấp vào "Thêm bài mới" để tạo.
                         </td>
                       </tr>
                     ) : (
                       articles.map((art) => (
-                        <tr key={art._id} className="hover:bg-[#05090a]/40 transition-colors group">
+                        <tr key={art._id} className="hover:bg-surface-alt transition-colors group">
                           <td className="px-6 py-4">
-                            <span className="text-white font-medium">{art.title}</span>
+                            <span className="text-ink font-medium">{art.title}</span>
                           </td>
                           <td className="px-6 py-4">
                             <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20">
@@ -584,14 +658,14 @@ export const AdminDashboard: React.FC = () => {
                             <div className="flex justify-end gap-3">
                               <button
                                 onClick={() => handleOpenEditModal(art)}
-                                className="p-1.5 text-[#82a1a8] hover:text-primary hover:bg-primary/10 rounded transition-colors interactable"
+                                className="p-1.5 text-muted hover:text-primary hover:bg-primary/10 rounded transition-colors interactable"
                                 title="Sửa"
                               >
                                 <span className="material-symbols-outlined text-sm">edit</span>
                               </button>
                               <button
                                 onClick={() => handleDeleteArticle(art._id)}
-                                className="p-1.5 text-[#82a1a8] hover:text-red-400 hover:bg-red-400/10 rounded transition-colors interactable"
+                                className="p-1.5 text-muted hover:text-red-400 hover:bg-red-400/10 rounded transition-colors interactable"
                                 title="Xóa"
                               >
                                 <span className="material-symbols-outlined text-sm">delete</span>
@@ -609,16 +683,16 @@ export const AdminDashboard: React.FC = () => {
 
           {/* TAB 3: CONTACT SUBMISSIONS */}
           {activeTab === 'contacts' && (
-            <div className="bg-[#0a1315] border border-[#1a2e33] rounded-2xl overflow-hidden flex flex-col">
-              <div className="px-6 py-5 border-b border-[#1a2e33] bg-[#05090a]/30">
-                <h3 className="text-base font-bold text-white tracking-wide">Khách hàng yêu cầu tư vấn</h3>
+            <div className="bg-white border border-line rounded-2xl overflow-hidden flex flex-col">
+              <div className="px-6 py-5 border-b border-line bg-surface-alt">
+                <h3 className="text-base font-bold text-ink tracking-wide">Khách hàng yêu cầu tư vấn</h3>
               </div>
 
               {/* Table list */}
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#05090a]/50 text-[#82a1a8] text-xs uppercase tracking-wider">
+                    <tr className="bg-surface-alt text-muted text-xs uppercase tracking-wider">
                       <th className="px-6 py-4 font-semibold">Tên khách hàng</th>
                       <th className="px-6 py-4 font-semibold">Liên hệ</th>
                       <th className="px-6 py-4 font-semibold">Lời nhắn</th>
@@ -626,22 +700,22 @@ export const AdminDashboard: React.FC = () => {
                       <th className="px-6 py-4 font-semibold text-right">Đánh dấu</th>
                     </tr>
                   </thead>
-                  <tbody className="text-sm divide-y divide-[#1a2e33]">
+                  <tbody className="text-sm divide-y divide-line">
                     {contacts.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="px-6 py-8 text-center text-[#82a1a8]">
+                        <td colSpan={5} className="px-6 py-8 text-center text-muted">
                           Chưa nhận được liên hệ nào từ khách hàng.
                         </td>
                       </tr>
                     ) : (
                       contacts.map((con) => (
-                        <tr key={con._id} className="hover:bg-[#05090a]/40 transition-colors">
-                          <td className="px-6 py-4 font-medium text-white">{con.name}</td>
-                          <td className="px-6 py-4 text-[#82a1a8]">
+                        <tr key={con._id} className="hover:bg-surface-alt transition-colors">
+                          <td className="px-6 py-4 font-medium text-ink">{con.name}</td>
+                          <td className="px-6 py-4 text-muted">
                             <p>{con.email}</p>
                             <p className="text-xs">{con.phone}</p>
                           </td>
-                          <td className="px-6 py-4 max-w-xs truncate text-[#82a1a8]" title={con.message}>
+                          <td className="px-6 py-4 max-w-xs truncate text-muted" title={con.message}>
                             {con.message}
                           </td>
                           <td className="px-6 py-4">
@@ -690,12 +764,12 @@ export const AdminDashboard: React.FC = () => {
 
           {/* TAB 4: SERVICES CRUD */}
           {activeTab === 'services' && (
-            <div className="bg-[#0a1315] border border-[#1a2e33] rounded-2xl overflow-hidden flex flex-col">
-              <div className="px-6 py-5 border-b border-[#1a2e33] flex justify-between items-center bg-[#05090a]/30">
-                <h3 className="text-base font-bold text-white tracking-wide">Quản lý Sản phẩm / Dịch vụ</h3>
+            <div className="bg-white border border-line rounded-2xl overflow-hidden flex flex-col">
+              <div className="px-6 py-5 border-b border-line flex justify-between items-center bg-surface-alt">
+                <h3 className="text-base font-bold text-ink tracking-wide">Quản lý Sản phẩm / Dịch vụ</h3>
                 <button
                   onClick={handleOpenCreateServiceModal}
-                  className="bg-primary hover:bg-[#008199] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 shadow-glow interactable"
+                  className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 interactable"
                 >
                   <span className="material-symbols-outlined text-lg">add</span> Thêm dịch vụ
                 </button>
@@ -703,7 +777,7 @@ export const AdminDashboard: React.FC = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#05090a]/50 text-[#82a1a8] text-xs uppercase tracking-wider">
+                    <tr className="bg-surface-alt text-muted text-xs uppercase tracking-wider">
                       <th className="px-6 py-4 font-semibold">Tên dịch vụ</th>
                       <th className="px-6 py-4 font-semibold">Danh mục</th>
                       <th className="px-6 py-4 font-semibold">Thứ tự</th>
@@ -711,20 +785,20 @@ export const AdminDashboard: React.FC = () => {
                       <th className="px-6 py-4 font-semibold text-right">Hành động</th>
                     </tr>
                   </thead>
-                  <tbody className="text-sm divide-y divide-[#1a2e33]">
+                  <tbody className="text-sm divide-y divide-line">
                     {services.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="px-6 py-8 text-center text-[#82a1a8]">
+                        <td colSpan={5} className="px-6 py-8 text-center text-muted">
                           Chưa có dịch vụ nào. Nhấp "Thêm dịch vụ" để tạo.
                         </td>
                       </tr>
                     ) : (
                       services.map((svc) => (
-                        <tr key={svc._id} className="hover:bg-[#05090a]/40 transition-colors group">
+                        <tr key={svc._id} className="hover:bg-surface-alt transition-colors group">
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-2">
                               <span className="material-symbols-outlined text-primary text-base">{svc.icon}</span>
-                              <span className="text-white font-medium">{svc.title}</span>
+                              <span className="text-ink font-medium">{svc.title}</span>
                             </div>
                           </td>
                           <td className="px-6 py-4">
@@ -732,7 +806,7 @@ export const AdminDashboard: React.FC = () => {
                               {svc.category}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-[#82a1a8]">{svc.order}</td>
+                          <td className="px-6 py-4 text-muted">{svc.order}</td>
                           <td className="px-6 py-4">
                             <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${
                               svc.status === 'active'
@@ -746,14 +820,14 @@ export const AdminDashboard: React.FC = () => {
                             <div className="flex justify-end gap-3">
                               <button
                                 onClick={() => handleOpenEditServiceModal(svc)}
-                                className="p-1.5 text-[#82a1a8] hover:text-primary hover:bg-primary/10 rounded transition-colors interactable"
+                                className="p-1.5 text-muted hover:text-primary hover:bg-primary/10 rounded transition-colors interactable"
                                 title="Sửa"
                               >
                                 <span className="material-symbols-outlined text-sm">edit</span>
                               </button>
                               <button
                                 onClick={() => handleDeleteService(svc._id)}
-                                className="p-1.5 text-[#82a1a8] hover:text-red-400 hover:bg-red-400/10 rounded transition-colors interactable"
+                                className="p-1.5 text-muted hover:text-red-400 hover:bg-red-400/10 rounded transition-colors interactable"
                                 title="Xóa"
                               >
                                 <span className="material-symbols-outlined text-sm">delete</span>
@@ -775,12 +849,12 @@ export const AdminDashboard: React.FC = () => {
       {/* SERVICE EDIT/CREATE MODAL FORM */}
       {isServiceModalOpen && (
         <div className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
-          <div data-lenis-prevent className="w-full max-w-2xl bg-[#0a1315] border border-[#1a2e33] rounded-3xl p-6 sm:p-8 overflow-y-auto max-h-[85vh]">
-            <div className="flex justify-between items-center border-b border-[#1a2e33] pb-4 mb-6">
-              <h3 className="text-xl font-bold text-white">
+          <div data-lenis-prevent className="w-full max-w-2xl bg-white border border-line rounded-3xl p-6 sm:p-8 overflow-y-auto max-h-[85vh]">
+            <div className="flex justify-between items-center border-b border-line pb-4 mb-6">
+              <h3 className="text-xl font-bold text-ink">
                 {editingServiceId ? 'Chỉnh sửa dịch vụ' : 'Thêm dịch vụ mới'}
               </h3>
-              <button onClick={() => setIsServiceModalOpen(false)} className="text-[#82a1a8] hover:text-white transition-colors">
+              <button onClick={() => setIsServiceModalOpen(false)} className="text-muted hover:text-ink transition-colors">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -791,23 +865,23 @@ export const AdminDashboard: React.FC = () => {
 
             <form onSubmit={handleSaveService} className="space-y-5">
               <div>
-                <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Tên dịch vụ *</label>
+                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Tên dịch vụ *</label>
                 <input type="text" required value={serviceForm.title}
                   onChange={(e) => setServiceForm({ ...serviceForm, title: e.target.value })}
-                  className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                  className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Slug</label>
+                  <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Slug</label>
                   <input type="text" value={serviceForm.slug}
                     onChange={(e) => setServiceForm({ ...serviceForm, slug: e.target.value })}
-                    className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                    className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Danh mục *</label>
+                  <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Danh mục *</label>
                   <select value={serviceForm.category}
                     onChange={(e) => setServiceForm({ ...serviceForm, category: e.target.value })}
-                    className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable">
+                    className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable">
                     <option value="Web">Web</option>
                     <option value="Mobile">Mobile</option>
                     <option value="AI">AI</option>
@@ -818,45 +892,45 @@ export const AdminDashboard: React.FC = () => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Icon (material-symbols)</label>
+                  <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Icon (material-symbols)</label>
                   <input type="text" value={serviceForm.icon}
                     onChange={(e) => setServiceForm({ ...serviceForm, icon: e.target.value })}
                     placeholder="language, phone_android, chat..."
-                    className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                    className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Trạng thái</label>
+                  <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Trạng thái</label>
                   <select value={serviceForm.status}
                     onChange={(e) => setServiceForm({ ...serviceForm, status: e.target.value })}
-                    className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable">
+                    className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable">
                     <option value="active">Hoạt động</option>
                     <option value="inactive">Tạm dừng</option>
                   </select>
                 </div>
               </div>
               <div>
-                <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Mô tả ngắn</label>
+                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Mô tả ngắn</label>
                 <input type="text" value={serviceForm.shortDesc}
                   onChange={(e) => setServiceForm({ ...serviceForm, shortDesc: e.target.value })}
-                  className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                  className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
               </div>
               <div>
-                <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Mô tả chi tiết</label>
+                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Mô tả chi tiết</label>
                 <textarea rows={4} value={serviceForm.description}
                   onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })}
-                  className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                  className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
               </div>
               <div>
-                <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Tính năng (cách nhau bằng dấu phẩy)</label>
+                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Tính năng (cách nhau bằng dấu phẩy)</label>
                 <input type="text" value={serviceForm.features}
                   onChange={(e) => setServiceForm({ ...serviceForm, features: e.target.value })}
                   placeholder="SEO, SSL, CMS, ..."
-                  className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                  className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
               </div>
               <div>
-                <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Hình ảnh đại diện</label>
+                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Hình ảnh đại diện</label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
-                  <div className="sm:col-span-1 h-24 rounded-xl border border-[#1a2e33] bg-[#05090a] overflow-hidden flex items-center justify-center relative group">
+                  <div className="sm:col-span-1 h-24 rounded-xl border border-line bg-surface-alt overflow-hidden flex items-center justify-center relative group">
                     {serviceForm.thumbnail ? (
                       <>
                         <img src={serviceForm.thumbnail} alt="Preview" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
@@ -865,7 +939,7 @@ export const AdminDashboard: React.FC = () => {
                         </button>
                       </>
                     ) : (
-                      <div className="text-[#82a1a8]/40 flex flex-col items-center gap-1">
+                      <div className="text-muted/40 flex flex-col items-center gap-1">
                         <span className="material-symbols-outlined text-2xl">image</span>
                         <span className="text-[10px]">No image</span>
                       </div>
@@ -876,14 +950,14 @@ export const AdminDashboard: React.FC = () => {
                       <input type="text" value={serviceForm.thumbnail}
                         onChange={(e) => setServiceForm({ ...serviceForm, thumbnail: e.target.value })}
                         placeholder="URL hoặc tải lên..."
-                        className="flex-1 bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
-                      <label className="bg-[#1a2e33] hover:bg-[#253f45] text-white border border-[#2a454d] text-xs font-semibold py-3 px-4 rounded-xl cursor-pointer flex items-center gap-1 transition-all select-none hover:scale-[1.02] active:scale-95 whitespace-nowrap">
+                        className="flex-1 bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                      <label className="bg-surface-alt hover:bg-line text-body border border-line text-xs font-semibold py-3 px-4 rounded-xl cursor-pointer flex items-center gap-1 transition-all select-none hover:scale-[1.02] active:scale-95 whitespace-nowrap">
                         {isUploading ? (
                           <span className="material-symbols-outlined text-sm animate-spin">sync</span>
                         ) : (
                           <span className="material-symbols-outlined text-sm">upload</span>
                         )}
-                        {isUploading ? 'Đang tải...' : 'Tải lên'}
+                        {isUploading ? `Đang tải ${imageUploadProgress}%` : 'Tải lên'}
                         <input type="file" accept="image/*" className="hidden" disabled={isUploading}
                           onChange={(e) => handleUploadImage(e, 'service')} />
                       </label>
@@ -893,18 +967,81 @@ export const AdminDashboard: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">Thứ tự hiển thị</label>
+                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">
+                  Video (YouTube, TikTok, Vimeo, Facebook hoặc file tải lên)
+                </label>
+                <div className="flex flex-col gap-3">
+                  {serviceForm.videos.map((url, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={url}
+                        onChange={(e) =>
+                          setServiceForm((prev) => {
+                            const videos = [...prev.videos];
+                            videos[idx] = e.target.value;
+                            return { ...prev, videos };
+                          })
+                        }
+                        placeholder="https://www.youtube.com/watch?v=... hoặc https://www.tiktok.com/@user/video/..."
+                        className="flex-1 bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
+                      />
+                      <span className="w-20 text-center text-xs font-semibold text-muted flex-shrink-0">
+                        {getVideoPlatform(url)}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label="Xóa link video"
+                        onClick={() =>
+                          setServiceForm((prev) => ({
+                            ...prev,
+                            videos: prev.videos.filter((_, i) => i !== idx),
+                          }))
+                        }
+                        className="w-10 h-10 rounded-xl border border-line bg-surface-alt text-muted hover:text-red-600 hover:border-red-300 hover:bg-red-50 transition-all flex items-center justify-center flex-shrink-0"
+                      >
+                        <span className="material-symbols-outlined text-lg">delete</span>
+                      </button>
+                    </div>
+                  ))}
+
+                  <div className="flex justify-between items-center">
+                    <button
+                      type="button"
+                      onClick={() => setServiceForm((prev) => ({ ...prev, videos: [...prev.videos, ''] }))}
+                      className="bg-surface-alt hover:bg-line text-body border border-line text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1 transition-all select-none hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+                    >
+                      <span className="material-symbols-outlined text-sm">add_link</span>
+                      Thêm link video
+                    </button>
+
+                    <label className="bg-surface-alt hover:bg-line text-body border border-line text-xs font-semibold py-2.5 px-4 rounded-xl cursor-pointer flex items-center gap-1 transition-all select-none hover:scale-[1.02] active:scale-95 whitespace-nowrap">
+                      {isUploadingVideo ? (
+                        <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                      ) : (
+                        <span className="material-symbols-outlined text-sm">upload_file</span>
+                      )}
+                      {isUploadingVideo ? `Đang tải video ${videoUploadProgress}%` : 'Tải lên video mới'}
+                      <input type="file" accept="video/*" className="hidden" disabled={isUploadingVideo}
+                        onChange={handleUploadVideo} />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Thứ tự hiển thị</label>
                 <input type="number" min={0} value={serviceForm.order}
                   onChange={(e) => setServiceForm({ ...serviceForm, order: Number(e.target.value) })}
-                  className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                  className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
               </div>
-              <div className="flex justify-end gap-4 border-t border-[#1a2e33] pt-5">
+              <div className="flex justify-end gap-4 border-t border-line pt-5">
                 <button type="button" onClick={() => setIsServiceModalOpen(false)}
-                  className="px-5 py-2.5 bg-[#0a1315] hover:bg-[#101e21] border border-[#1a2e33] text-[#82a1a8] hover:text-white rounded-xl text-sm transition-all interactable">
+                  className="px-5 py-2.5 bg-white hover:bg-surface-alt border border-line text-muted hover:text-ink rounded-xl text-sm transition-all interactable">
                   Hủy bỏ
                 </button>
                 <button type="submit"
-                  className="px-5 py-2.5 bg-primary hover:bg-[#008199] text-white rounded-xl text-sm font-semibold transition-all shadow-glow interactable">
+                  className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white rounded-xl text-sm font-semibold transition-all interactable">
                   Lưu dịch vụ
                 </button>
               </div>
@@ -916,14 +1053,14 @@ export const AdminDashboard: React.FC = () => {
       {/* ARTICLE EDIT/CREATE MODAL FORM */}
       {isArticleModalOpen && (
         <div className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
-          <div data-lenis-prevent className="w-full max-w-6xl bg-[#0a1315] border border-[#1a2e33] rounded-3xl p-6 sm:p-8 overflow-y-auto max-h-[90vh]">
-            <div className="flex justify-between items-center border-b border-[#1a2e33] pb-4 mb-6">
-              <h3 className="text-xl font-bold text-white">
+          <div data-lenis-prevent className="w-full max-w-6xl bg-white border border-line rounded-3xl p-6 sm:p-8 overflow-y-auto max-h-[90vh]">
+            <div className="flex justify-between items-center border-b border-line pb-4 mb-6">
+              <h3 className="text-xl font-bold text-ink">
                 {editingArticleId ? 'Chỉnh sửa bài viết' : 'Thêm bài viết mới'}
               </h3>
               <button
                 onClick={() => setIsArticleModalOpen(false)}
-                className="text-[#82a1a8] hover:text-white transition-colors"
+                className="text-muted hover:text-ink transition-colors"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -939,7 +1076,7 @@ export const AdminDashboard: React.FC = () => {
               {/* Left Column: Content Editor */}
               <div className="lg:col-span-8 flex flex-col justify-between">
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-3">
+                  <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-3">
                     Nội dung bài viết
                   </label>
                   <ReactQuill
@@ -957,7 +1094,7 @@ export const AdminDashboard: React.FC = () => {
               <div className="lg:col-span-4 space-y-5 flex flex-col justify-between">
                 <div className="space-y-5">
                   <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">
+                    <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">
                       Tiêu đề bài viết
                     </label>
                     <input
@@ -965,13 +1102,13 @@ export const AdminDashboard: React.FC = () => {
                       required
                       value={articleForm.title}
                       onChange={handleArticleTitleChange}
-                      className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
+                      className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">
+                      <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">
                         Slug (Tự động tạo)
                       </label>
                       <input
@@ -979,17 +1116,17 @@ export const AdminDashboard: React.FC = () => {
                         required
                         value={articleForm.slug}
                         onChange={(e) => setArticleForm({ ...articleForm, slug: e.target.value })}
-                        className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
+                        className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">
+                      <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">
                         Danh mục
                       </label>
                       <select
                         value={articleForm.category}
                         onChange={(e) => setArticleForm({ ...articleForm, category: e.target.value })}
-                        className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
+                        className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
                       >
                         <option value="AI Trends">AI Trends</option>
                         <option value="Tech Insights">Tech Insights</option>
@@ -999,11 +1136,11 @@ export const AdminDashboard: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">
+                    <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">
                       Hình ảnh đại diện
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
-                      <div className="sm:col-span-1 h-24 rounded-xl border border-[#1a2e33] bg-[#05090a] overflow-hidden flex items-center justify-center relative group">
+                      <div className="sm:col-span-1 h-24 rounded-xl border border-line bg-surface-alt overflow-hidden flex items-center justify-center relative group">
                         {articleForm.thumbnail ? (
                           <>
                             <img
@@ -1020,7 +1157,7 @@ export const AdminDashboard: React.FC = () => {
                             </button>
                           </>
                         ) : (
-                          <div className="text-[#82a1a8]/40 flex flex-col items-center gap-1">
+                          <div className="text-muted/40 flex flex-col items-center gap-1">
                             <span className="material-symbols-outlined text-2xl">image</span>
                             <span className="text-[10px]">No image</span>
                           </div>
@@ -1033,15 +1170,15 @@ export const AdminDashboard: React.FC = () => {
                             value={articleForm.thumbnail}
                             onChange={(e) => setArticleForm({ ...articleForm, thumbnail: e.target.value })}
                             placeholder="URL hình ảnh hoặc tải lên..."
-                            className="flex-1 bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable min-w-0"
+                            className="flex-1 bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable min-w-0"
                           />
-                          <label className="bg-[#1a2e33] hover:bg-[#253f45] text-white border border-[#2a454d] text-xs font-semibold py-3 px-3.5 rounded-xl cursor-pointer flex items-center gap-1 transition-all select-none hover:scale-[1.02] active:scale-95 whitespace-nowrap">
+                          <label className="bg-surface-alt hover:bg-line text-body border border-line text-xs font-semibold py-3 px-3.5 rounded-xl cursor-pointer flex items-center gap-1 transition-all select-none hover:scale-[1.02] active:scale-95 whitespace-nowrap">
                             {isUploading ? (
                               <span className="material-symbols-outlined text-sm animate-spin">sync</span>
                             ) : (
                               <span className="material-symbols-outlined text-sm">upload</span>
                             )}
-                            {isUploading ? 'Đang tải' : 'Tải lên'}
+                            {isUploading ? `Đang tải ${imageUploadProgress}%` : 'Tải lên'}
                             <input type="file" accept="image/*" className="hidden" disabled={isUploading}
                               onChange={(e) => handleUploadImage(e, 'article')} />
                           </label>
@@ -1051,13 +1188,13 @@ export const AdminDashboard: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#82a1a8] font-bold mb-2">
+                    <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">
                       Trạng thái đăng
                     </label>
                     <select
                       value={articleForm.status}
                       onChange={(e) => setArticleForm({ ...articleForm, status: e.target.value })}
-                      className="w-full bg-[#05090a] border border-[#1a2e33] text-white rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
+                      className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
                     >
                       <option value="draft">Bản nháp (Draft)</option>
                       <option value="published">Đăng ngay (Published)</option>
@@ -1065,17 +1202,17 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-4 border-t border-[#1a2e33] pt-6 mt-8">
+                <div className="flex justify-end gap-4 border-t border-line pt-6 mt-8">
                   <button
                     type="button"
                     onClick={() => setIsArticleModalOpen(false)}
-                    className="px-5 py-2.5 bg-[#0a1315] hover:bg-[#101e21] border border-[#1a2e33] text-[#82a1a8] hover:text-white rounded-xl text-sm transition-all interactable"
+                    className="px-5 py-2.5 bg-white hover:bg-surface-alt border border-line text-muted hover:text-ink rounded-xl text-sm transition-all interactable"
                   >
                     Hủy bỏ
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 bg-primary hover:bg-[#008199] text-white rounded-xl text-sm font-semibold transition-all shadow-glow interactable"
+                    className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white rounded-xl text-sm font-semibold transition-all interactable"
                   >
                     Lưu bài viết
                   </button>
