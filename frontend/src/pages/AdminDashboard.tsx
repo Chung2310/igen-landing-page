@@ -145,6 +145,7 @@ export const AdminDashboard: React.FC = () => {
   // Service state
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
 
   // Disable body scroll when modal is open
   useEffect(() => {
@@ -187,6 +188,39 @@ export const AdminDashboard: React.FC = () => {
       alert(err.response?.data?.message || 'Lỗi khi tải ảnh lên.');
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleUploadVideo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setIsUploadingVideo(true);
+    try {
+      const res = await axios.post(`${API_URL}/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      if (res.data?.success && res.data.url) {
+        const videoUrl = res.data.url;
+        setServiceForm((prev) => {
+          const currentVideos = prev.videos.trim();
+          const newVideos = currentVideos ? `${currentVideos}\n${videoUrl}` : videoUrl;
+          return { ...prev, videos: newVideos };
+        });
+      }
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      alert(err.response?.data?.message || 'Lỗi khi tải video lên.');
+    } finally {
+      setIsUploadingVideo(false);
     }
   };
 
@@ -901,10 +935,25 @@ export const AdminDashboard: React.FC = () => {
 
               <div>
                 <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Danh sách URL Video (Mỗi dòng một URL)</label>
-                <textarea rows={3} value={serviceForm.videos}
-                  onChange={(e) => setServiceForm({ ...serviceForm, videos: e.target.value })}
-                  placeholder="https://www.youtube.com/watch?v=...&#10;https://..."
-                  className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                <div className="flex flex-col gap-3">
+                  <textarea rows={3} value={serviceForm.videos}
+                    onChange={(e) => setServiceForm({ ...serviceForm, videos: e.target.value })}
+                    placeholder="https://www.youtube.com/watch?v=...&#10;https://..."
+                    className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
+                  
+                  <div className="flex justify-end">
+                    <label className="bg-surface-alt hover:bg-line text-body border border-line text-xs font-semibold py-2.5 px-4 rounded-xl cursor-pointer flex items-center gap-1 transition-all select-none hover:scale-[1.02] active:scale-95 whitespace-nowrap">
+                      {isUploadingVideo ? (
+                        <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                      ) : (
+                        <span className="material-symbols-outlined text-sm">upload_file</span>
+                      )}
+                      {isUploadingVideo ? 'Đang tải video...' : 'Tải lên video mới'}
+                      <input type="file" accept="video/*" className="hidden" disabled={isUploadingVideo}
+                        onChange={handleUploadVideo} />
+                    </label>
+                  </div>
+                </div>
               </div>
 
               <div>
