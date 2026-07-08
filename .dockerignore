@@ -4,7 +4,12 @@ backend/node_modules
 frontend/dist
 backend/dist
 .git
+.github
 .gitignore
+.agent
+.env
+.env.*
+!.env.example
 *.md
 docker-compose.yml
 Dockerfile
