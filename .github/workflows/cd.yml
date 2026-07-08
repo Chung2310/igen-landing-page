@@ -4,11 +4,49 @@ on:
   push:
     branches: [ develop, production ]
 
+# Không cancel deploy đang chạy giữa chừng; push mới sẽ xếp hàng chờ
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
 
-  deploy-docker-vps:
-    name: Build Docker & Deploy VPS
+  # ─── Bước 1: Lint & Typecheck — deploy chỉ chạy khi code sạch ─────────────
+  checks:
+    name: Lint & Typecheck (${{ matrix.app }})
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        app: [ backend, frontend ]
+    defaults:
+      run:
+        working-directory: ${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+          cache-dependency-path: ${{ matrix.app }}/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Typecheck
+        run: yarn tsc --noEmit
+
+  # ─── Bước 2: Build & push image (một lần duy nhất) ────────────────────────
+  build-push:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: [ checks ]
     permissions:
       contents: read
       packages: write
@@ -44,10 +82,17 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # ─── STAGING (branch: develop) ───────────────────────────────────────────
+  # ─── Bước 3a: Deploy STAGING (branch: develop) ────────────────────────────
+  deploy-staging:
+    name: Deploy Staging VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [ build-push ]
+    if: github.ref_name == 'develop'
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Copy docker-compose.yml to Staging VPS
-        if: github.ref_name == 'develop'
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -58,7 +103,6 @@ jobs:
           target: "/opt/igen-ldp/staging"
 
       - name: Deploy via SSH to Staging VPS
-        if: github.ref_name == 'develop'
         uses: appleboy/ssh-action@v1.0.3
         env:
           ENV_FILE_CONTENT: ${{ secrets.ENV_FILE }}
@@ -69,32 +113,57 @@ jobs:
           port: ${{ secrets.SSH_PORT || '22' }}
           envs: ENV_FILE_CONTENT
           script: |
+            set -e
             TARGET_DIR="/opt/igen-ldp/staging"
             IMAGE_TAG="develop"
             CONTAINER_NAME="igen-ldp-staging"
 
-            # Tạo thư mục đích nếu chưa tồn tại và chuyển vào
             mkdir -p "$TARGET_DIR"
             cd "$TARGET_DIR"
 
-            # Tạo/ghi nội dung cấu hình từ GitHub Secrets vào file .env cục bộ
+            # Ghi cấu hình từ GitHub Secrets vào file .env cục bộ
             echo "$ENV_FILE_CONTENT" > .env
 
             # Đăng nhập vào GHCR trên VPS
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            # Dừng và giải phóng hoàn toàn stack cũ (bao gồm port binding)
             export COMPOSE_PROJECT_NAME="$CONTAINER_NAME"
-            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml down --remove-orphans || true
 
-            # Kéo image mới và khởi động container
+            # Kéo image mới TRƯỚC, rồi mới thay container — downtime chỉ vài giây
+            # thay vì chết suốt thời gian pull như khi down trước
             IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml pull
             IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml up -d --remove-orphans
 
-      # ─── PRODUCTION (branch: production) ─────────────────────────────────────
+            # Health check: chờ tối đa 60s cho app sẵn sàng
+            ok=""
+            for i in $(seq 1 12); do
+              if docker compose -f docker-compose.yml exec -T app wget -qO- http://127.0.0.1:5001/api/v1/health >/dev/null 2>&1; then
+                echo "✅ Health check OK (lần thử $i)"
+                ok=1
+                break
+              fi
+              sleep 5
+            done
+            if [ -z "$ok" ]; then
+              echo "❌ Health check FAILED — logs gần nhất:"
+              docker compose -f docker-compose.yml logs --tail=100 app
+              exit 1
+            fi
+
+            # Dọn image cũ không dùng để tránh đầy disk VPS
+            docker image prune -f
+
+  # ─── Bước 3b: Deploy PRODUCTION (branch: production) ──────────────────────
+  deploy-production:
+    name: Deploy Production VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [ build-push ]
+    if: github.ref_name == 'production'
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Copy docker-compose.yml to Production VPS
-        if: github.ref_name == 'production'
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST_PROD }}
@@ -105,7 +174,6 @@ jobs:
           target: "/opt/igen-ldp/production"
 
       - name: Deploy via SSH to Production VPS
-        if: github.ref_name == 'production'
         uses: appleboy/ssh-action@v1.0.3
         env:
           ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_PROD }}
@@ -116,24 +184,41 @@ jobs:
           port: ${{ secrets.SSH_PORT_PROD || '22' }}
           envs: ENV_FILE_CONTENT
           script: |
+            set -e
             TARGET_DIR="/opt/igen-ldp/production"
             IMAGE_TAG="production"
             CONTAINER_NAME="igen-ldp-production"
 
-            # Tạo thư mục đích nếu chưa tồn tại và chuyển vào
             mkdir -p "$TARGET_DIR"
             cd "$TARGET_DIR"
 
-            # Tạo/ghi nội dung cấu hình từ GitHub Secrets vào file .env cục bộ
+            # Ghi cấu hình từ GitHub Secrets vào file .env cục bộ
             echo "$ENV_FILE_CONTENT" > .env
 
             # Đăng nhập vào GHCR trên VPS
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            # Dừng và giải phóng hoàn toàn stack cũ (bao gồm port binding)
             export COMPOSE_PROJECT_NAME="$CONTAINER_NAME"
-            IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml down --remove-orphans || true
 
-            # Kéo image mới và khởi động container
+            # Kéo image mới TRƯỚC, rồi mới thay container — downtime chỉ vài giây
             IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml pull
             IMAGE_TAG="$IMAGE_TAG" CONTAINER_NAME="$CONTAINER_NAME" docker compose -f docker-compose.yml up -d --remove-orphans
+
+            # Health check: chờ tối đa 60s cho app sẵn sàng
+            ok=""
+            for i in $(seq 1 12); do
+              if docker compose -f docker-compose.yml exec -T app wget -qO- http://127.0.0.1:5001/api/v1/health >/dev/null 2>&1; then
+                echo "✅ Health check OK (lần thử $i)"
+                ok=1
+                break
+              fi
+              sleep 5
+            done
+            if [ -z "$ok" ]; then
+              echo "❌ Health check FAILED — logs gần nhất:"
+              docker compose -f docker-compose.yml logs --tail=100 app
+              exit 1
+            fi
+
+            # Dọn image cũ không dùng để tránh đầy disk VPS
+            docker image prune -f

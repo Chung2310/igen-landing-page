@@ -1,20 +1,28 @@
-name: CI (Integration Test)
+name: CI (Pull Request Checks)
 
+# Chỉ chạy trên PR — push lên develop/production đã được kiểm tra đầy đủ trong cd.yml,
+# tránh build Docker image trùng lặp 2 lần cho cùng một commit.
 on:
-  push:
-    branches: [ develop, production ]
   pull_request:
     branches: [ develop, production ]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
 
-  # ─── Job 1: Lint & Typecheck Backend ──────────────────────────────────────
-  lint-backend:
-    name: Lint Backend (ESLint + TS)
+  # ─── Lint & Typecheck (backend + frontend chạy song song) ─────────────────
+  lint:
+    name: Lint & Typecheck (${{ matrix.app }})
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        app: [ backend, frontend ]
     defaults:
       run:
-        working-directory: backend
+        working-directory: ${{ matrix.app }}
     steps:
       - uses: actions/checkout@v4
 
@@ -23,48 +31,23 @@ jobs:
         with:
           node-version: 20
           cache: 'yarn'
-          cache-dependency-path: backend/yarn.lock
+          cache-dependency-path: ${{ matrix.app }}/yarn.lock
 
-      - name: Install backend dependencies
+      - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Lint backend
+      - name: Lint
         run: yarn lint
 
-      - name: Typecheck backend
+      - name: Typecheck
         run: yarn tsc --noEmit
 
-  # ─── Job 2: Lint & Typecheck Frontend ─────────────────────────────────────
-  lint-frontend:
-    name: Lint Frontend (ESLint + TS)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'yarn'
-          cache-dependency-path: frontend/yarn.lock
-
-      - name: Install frontend dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Lint frontend
-        run: yarn lint
-
-      - name: Typecheck frontend
-        run: yarn tsc --noEmit
-
-  # ─── Job 3: Build (chỉ chạy khi cả 2 lint đều pass) ──────────────────────
+  # ─── Build Docker image (dry-run, chỉ khi lint pass) ──────────────────────
   build-app:
     name: Build Docker Image (dry-run)
     runs-on: ubuntu-latest
-    needs: [ lint-backend, lint-frontend ]
+    timeout-minutes: 20
+    needs: [ lint ]
     steps:
       - uses: actions/checkout@v4
 
