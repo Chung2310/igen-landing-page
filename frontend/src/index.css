@@ -8,6 +8,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-size: clamp(15px, 0.35vw + 12.5px, 28px);
+  }
+
+  :root:fullscreen, :fullscreen, html:fullscreen {
+    font-size: clamp(18px, 0.45vw + 14px, 32px) !important;
   }
 
   body {
@@ -283,8 +288,33 @@ section.relative.pt-40.pb-40 p {
    Scroll reveal (restrained fade / slide up)
    ========================================================================== */
 .reveal-text,
+.reveal-item,
+.reveal-step,
+.hero-reveal,
 .fade-up {
   will-change: transform, opacity;
+}
+
+/* CSS-only entrance for async-rendered items (news cards...) — replays on re-render */
+@keyframes fade-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up-in {
+  opacity: 0;
+  animation: fade-up-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fade-up-in {
+    animation: none;
+    opacity: 1;
+  }
 }
 
 .scroll-progress-container {

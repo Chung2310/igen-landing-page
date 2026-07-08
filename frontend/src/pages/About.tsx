@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React from 'react';
 import { SilkBackground } from '../components/SilkBackground';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
 const PARTNERS = [
   {
@@ -29,25 +26,7 @@ const PARTNERS = [
 ];
 
 export const About: React.FC = () => {
-  useEffect(() => {
-    const reveals = gsap.utils.toArray<HTMLElement>('.reveal-text');
-    const triggers = reveals.map((el) =>
-      gsap.fromTo(
-        el,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
-        }
-      )
-    );
-    return () => {
-      triggers.forEach((t) => t.scrollTrigger?.kill());
-    };
-  }, []);
+  useRevealAnimations();
 
   return (
     <main className="flex flex-col w-full relative">
@@ -56,10 +35,10 @@ export const About: React.FC = () => {
       <section className="relative pt-40 pb-40 overflow-hidden">
         <SilkBackground />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6">
+          <h1 className="hero-reveal text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6">
             Về chúng tôi
           </h1>
-          <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
+          <p className="hero-reveal text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
             Kiến tạo hệ sinh thái AI thông minh, đồng hành cùng doanh nghiệp trong kỷ nguyên số.
           </p>
         </div>
@@ -106,9 +85,9 @@ export const About: React.FC = () => {
             <p className="text-body text-lg">Đồng hành cùng sự phát triển bền vững của các doanh nghiệp hàng đầu.</p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 reveal-items-container">
             {PARTNERS.map((partner) => (
-              <div key={partner.name} className="card card-hover overflow-hidden flex flex-col group reveal-text">
+              <div key={partner.name} className="card card-hover overflow-hidden flex flex-col group reveal-item">
                 <div className="relative w-full aspect-[4/3] overflow-hidden flex-shrink-0 bg-surface-alt">
                   <img
                     src={partner.logo}

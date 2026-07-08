@@ -29,8 +29,10 @@ export const Navbar: React.FC = () => {
   ];
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `text-sm font-medium transition-colors whitespace-nowrap ${
-      isActive ? 'text-ink' : 'text-body hover:text-ink'
+    `relative text-sm font-medium transition-colors whitespace-nowrap py-1 after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:rounded-full after:bg-primary after:transition-all after:duration-300 ${
+      isActive
+        ? 'text-ink after:w-full'
+        : 'text-body hover:text-ink after:w-0 hover:after:w-full'
     }`;
 
   return (
@@ -74,6 +76,7 @@ export const Navbar: React.FC = () => {
             className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-ink hover:bg-surface-alt transition-colors"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Menu"
+            aria-expanded={mobileOpen}
           >
             <span className="material-symbols-outlined">{mobileOpen ? 'close' : 'menu'}</span>
           </button>
@@ -81,8 +84,12 @@ export const Navbar: React.FC = () => {
       </div>
 
       {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-line">
+      <div
+        className={`md:hidden grid bg-white transition-all duration-300 ease-in-out ${
+          mobileOpen ? 'grid-rows-[1fr] opacity-100 border-t border-line' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className="overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
             {links.map((l) => (
               <NavLink
@@ -103,7 +110,7 @@ export const Navbar: React.FC = () => {
             </Link>
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };

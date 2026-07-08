@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { SilkBackground } from '../components/SilkBackground';
+import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
@@ -12,6 +13,8 @@ const CONTACT_INFO = [
 ];
 
 export const Contact: React.FC = () => {
+  useRevealAnimations();
+
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -56,10 +59,10 @@ export const Contact: React.FC = () => {
       <section className="relative pt-40 pb-40 overflow-hidden">
         <SilkBackground />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight leading-[1.1]">
+          <h1 className="hero-reveal text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight leading-[1.1]">
             Kết nối với chúng tôi
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="hero-reveal text-lg text-slate-600 max-w-2xl mx-auto">
             Hãy để lại thông tin, đội ngũ chuyên gia AI của chúng tôi sẽ liên hệ tư vấn giải pháp phù hợp nhất.
           </p>
         </div>
@@ -72,14 +75,16 @@ export const Contact: React.FC = () => {
 
             {/* Info (Left: 5 cols) */}
             <div className="lg:col-span-5">
-              <h2 className="text-3xl font-bold text-ink mb-6">Thông tin liên hệ</h2>
-              <p className="text-body mb-10 leading-relaxed">
-                iGen Technology cam kết mang đến những sản phẩm công nghệ chất lượng hàng đầu. Bạn có thể ghé thăm văn phòng hoặc liên hệ trực tiếp qua hotline.
-              </p>
+              <div className="reveal-text">
+                <h2 className="text-3xl font-bold text-ink mb-6">Thông tin liên hệ</h2>
+                <p className="text-body mb-10 leading-relaxed">
+                  iGen Technology cam kết mang đến những sản phẩm công nghệ chất lượng hàng đầu. Bạn có thể ghé thăm văn phòng hoặc liên hệ trực tiếp qua hotline.
+                </p>
+              </div>
 
-              <ul className="space-y-6">
+              <ul className="space-y-6 reveal-items-container">
                 {CONTACT_INFO.map((item) => (
-                  <li key={item.title} className="flex items-start gap-4">
+                  <li key={item.title} className="reveal-item flex items-start gap-4">
                     <span className="w-11 h-11 rounded-xl bg-primary-light flex items-center justify-center flex-shrink-0">
                       <span className="material-symbols-outlined text-primary text-xl">{item.icon}</span>
                     </span>
@@ -93,7 +98,7 @@ export const Contact: React.FC = () => {
             </div>
 
             {/* Form (Right: 7 cols) */}
-            <div className="lg:col-span-7 card p-8 sm:p-10">
+            <div className="lg:col-span-7 card p-8 sm:p-10 reveal-text">
               <h3 className="text-2xl font-bold text-ink mb-6">Gửi thông điệp</h3>
 
               {alert && (

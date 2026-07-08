@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { SilkBackground } from '../components/SilkBackground';
+import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
 interface ArticleData {
   _id?: string;
@@ -192,6 +193,8 @@ const MOCK_ARTICLES: ArticleData[] = [
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const News: React.FC = () => {
+  useRevealAnimations();
+
   const [articles, setArticles] = useState<ArticleData[]>(MOCK_ARTICLES);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -271,10 +274,10 @@ export const News: React.FC = () => {
       <section className="relative pt-40 pb-40 overflow-hidden">
         <SilkBackground />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight leading-[1.1]">
+          <h1 className="hero-reveal text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight leading-[1.1]">
             Tin tức & Xu hướng
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="hero-reveal text-lg text-slate-600 max-w-2xl mx-auto">
             Cập nhật những chuyển biến và đột phá mới nhất trong thế giới trí tuệ nhân tạo.
           </p>
         </div>
@@ -332,11 +335,12 @@ export const News: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {articles.map((art) => (
+              {articles.map((art, index) => (
                 <Link
                   key={art.slug}
                   to={`/news/${art.slug}`}
-                  className="card card-hover overflow-hidden flex flex-col group"
+                  className="card card-hover overflow-hidden flex flex-col group fade-up-in"
+                  style={{ animationDelay: `${index * 90}ms` }}
                 >
                   {/* Thumbnail */}
                   <div className="aspect-video relative overflow-hidden bg-surface-alt">

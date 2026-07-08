@@ -1,11 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import axios from 'axios';
 import { SilkBackground } from '../components/SilkBackground';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
 interface ServiceData {
   _id?: string;
@@ -53,25 +50,7 @@ export const Solutions: React.FC = () => {
     fetchServices();
   }, [fetchServices]);
 
-  useEffect(() => {
-    const reveals = gsap.utils.toArray<HTMLElement>('.reveal-text');
-    const triggers = reveals.map((el) =>
-      gsap.fromTo(
-        el,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
-        }
-      )
-    );
-    return () => {
-      triggers.forEach((t) => t.scrollTrigger?.kill());
-    };
-  }, []);
+  useRevealAnimations();
 
   return (
     <main className="flex flex-col w-full relative">
@@ -80,13 +59,13 @@ export const Solutions: React.FC = () => {
       <section className="relative pt-40 pb-44 md:pt-48 md:pb-52 overflow-hidden">
         <SilkBackground />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4 flex flex-col items-center">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-6">
+          <span className="hero-reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-6">
             AI Solutions Suite
           </span>
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-ink leading-[1.1] mb-6">
+          <h1 className="hero-reveal text-4xl md:text-6xl font-extrabold tracking-tight text-ink leading-[1.1] mb-6">
             Hệ sinh thái giải pháp AI toàn diện
           </h1>
-          <p className="text-lg md:text-xl text-body max-w-2xl leading-relaxed">
+          <p className="hero-reveal text-lg md:text-xl text-body max-w-2xl leading-relaxed">
             Khám phá sức mạnh của trí tuệ nhân tạo được thiết kế riêng cho sự phát triển vượt bậc của doanh nghiệp bạn.
           </p>
         </div>
@@ -102,9 +81,9 @@ export const Solutions: React.FC = () => {
             <p className="text-body text-lg">Nền tảng vững chắc cho mọi chiến lược chuyển đổi số.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 reveal-items-container">
             {PILLARS.map((p) => (
-              <div key={p.slug} className="card card-hover p-8 md:p-10 flex flex-col reveal-text">
+              <div key={p.slug} className="card card-hover p-8 md:p-10 flex flex-col reveal-item">
                 <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center text-primary mb-6">
                   <span className="material-symbols-outlined text-3xl">{p.icon}</span>
                 </div>
