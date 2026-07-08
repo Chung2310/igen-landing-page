@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { getVideoPlatform } from '../utils/videoEmbed';
 
 const quillModules = {
   toolbar: [
@@ -144,8 +145,10 @@ export const AdminDashboard: React.FC = () => {
 
   // Service state
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(null);
+  const [videoUploadProgress, setVideoUploadProgress] = useState<number | null>(null);
+  const isUploading = imageUploadProgress !== null;
+  const isUploadingVideo = videoUploadProgress !== null;
 
   // Disable body scroll when modal is open
   useEffect(() => {
@@ -159,68 +162,79 @@ export const AdminDashboard: React.FC = () => {
     };
   }, [isArticleModalOpen, isServiceModalOpen]);
 
-  const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>, targetForm: 'article' | 'service') => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Backend (multer) rejects files over this limit — check client-side for a clear message
+  const MAX_UPLOAD_MB = 25;
+
+  const uploadMedia = async (
+    file: File,
+    kind: 'image' | 'video',
+    onProgress: (percent: number) => void
+  ): Promise<string> => {
+    if (!file.type.startsWith(`${kind}/`)) {
+      throw new Error(kind === 'image' ? 'Vui lòng chọn tệp hình ảnh.' : 'Vui lòng chọn tệp video.');
+    }
+    if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
+      throw new Error(
+        `Tệp "${file.name}" nặng ${(file.size / 1024 / 1024).toFixed(1)}MB, vượt giới hạn ${MAX_UPLOAD_MB}MB.`
+      );
+    }
 
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', file); // backend expects field name "image" for both kinds
 
-    setIsUploading(true);
+    const res = await axios.post(`${API_URL}/upload`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+      onUploadProgress: (evt) => {
+        if (evt.total) onProgress(Math.round((evt.loaded / evt.total) * 100));
+      },
+    });
+
+    if (res.data?.success && res.data.url) return res.data.url;
+    throw new Error(res.data?.message || 'Tải lên thất bại.');
+  };
+
+  const getUploadErrorMessage = (error: unknown, fallback: string) => {
+    const err = error as { response?: { data?: { message?: string } }; message?: string };
+    return err.response?.data?.message || err.message || fallback;
+  };
+
+  const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>, targetForm: 'article' | 'service') => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-selecting the same file
+    if (!file || !token) return;
+
+    setImageUploadProgress(0);
     try {
-      const res = await axios.post(`${API_URL}/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
-
-      if (res.data?.success && res.data.url) {
-        const imageUrl = res.data.url;
-        if (targetForm === 'article') {
-          setArticleForm((prev) => ({ ...prev, thumbnail: imageUrl }));
-        } else {
-          setServiceForm((prev) => ({ ...prev, thumbnail: imageUrl }));
-        }
+      const imageUrl = await uploadMedia(file, 'image', setImageUploadProgress);
+      if (targetForm === 'article') {
+        setArticleForm((prev) => ({ ...prev, thumbnail: imageUrl }));
+      } else {
+        setServiceForm((prev) => ({ ...prev, thumbnail: imageUrl }));
       }
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      alert(err.response?.data?.message || 'Lỗi khi tải ảnh lên.');
+      alert(getUploadErrorMessage(error, 'Lỗi khi tải ảnh lên.'));
     } finally {
-      setIsUploading(false);
+      setImageUploadProgress(null);
     }
   };
 
   const handleUploadVideo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    e.target.value = ''; // allow re-selecting the same file
+    if (!file || !token) return;
 
-    const formData = new FormData();
-    formData.append('image', file);
-
-    setIsUploadingVideo(true);
+    setVideoUploadProgress(0);
     try {
-      const res = await axios.post(`${API_URL}/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-        },
-        withCredentials: true,
-      });
-
-      if (res.data?.success && res.data.url) {
-        const videoUrl = res.data.url;
-        setServiceForm((prev) => {
-          const currentVideos = prev.videos.trim();
-          const newVideos = currentVideos ? `${currentVideos}\n${videoUrl}` : videoUrl;
-          return { ...prev, videos: newVideos };
-        });
-      }
+      const videoUrl = await uploadMedia(file, 'video', setVideoUploadProgress);
+      setServiceForm((prev) => ({ ...prev, videos: [...prev.videos, videoUrl] }));
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      alert(err.response?.data?.message || 'Lỗi khi tải video lên.');
+      alert(getUploadErrorMessage(error, 'Lỗi khi tải video lên.'));
     } finally {
-      setIsUploadingVideo(false);
+      setVideoUploadProgress(null);
     }
   };
 
@@ -229,7 +243,7 @@ export const AdminDashboard: React.FC = () => {
   const [serviceForm, setServiceForm] = useState({
     title: '', slug: '', shortDesc: '', description: '',
     icon: 'category', thumbnail: '', category: 'Web',
-    features: '', status: 'active', order: 0, videos: '',
+    features: '', status: 'active', order: 0, videos: [] as string[],
   });
 
   const handleOpenCreateServiceModal = () => {
@@ -237,7 +251,7 @@ export const AdminDashboard: React.FC = () => {
     setServiceForm({
       title: '', slug: '', shortDesc: '', description: '',
       icon: 'category', thumbnail: '', category: 'Web',
-      features: '', status: 'active', order: 0, videos: '',
+      features: '', status: 'active', order: 0, videos: [] as string[],
     });
     setServiceFormError(null);
     setIsServiceModalOpen(true);
@@ -250,7 +264,7 @@ export const AdminDashboard: React.FC = () => {
       description: svc.description, icon: svc.icon, thumbnail: svc.thumbnail || '',
       category: svc.category, features: svc.features.join(', '),
       status: svc.status, order: svc.order,
-      videos: svc.videos ? svc.videos.join('\n') : '',
+      videos: svc.videos ? [...svc.videos] : [],
     });
     setServiceFormError(null);
     setIsServiceModalOpen(true);
@@ -264,7 +278,7 @@ export const AdminDashboard: React.FC = () => {
     const payload = {
       ...serviceForm,
       features: serviceForm.features.split(',').map((f) => f.trim()).filter(Boolean),
-      videos: serviceForm.videos.split('\n').map((v) => v.trim()).filter(Boolean),
+      videos: serviceForm.videos.map((v) => v.trim()).filter(Boolean),
       order: Number(serviceForm.order),
     };
     try {
@@ -924,7 +938,7 @@ export const AdminDashboard: React.FC = () => {
                         ) : (
                           <span className="material-symbols-outlined text-sm">upload</span>
                         )}
-                        {isUploading ? 'Đang tải...' : 'Tải lên'}
+                        {isUploading ? `Đang tải ${imageUploadProgress}%` : 'Tải lên'}
                         <input type="file" accept="image/*" className="hidden" disabled={isUploading}
                           onChange={(e) => handleUploadImage(e, 'service')} />
                       </label>
@@ -934,21 +948,61 @@ export const AdminDashboard: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Danh sách URL Video (Mỗi dòng một URL)</label>
+                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">
+                  Video (YouTube, TikTok, Vimeo, Facebook hoặc file tải lên)
+                </label>
                 <div className="flex flex-col gap-3">
-                  <textarea rows={3} value={serviceForm.videos}
-                    onChange={(e) => setServiceForm({ ...serviceForm, videos: e.target.value })}
-                    placeholder="https://www.youtube.com/watch?v=...&#10;https://..."
-                    className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
-                  
-                  <div className="flex justify-end">
+                  {serviceForm.videos.map((url, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={url}
+                        onChange={(e) =>
+                          setServiceForm((prev) => {
+                            const videos = [...prev.videos];
+                            videos[idx] = e.target.value;
+                            return { ...prev, videos };
+                          })
+                        }
+                        placeholder="https://www.youtube.com/watch?v=... hoặc https://www.tiktok.com/@user/video/..."
+                        className="flex-1 bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable"
+                      />
+                      <span className="w-20 text-center text-xs font-semibold text-muted flex-shrink-0">
+                        {getVideoPlatform(url)}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label="Xóa link video"
+                        onClick={() =>
+                          setServiceForm((prev) => ({
+                            ...prev,
+                            videos: prev.videos.filter((_, i) => i !== idx),
+                          }))
+                        }
+                        className="w-10 h-10 rounded-xl border border-line bg-surface-alt text-muted hover:text-red-600 hover:border-red-300 hover:bg-red-50 transition-all flex items-center justify-center flex-shrink-0"
+                      >
+                        <span className="material-symbols-outlined text-lg">delete</span>
+                      </button>
+                    </div>
+                  ))}
+
+                  <div className="flex justify-between items-center">
+                    <button
+                      type="button"
+                      onClick={() => setServiceForm((prev) => ({ ...prev, videos: [...prev.videos, ''] }))}
+                      className="bg-surface-alt hover:bg-line text-body border border-line text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1 transition-all select-none hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+                    >
+                      <span className="material-symbols-outlined text-sm">add_link</span>
+                      Thêm link video
+                    </button>
+
                     <label className="bg-surface-alt hover:bg-line text-body border border-line text-xs font-semibold py-2.5 px-4 rounded-xl cursor-pointer flex items-center gap-1 transition-all select-none hover:scale-[1.02] active:scale-95 whitespace-nowrap">
                       {isUploadingVideo ? (
                         <span className="material-symbols-outlined text-sm animate-spin">sync</span>
                       ) : (
                         <span className="material-symbols-outlined text-sm">upload_file</span>
                       )}
-                      {isUploadingVideo ? 'Đang tải video...' : 'Tải lên video mới'}
+                      {isUploadingVideo ? `Đang tải video ${videoUploadProgress}%` : 'Tải lên video mới'}
                       <input type="file" accept="video/*" className="hidden" disabled={isUploadingVideo}
                         onChange={handleUploadVideo} />
                     </label>
@@ -1105,7 +1159,7 @@ export const AdminDashboard: React.FC = () => {
                             ) : (
                               <span className="material-symbols-outlined text-sm">upload</span>
                             )}
-                            {isUploading ? 'Đang tải' : 'Tải lên'}
+                            {isUploading ? `Đang tải ${imageUploadProgress}%` : 'Tải lên'}
                             <input type="file" accept="image/*" className="hidden" disabled={isUploading}
                               onChange={(e) => handleUploadImage(e, 'article')} />
                           </label>

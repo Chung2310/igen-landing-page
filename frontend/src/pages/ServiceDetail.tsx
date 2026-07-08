@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import gsap from 'gsap';
 import { SilkBackground } from '../components/SilkBackground';
+import { getVideoEmbed } from '../utils/videoEmbed';
 
 interface ServiceData {
   title: string;
@@ -148,16 +149,6 @@ const MOCK_SERVICES: ServiceData[] = [
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
-const getYoutubeEmbedUrl = (url: string) => {
-  if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  if (match && match[2].length === 11) {
-    return `https://www.youtube.com/embed/${match[2]}`;
-  }
-  return null;
-};
-
 export const ServiceDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [service, setService] = useState<ServiceData | null>(null);
@@ -296,22 +287,44 @@ export const ServiceDetail: React.FC = () => {
                   <span className="material-symbols-outlined text-primary">play_circle</span>
                   Video giới thiệu &amp; Hướng dẫn
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                   {service.videos.map((videoUrl, index) => {
-                    const embedUrl = getYoutubeEmbedUrl(videoUrl);
+                    const embed = getVideoEmbed(videoUrl);
+                    if (!embed) return null;
+
+                    if (embed.type === 'link') {
+                      return (
+                        <a
+                          key={index}
+                          href={embed.src}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="aspect-video w-full rounded-xl border border-line bg-surface-alt shadow-sm flex flex-col items-center justify-center gap-3 text-body hover:text-primary hover:border-primary/30 transition-colors"
+                        >
+                          <span className="material-symbols-outlined text-4xl">open_in_new</span>
+                          <span className="text-sm font-semibold">Xem video</span>
+                        </a>
+                      );
+                    }
+
                     return (
-                      <div key={index} className="aspect-video w-full rounded-xl overflow-hidden bg-black border border-line shadow-sm">
-                        {embedUrl ? (
+                      <div
+                        key={index}
+                        className={`w-full rounded-xl overflow-hidden bg-black border border-line shadow-sm ${
+                          embed.vertical ? 'aspect-[9/16] max-w-[280px] mx-auto' : 'aspect-video'
+                        }`}
+                      >
+                        {embed.type === 'iframe' ? (
                           <iframe
-                            src={embedUrl}
+                            src={embed.src}
                             title={`${service.title} Video ${index + 1}`}
                             frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowFullScreen
                             className="w-full h-full"
                           ></iframe>
                         ) : (
-                          <video src={videoUrl} controls className="w-full h-full object-cover">
+                          <video src={embed.src} controls className="w-full h-full object-cover">
                             Trình duyệt của bạn không hỗ trợ phát video.
                           </video>
                         )}
