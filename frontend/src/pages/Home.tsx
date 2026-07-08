@@ -41,17 +41,17 @@ export const Home: React.FC = () => {
       <section className="relative pt-40 pb-48 md:pt-48 md:pb-56 overflow-hidden">
         <SilkBackground />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4 flex flex-col items-center">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur text-white/90 text-xs font-semibold uppercase tracking-wider mb-6">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-6">
             Igen Technology
           </span>
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-ink leading-[1.1] mb-6">
             Tiên phong kỷ nguyên<br className="hidden md:block" /> doanh nghiệp AI
           </h1>
-          <p className="text-lg md:text-xl text-white/85 font-normal leading-relaxed max-w-2xl">
+          <p className="text-lg md:text-xl text-body font-normal leading-relaxed max-w-2xl">
             Tiên phong kiến tạo hệ sinh thái AI và giải pháp chuyển đổi số cho doanh nghiệp Việt.
           </p>
           <div className="mt-10 flex flex-wrap gap-4 justify-center">
-            <Link to="/solutions" className="btn-primary bg-white !text-ink hover:!bg-white/90 shadow-lg px-7 py-3.5">
+            <Link to="/solutions" className="btn-primary shadow-lg px-7 py-3.5">
               Xem giải pháp <span className="material-symbols-outlined text-base">arrow_forward</span>
             </Link>
 
@@ -122,13 +122,13 @@ export const Home: React.FC = () => {
       {/* CTA Section */}
       <section className="section">
         <div className="container-page">
-          <div className="relative gradient-hero rounded-3xl px-8 py-16 md:py-20 text-center overflow-hidden">
+          <div className="relative bg-gradient-to-br from-white via-[rgba(0,255,255,0.12)] to-white border border-line rounded-3xl px-8 py-16 md:py-20 text-center overflow-hidden shadow-card">
             <div className="relative z-10 max-w-2xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Sẵn sàng chuyển đổi cùng AI?</h2>
-              <p className="text-white/85 mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4">Sẵn sàng chuyển đổi cùng AI?</h2>
+              <p className="text-body mb-8">
                 Để iGen Technology đồng hành cùng doanh nghiệp của bạn trên hành trình ứng dụng AI hiệu quả.
               </p>
-              <Link to="/contact" className="btn-primary bg-white !text-ink hover:!bg-white/90 px-7 py-3.5">
+              <Link to="/contact" className="btn-primary px-7 py-3.5">
                 Bắt đầu ngay <span className="material-symbols-outlined text-base">arrow_forward</span>
               </Link>
             </div>

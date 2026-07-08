@@ -56,10 +56,10 @@ export const Contact: React.FC = () => {
       <section className="relative pt-40 pb-40 overflow-hidden">
         <SilkBackground />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight leading-[1.1]">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight leading-[1.1]">
             Kết nối với chúng tôi
           </h1>
-          <p className="text-lg text-white/85 max-w-2xl mx-auto">
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Hãy để lại thông tin, đội ngũ chuyên gia AI của chúng tôi sẽ liên hệ tư vấn giải pháp phù hợp nhất.
           </p>
         </div>

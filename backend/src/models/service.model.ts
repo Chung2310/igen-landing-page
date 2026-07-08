@@ -43,6 +43,10 @@ const serviceSchema = new Schema<IService>(
       type: [String],
       default: [],
     },
+    videos: {
+      type: [String],
+      default: [],
+    },
     status: {
       type: String,
       enum: ['active', 'inactive'],

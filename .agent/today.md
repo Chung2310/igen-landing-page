@@ -1,4 +1,4 @@
-# today.md - 2026-07-07
+# today.md - 2026-07-08
 
 ## Session Goal
 Tái thiết kế toàn bộ giao diện frontend theo phong cách **Stripe** (light-only): nền sáng, typography sans sạch (Inter), card bóng mềm, nút pill, hero gradient nghiêng đa sắc. Giữ teal `#0097b2` làm màu điểm nhấn; bỏ chế độ tối và toàn bộ hiệu ứng nặng.
@@ -14,9 +14,10 @@ Tái thiết kế toàn bộ giao diện frontend theo phong cách **Stripe** (l
 - [x] **Phase 6 — Đồng bộ Logo:** Sao chép logo công ty chính thức (`logo cty 1024x1024.png`) từ `Igen-ERP/assets/img/` sang Landing Page (`logo.png`), cập nhật favicon ở `index.html` và logo chính ở cả `Navbar.tsx` và `Footer.tsx`.
 - [x] **Phase 7 — Hợp nhất cấu hình:** Di chuyển các tệp `.env` riêng biệt của frontend và backend vào chung một tệp `.env` duy nhất tại thư mục gốc, cấu hình `envDir` cho Vite và thiết lập bộ nạp dotenv động có hỗ trợ ghi đè (`override: true`) cho backend.
 - [x] **Phase 8 — Khắc phục lỗi Lint:** Cấu hình tắt rule `'react-hooks/set-state-in-effect'` do đây là các mẫu cập nhật trạng thái hoặc tải dữ liệu tiêu chuẩn khi mount component, chạy lệnh `yarn lint` vượt qua 100% kiểm tra sạch.
-- [x] **Phase 9 — Hợp nhất docker-compose:** Xóa hoàn toàn `docker-compose.prod.yml`, cập nhật `docker-compose.yml` để sử dụng ảnh ghcr.io và nạp `.env` từ thư mục gốc, cập nhật CD pipeline (`cd.yml`) để dùng `docker-compose.yml` khi triển khai.
+- [x] **Phase 9 — Hợp nhất docker-compose:** Xóa hoàn toàn `docker-compose.prod.yml`, cập nhật `docker-compose.yml` để sử dụng ảnh ghcr.io và nạp `.env` từ thư mục gốc, cập nhật CD pipeline (`cd.yml`) để dùng `docker-compose.yml` when triển khai.
+- [x] **Phase 10 — Nền trắng xanh cyan cho Hero:** Thay đổi màu nền của `SilkBackground` (section đầu tiên của tất cả các trang) thành màu trắng xanh cyan #00FFFF sáng. Điều chỉnh toàn bộ text, badge, icon và nút bấm trong các section này sang màu tối (`text-ink`, `text-body`, `bg-primary-light` / `text-slate-900` / `text-slate-600`) để đảm bảo độ tương phản sắc nét và tính thẩm mỹ cao. Cập nhật thẻ CTA (Sẵn sàng chuyển đổi cùng AI?) ở trang chủ đồng bộ sang giao diện nền trắng xanh cyan #00FFFF và chữ/nút tối màu tương ứng.
+- [x] **Phase 11 — Hiển thị Ảnh đại diện & Quản lý Nhiều Video Dịch vụ:** Thêm trường `videos` vào Schema & Joi Validation của Service ở backend. Cập nhật trang Giải pháp (`Solutions.tsx`) hiển thị ảnh đại diện (thumbnail) trên mỗi card. Bổ sung giao diện quản lý danh sách URL video (mỗi dòng một URL) trong form sửa/thêm của Admin Dashboard. Hiển thị phần phát video (hỗ trợ cả iframe YouTube và video MP4 trực tiếp) tại trang chi tiết dịch vụ (`ServiceDetail.tsx`).
 
 ## Next Steps
-- Duyệt mắt thực tế trên trình duyệt (dev `yarn dev`) từng trang để tinh chỉnh tông gradient hero, khoảng cách, ảnh.
-- Cân nhắc code-splitting (bundle JS ~722 kB) nếu cần tối ưu tải.
-- Chưa commit — chờ người dùng xác nhận giao diện trước khi commit nhánh `fix/cicd`.
+- Kiểm tra các video đã lưu trong Admin Dashboard có hiển thị chính xác trên trang chi tiết dịch vụ hay chưa.
+- Chưa commit — chờ người dùng xác nhận giao diện mới.

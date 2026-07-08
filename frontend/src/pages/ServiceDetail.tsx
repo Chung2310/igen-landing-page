@@ -11,6 +11,7 @@ interface ServiceData {
   description: string;
   icon: string;
   thumbnail?: string;
+  videos?: string[];
   category: string;
   features: string[];
   status: string;
@@ -86,6 +87,10 @@ const MOCK_SERVICES: ServiceData[] = [
       'Tăng năng suất – Giảm chi phí',
       'Hệ thống vận hành 24/7'
     ],
+    videos: [
+      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    ],
     status: 'active', order: 7,
   },
   {
@@ -101,6 +106,9 @@ const MOCK_SERVICES: ServiceData[] = [
       'Tối ưu năng suất làm việc',
       'Giảm chi phí vận hành',
       'Đồng hành triển khai thực tế'
+    ],
+    videos: [
+      'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     ],
     status: 'active', order: 8,
   },
@@ -139,6 +147,16 @@ const MOCK_SERVICES: ServiceData[] = [
 ];
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
+
+const getYoutubeEmbedUrl = (url: string) => {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    return `https://www.youtube.com/embed/${match[2]}`;
+  }
+  return null;
+};
 
 export const ServiceDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -208,7 +226,7 @@ export const ServiceDetail: React.FC = () => {
           <div className="sd-reveal mb-6">
             <Link
               to="/solutions"
-              className="inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-medium text-body hover:text-primary transition-colors"
             >
               <span className="material-symbols-outlined text-base">arrow_back</span>
               Sản phẩm &amp; Dịch vụ
@@ -216,19 +234,19 @@ export const ServiceDetail: React.FC = () => {
           </div>
 
           <div className="sd-reveal flex items-center gap-4 mb-5">
-            <span className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-3xl">{service.icon}</span>
+            <span className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary text-3xl">{service.icon}</span>
             </span>
-            <span className="text-xs px-3 py-1 rounded-full bg-white/15 text-white uppercase tracking-widest font-semibold">
+            <span className="text-xs px-3 py-1 rounded-full bg-primary-light border border-primary/20 text-primary uppercase tracking-widest font-semibold">
               {service.category}
             </span>
           </div>
 
-          <h1 className="sd-reveal text-4xl md:text-5xl font-extrabold text-white leading-tight mb-6">
+          <h1 className="sd-reveal text-4xl md:text-5xl font-extrabold text-ink leading-tight mb-6">
             {service.title}
           </h1>
 
-          <p className="sd-reveal text-lg text-white/85 leading-relaxed max-w-2xl">
+          <p className="sd-reveal text-lg text-body leading-relaxed max-w-2xl">
             {service.shortDesc}
           </p>
         </div>
@@ -269,6 +287,41 @@ export const ServiceDetail: React.FC = () => {
               </ul>
             </div>
           </div>
+
+          {/* Service Videos */}
+          {service.videos && service.videos.length > 0 && (
+            <div className="lg:col-span-3 sd-reveal mt-4">
+              <div className="card p-8">
+                <h2 className="text-xl font-semibold text-ink mb-6 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary">play_circle</span>
+                  Video giới thiệu &amp; Hướng dẫn
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {service.videos.map((videoUrl, index) => {
+                    const embedUrl = getYoutubeEmbedUrl(videoUrl);
+                    return (
+                      <div key={index} className="aspect-video w-full rounded-xl overflow-hidden bg-black border border-line shadow-sm">
+                        {embedUrl ? (
+                          <iframe
+                            src={embedUrl}
+                            title={`${service.title} Video ${index + 1}`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="w-full h-full"
+                          ></iframe>
+                        ) : (
+                          <video src={videoUrl} controls className="w-full h-full object-cover">
+                            Trình duyệt của bạn không hỗ trợ phát video.
+                          </video>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

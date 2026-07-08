@@ -58,6 +58,7 @@ interface ServiceAdminData {
   description: string;
   icon: string;
   thumbnail?: string;
+  videos?: string[];
   category: string;
   features: string[];
   status: 'active' | 'inactive';
@@ -194,12 +195,16 @@ export const AdminDashboard: React.FC = () => {
   const [serviceForm, setServiceForm] = useState({
     title: '', slug: '', shortDesc: '', description: '',
     icon: 'category', thumbnail: '', category: 'Web',
-    features: '', status: 'active', order: 0,
+    features: '', status: 'active', order: 0, videos: '',
   });
 
   const handleOpenCreateServiceModal = () => {
     setEditingServiceId(null);
-    setServiceForm({ title: '', slug: '', shortDesc: '', description: '', icon: 'category', thumbnail: '', category: 'Web', features: '', status: 'active', order: 0 });
+    setServiceForm({
+      title: '', slug: '', shortDesc: '', description: '',
+      icon: 'category', thumbnail: '', category: 'Web',
+      features: '', status: 'active', order: 0, videos: '',
+    });
     setServiceFormError(null);
     setIsServiceModalOpen(true);
   };
@@ -211,6 +216,7 @@ export const AdminDashboard: React.FC = () => {
       description: svc.description, icon: svc.icon, thumbnail: svc.thumbnail || '',
       category: svc.category, features: svc.features.join(', '),
       status: svc.status, order: svc.order,
+      videos: svc.videos ? svc.videos.join('\n') : '',
     });
     setServiceFormError(null);
     setIsServiceModalOpen(true);
@@ -224,6 +230,7 @@ export const AdminDashboard: React.FC = () => {
     const payload = {
       ...serviceForm,
       features: serviceForm.features.split(',').map((f) => f.trim()).filter(Boolean),
+      videos: serviceForm.videos.split('\n').map((v) => v.trim()).filter(Boolean),
       order: Number(serviceForm.order),
     };
     try {
@@ -890,6 +897,14 @@ export const AdminDashboard: React.FC = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Danh sách URL Video (Mỗi dòng một URL)</label>
+                <textarea rows={3} value={serviceForm.videos}
+                  onChange={(e) => setServiceForm({ ...serviceForm, videos: e.target.value })}
+                  placeholder="https://www.youtube.com/watch?v=...&#10;https://..."
+                  className="w-full bg-surface-alt border border-line text-ink rounded-xl py-3 px-4 focus:outline-none focus:border-primary/50 text-sm interactable" />
               </div>
 
               <div>

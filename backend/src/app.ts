@@ -237,12 +237,39 @@ export const seedServices = async () => {
       },
     ];
 
+    const defaultThumbnails: Record<string, string> = {
+      'thiet-ke-website': 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&auto=format&fit=crop&q=60',
+      'phat-trien-ung-dung-di-dong': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=60',
+      'mini-app-zalo': 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=60',
+      'giai-phap-ai-automation': 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60',
+      'he-thong-e-commerce': 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&auto=format&fit=crop&q=60',
+      'tu-van-chuyen-doi-so': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=60',
+      'hoc-vien-doanh-nghiep-1-nguoi': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=60',
+      'chuyen-doi-ai-doanh-nghiep': 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=60',
+      'nen-tang-ai-theo-yeu-cau': 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&auto=format&fit=crop&q=60',
+      'ai-marketing-van-hanh': 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=60',
+    };
+
+    const defaultVideos: Record<string, string[]> = {
+      'hoc-vien-doanh-nghiep-1-nguoi': [
+        'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      ],
+      'chuyen-doi-ai-doanh-nghiep': [
+        'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      ]
+    };
+
     let insertedCount = 0;
     let updatedCount = 0;
     for (const svc of defaultServices) {
       const exists = await Service.findOne({ slug: svc.slug });
       if (!exists) {
-        await Service.create(svc);
+        await Service.create({
+          ...svc,
+          thumbnail: defaultThumbnails[svc.slug] || '',
+          videos: defaultVideos[svc.slug] || []
+        });
         insertedCount++;
       } else {
         exists.title = svc.title;
@@ -253,6 +280,9 @@ export const seedServices = async () => {
         exists.features = svc.features;
         exists.status = svc.status as 'active' | 'inactive';
         exists.order = svc.order;
+        // Preserve admin modifications but assign default fallback if empty
+        exists.thumbnail = exists.thumbnail || defaultThumbnails[svc.slug] || '';
+        exists.videos = exists.videos && exists.videos.length > 0 ? exists.videos : (defaultVideos[svc.slug] || []);
         await exists.save();
         updatedCount++;
       }

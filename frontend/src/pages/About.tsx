@@ -56,10 +56,10 @@ export const About: React.FC = () => {
       <section className="relative pt-40 pb-40 overflow-hidden">
         <SilkBackground />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6">
             Về chúng tôi
           </h1>
-          <p className="text-lg md:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
             Kiến tạo hệ sinh thái AI thông minh, đồng hành cùng doanh nghiệp trong kỷ nguyên số.
           </p>
         </div>
