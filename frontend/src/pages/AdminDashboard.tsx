@@ -122,15 +122,15 @@ export const AdminDashboard: React.FC = () => {
         setContacts(conRes.data.data.docs);
         setStats((prev) => ({ ...prev, contactsCount: conRes.data.data.totalDocs }));
       }
-
-      // Check health
-      const healthRes = await axios.get(`${API_URL}/health`);
-      if (healthRes.data?.status === 'UP') {
-        setHealthStatus('UP');
-      }
     } catch (error) {
-      console.warn('Backend server offline or unauthorized:', error);
-      setHealthStatus('DOWN');
+      const err = error as { response?: { status?: number } };
+      if (err.response?.status === 401) {
+        // Token expired — force re-login instead of showing stale data
+        localStorage.removeItem('adminToken');
+        setToken(null);
+        return;
+      }
+      console.warn('Không tải được dữ liệu dashboard:', error);
     }
   };
 
@@ -142,6 +142,25 @@ export const AdminDashboard: React.FC = () => {
       fetchData();
     }
   }, [token]);
+
+  // Health check runs independently of auth and re-polls every 30s
+  useEffect(() => {
+    let active = true;
+    const checkHealth = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/health`, { timeout: 5000 });
+        if (active) setHealthStatus(res.data?.status === 'UP' ? 'UP' : 'DOWN');
+      } catch {
+        if (active) setHealthStatus('DOWN');
+      }
+    };
+    checkHealth();
+    const intervalId = setInterval(checkHealth, 30000);
+    return () => {
+      active = false;
+      clearInterval(intervalId);
+    };
+  }, []);
 
   // Service state
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);

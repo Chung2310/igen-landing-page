@@ -283,7 +283,7 @@ export const ServiceDetail: React.FC = () => {
           {service.videos && service.videos.length > 0 && (
             <div className="lg:col-span-3 sd-reveal mt-4">
               <div className="card p-8">
-                <h2 className="text-xl font-semibold text-ink mb-6 flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-ink mb-6 flex items-center justify-center gap-2 text-center">
                   <span className="material-symbols-outlined text-primary">play_circle</span>
                   Video giới thiệu &amp; Hướng dẫn
                 </h2>
