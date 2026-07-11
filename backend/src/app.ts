@@ -69,9 +69,13 @@ app.get('*', (req: Request, res: Response) => {
 // Seed default Admin User
 export const seedAdmin = async () => {
   try {
-    const adminUsername = process.env.ADMIN_USERNAME || 'admin';
-    const adminEmail    = process.env.ADMIN_EMAIL    || 'admin@igen.vn';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123456';
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminUsername || !adminEmail || !adminPassword) {
+      throw new Error('ADMIN_USERNAME, ADMIN_EMAIL, and ADMIN_PASSWORD must be configured.');
+    }
 
     const existingAdmin = await User.findOne({ username: adminUsername });
     if (!existingAdmin) {
@@ -82,11 +86,7 @@ export const seedAdmin = async () => {
         role: 'admin',
       });
       await admin.save();
-      console.log('--- Default Admin User Seeded ---');
-      console.log(`Username : ${adminUsername}`);
-      console.log(`Email    : ${adminEmail}`);
-      console.log(`Password : ${adminPassword}`);
-      console.log('---------------------------------');
+      console.log('Admin user seeded successfully.');
     }
   } catch (error) {
     console.error('Failed to seed default admin:', error);

@@ -1,7 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'igen_technology_super_secret_access_token_key_999';
+const requireEnv = (name: string): string => {
+  const value = process.env[name];
+  if (!value) throw new Error(` must be configured.`);
+  return value;
+};
+
+const JWT_ACCESS_SECRET = requireEnv('JWT_ACCESS_SECRET');
 
 export interface AuthenticatedRequest extends Request {
   user?: {

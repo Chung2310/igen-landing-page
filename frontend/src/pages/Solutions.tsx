@@ -3,30 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
 import { SilkBackground } from '../components/SilkBackground';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
-
-interface ServiceData {
-  _id?: string;
-  title: string;
-  slug: string;
-  shortDesc: string;
-  icon: string;
-  thumbnail?: string;
-  category: string;
-  features: string[];
-}
-
-const MOCK_SERVICES: ServiceData[] = [
-  { title: 'Học viện doanh nghiệp 1 người', slug: 'hoc-vien-doanh-nghiep-1-nguoi', shortDesc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành.', icon: 'school', thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['Mô hình Doanh nghiệp 1 Người', 'Tự động hóa quy trình bằng AI', 'Xây dựng đội ngũ AI Agent'] },
-  { title: 'Chuyển Đổi AI Doanh Nghiệp', slug: 'chuyen-doi-ai-doanh-nghiep', shortDesc: 'Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp.', icon: 'business', thumbnail: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['Đào tạo AI cho đội ngũ nhân sự', 'Chuyển giao quy trình vận hành AI', 'Tích hợp AI vào SOP doanh nghiệp'] },
-  { title: 'Nền Tảng AI Theo Yêu Cầu', slug: 'nen-tang-ai-theo-yeu-cau', shortDesc: 'Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu.', icon: 'settings', thumbnail: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['Phát triển ứng dụng AI theo yêu cầu', 'Thiết kế hệ thống ERP thông minh', 'Chatbot & Trợ lý AI chuyên biệt'] },
-  { title: 'AI Marketing & Vận Hành', slug: 'ai-marketing-van-hanh', shortDesc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả.', icon: 'campaign', thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['AI Marketing đa kênh', 'Tự động hóa nội dung & truyền thông', 'Trợ lý AI chăm sóc khách hàng'] },
-  { title: 'Thiết kế Website', slug: 'thiet-ke-website', shortDesc: 'Website chuyên nghiệp, tối ưu SEO, hiệu suất cao.', icon: 'language', thumbnail: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&auto=format&fit=crop&q=60', category: 'Web', features: ['Responsive', 'SEO', 'SSL'] },
-  { title: 'Phát triển App Di động', slug: 'phat-trien-ung-dung-di-dong', shortDesc: 'App iOS & Android chất lượng cao.', icon: 'phone_android', thumbnail: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=60', category: 'Mobile', features: ['iOS & Android', 'Push Notification', 'Offline'] },
-  { title: 'Mini App Zalo', slug: 'mini-app-zalo', shortDesc: 'Tiếp cận 75 triệu người dùng Zalo.', icon: 'chat', thumbnail: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=60', category: 'Mobile', features: ['ZaloPay', 'Zalo OA', 'Không cài đặt'] },
-  { title: 'Giải pháp AI & Automation', slug: 'giai-phap-ai-automation', shortDesc: 'Tự động hóa quy trình, tích hợp AI.', icon: 'psychology', thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60', category: 'AI', features: ['Chatbot', 'NLP', 'Computer Vision'] },
-  { title: 'Hệ thống E-Commerce', slug: 'he-thong-e-commerce', shortDesc: 'Nền tảng thương mại điện tử toàn diện.', icon: 'shopping_cart', thumbnail: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&auto=format&fit=crop&q=60', category: 'E-Commerce', features: ['Thanh toán đa kênh', 'Quản lý kho', 'CRM'] },
-  { title: 'Tư vấn & Chuyển đổi Số', slug: 'tu-van-chuyen-doi-so', shortDesc: 'Chiến lược số hóa toàn diện cho doanh nghiệp.', icon: 'trending_up', thumbnail: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=60', category: 'Consulting', features: ['Đánh giá', 'Roadmap', 'ERP/CRM'] },
-];
+import { type ServiceData, MOCK_SERVICES } from '../utils/servicesData';
 
 const PILLARS = MOCK_SERVICES.slice(0, 4);
 

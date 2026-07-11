@@ -2,8 +2,14 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 import User from '../models/user.model';
 import { IUser } from '../interfaces/user.interface';
 
-const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'igen_technology_super_secret_access_token_key_999';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'igen_technology_super_secret_refresh_token_key_888';
+const requireEnv = (name: string): string => {
+  const value = process.env[name];
+  if (!value) throw new Error(` must be configured.`);
+  return value;
+};
+
+const JWT_ACCESS_SECRET = requireEnv('JWT_ACCESS_SECRET');
+const JWT_REFRESH_SECRET = requireEnv('JWT_REFRESH_SECRET');
 const JWT_ACCESS_EXPIRATION = process.env.JWT_ACCESS_EXPIRATION || '15m';
 const JWT_REFRESH_EXPIRATION = process.env.JWT_REFRESH_EXPIRATION || '7d';
 

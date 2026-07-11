@@ -2,7 +2,10 @@ import mongoose from 'mongoose';
 import './env';
 
 export const connectDB = async (): Promise<void> => {
-  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/igentech';
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error('MONGODB_URI must be configured.');
+  }
   const user = process.env.MONGODB_USER;
   const pass = process.env.MONGODB_PASS || process.env.MONGODB_PASSWORD;
   const authSource = process.env.MONGODB_AUTH_SOURCE || 'admin';
