@@ -9,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 // Request interceptor to automatically attach authorization header
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('adminToken');
+    const token = sessionStorage.getItem('adminToken');
     if (token && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -67,7 +67,7 @@ axios.interceptors.response.use(
         const res = await axios.post(`${API_URL}/auth/refresh-token`, {}, { withCredentials: true });
         if (res.data?.success) {
           const newToken = res.data.data.accessToken;
-          localStorage.setItem('adminToken', newToken);
+          sessionStorage.setItem('adminToken', newToken);
           axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           processQueue(null, newToken);
@@ -76,7 +76,7 @@ axios.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError as Error, null);
         // Clear expired token and redirect to login
-        localStorage.removeItem('adminToken');
+        sessionStorage.removeItem('adminToken');
         if (window.location.pathname.startsWith('/admin')) {
           window.location.href = '/login';
         }

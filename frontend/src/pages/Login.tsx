@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('adminToken');
+  const token = sessionStorage.getItem('adminToken');
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -27,7 +27,7 @@ export const Login: React.FC = () => {
       const response = await axios.post(`${API_URL}/auth/login`, { username, password });
       if (response.data?.success) {
         const adminToken = response.data.data.accessToken;
-        localStorage.setItem('adminToken', adminToken);
+        sessionStorage.setItem('adminToken', adminToken);
         navigate('/admin');
       }
     } catch (error: unknown) {
