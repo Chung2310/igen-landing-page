@@ -79,7 +79,7 @@ export const swaggerDocument = {
                 properties: {
                   username: { type: 'string', example: 'igen_admin' },
                   email: { type: 'string', example: 'admin@igen.vn' },
-                  password: { type: 'string', example: 'Admin@123456' },
+                  password: { type: 'string', example: 'your-secure-password' },
                   role: { type: 'string', enum: ['admin', 'user'], example: 'admin' },
                 },
               },
@@ -130,7 +130,7 @@ export const swaggerDocument = {
                 required: ['email', 'password'],
                 properties: {
                   email: { type: 'string', example: 'admin@igen.vn' },
-                  password: { type: 'string', example: 'Admin@123456' },
+                  password: { type: 'string', example: 'your-secure-password' },
                 },
               },
             },

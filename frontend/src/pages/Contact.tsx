@@ -54,6 +54,36 @@ export const Contact: React.FC = () => {
 
   return (
     <main className="flex flex-col w-full relative">
+      {alert?.type === 'success' && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-sm"
+          role="presentation"
+          onMouseDown={() => setAlert(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl bg-white p-7 text-center shadow-2xl sm:p-8"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-success-title"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <span className="material-symbols-outlined mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-3xl text-emerald-600">
+              check_circle
+            </span>
+            <h2 id="contact-success-title" className="text-xl font-bold text-ink">
+              Gửi yêu cầu thành công
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-body">{alert.message}</p>
+            <button
+              type="button"
+              className="btn-primary mt-6 w-full py-3"
+              onClick={() => setAlert(null)}
+            >
+              Đã hiểu
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Hero section */}
       <section className="relative pt-40 pb-40 overflow-hidden">
@@ -101,16 +131,12 @@ export const Contact: React.FC = () => {
             <div className="lg:col-span-7 card p-8 sm:p-10 reveal-text">
               <h3 className="text-2xl font-bold text-ink mb-6">Gửi thông điệp</h3>
 
-              {alert && (
+              {alert?.type === 'error' && (
                 <div
-                  className={`p-4 rounded-xl border mb-6 text-sm flex items-center gap-3 ${
-                    alert.type === 'success'
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                      : 'bg-red-50 text-red-700 border-red-200'
-                  }`}
+                  className="p-4 rounded-xl border mb-6 text-sm flex items-center gap-3 bg-red-50 text-red-700 border-red-200"
                 >
                   <span className="material-symbols-outlined">
-                    {alert.type === 'success' ? 'check_circle' : 'error'}
+                    error
                   </span>
                   <span>{alert.message}</span>
                 </div>

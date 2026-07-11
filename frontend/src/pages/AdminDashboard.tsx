@@ -69,7 +69,7 @@ interface ServiceAdminData {
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const AdminDashboard: React.FC = () => {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('adminToken'));
+  const [token, setToken] = useState<string | null>(sessionStorage.getItem('adminToken'));
   const [activeTab, setActiveTab] = useState<'overview' | 'articles' | 'contacts' | 'services'>('overview');
   
 
@@ -126,7 +126,7 @@ export const AdminDashboard: React.FC = () => {
       const err = error as { response?: { status?: number } };
       if (err.response?.status === 401) {
         // Token expired — force re-login instead of showing stale data
-        localStorage.removeItem('adminToken');
+        sessionStorage.removeItem('adminToken');
         setToken(null);
         return;
       }
@@ -141,7 +141,7 @@ export const AdminDashboard: React.FC = () => {
       };
       fetchData();
     }
-  }, [token]);
+  }, [token, activeTab]);
 
   // Health check runs independently of auth and re-polls every 30s
   useEffect(() => {
@@ -333,7 +333,7 @@ export const AdminDashboard: React.FC = () => {
     } catch (err) {
       console.warn('Backend logout failed or offline:', err);
     }
-    localStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminToken');
     setToken(null);
     setArticles([]);
     setContacts([]);
