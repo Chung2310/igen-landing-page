@@ -27,7 +27,7 @@ export const Solutions: React.FC = () => {
     fetchServices();
   }, [fetchServices]);
 
-  useRevealAnimations();
+  useRevealAnimations(services.length);
 
   return (
     <main className="flex flex-col w-full relative">
@@ -85,12 +85,12 @@ export const Solutions: React.FC = () => {
             <p className="text-body text-lg">Khám phá toàn bộ danh mục giải pháp công nghệ của iGen.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal-items-container">
             {services.map((svc) => (
               <RouterLink
                 key={svc.slug}
                 to={`/solutions/${svc.slug}`}
-                className="card card-hover overflow-hidden flex flex-col group reveal-text"
+                className="card card-hover overflow-hidden flex flex-col group reveal-item"
               >
                 {/* Thumbnail banner at the top of the card */}
                 <div className="aspect-video w-full relative overflow-hidden bg-surface-alt border-b border-line flex-shrink-0">
