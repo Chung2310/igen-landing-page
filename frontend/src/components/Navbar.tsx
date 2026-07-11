@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
       try {
         const res = await axios.get(`${API_URL}/services`, { params: { limit: 20, status: 'active' } });
         if (res.data?.success && res.data.data.docs.length > 0) {
-          const sorted = res.data.data.docs.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+          const sorted = res.data.data.docs.sort((a: ServiceData, b: ServiceData) => (a.order || 0) - (b.order || 0));
           setServices(sorted);
         } else {
           setServices(MOCK_SERVICES);
