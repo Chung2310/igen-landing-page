@@ -11,11 +11,17 @@ gsap.registerPlugin(ScrollTrigger);
  * - `.reveal-text`            — fade-up when scrolled into view
  * - `.reveal-steps-container` — staggers its `.reveal-step` children on scroll
  * - `.reveal-items-container` — staggers its `.reveal-item` children on scroll
+ *
+ * @param deps — pass any reactive value (e.g. services.length) so the hook
+ *               re-registers ScrollTriggers after async data renders into the DOM.
  */
-export const useRevealAnimations = () => {
+export const useRevealAnimations = (...deps: unknown[]) => {
   useEffect(() => {
     // Respect reduced-motion: skip all animations, content stays visible
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Kill all existing ScrollTriggers before re-registering to avoid duplicates
+    ScrollTrigger.getAll().forEach((st) => st.kill());
 
     const tweens: gsap.core.Tween[] = [];
 
@@ -94,9 +100,13 @@ export const useRevealAnimations = () => {
             y: 0,
             opacity: 1,
             duration: 0.7,
-            stagger: 0.12,
+            stagger: 0.10,
             ease: 'power2.out',
-            scrollTrigger: { trigger: container, start: 'top 85%', toggleActions: 'play none none none' },
+            scrollTrigger: {
+              trigger: container,
+              start: 'top 88%',
+              toggleActions: 'play none none none',
+            },
           }
         )
       );
@@ -108,5 +118,6 @@ export const useRevealAnimations = () => {
         t.kill();
       });
     };
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 };
