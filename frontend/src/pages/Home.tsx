@@ -159,7 +159,7 @@ export const Home: React.FC = () => {
             <div className="lg:col-span-5 reveal-text order-2 lg:order-1 group">
               <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-card border border-line">
                 <img
-                  src="/workspace.jpg"
+                  src="/1783918018405_7758341297950364477_7758341297950364477_227cf57779e2d731342416ffd416fafc.jpg"
                   alt="Không gian làm việc công nghệ iGen"
                   loading="lazy"
                   className="w-full h-full object-cover object-center transition-all duration-[1000ms] ease-out group-hover:scale-105 group-hover:rotate-[0.5deg]"
