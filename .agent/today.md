@@ -1,26 +1,11 @@
-# today.md - 2026-07-08
+# today.md - 2026-07-13
 
 ## Session Goal
-Tái thiết kế toàn bộ giao diện frontend theo phong cách **Stripe** (light-only): nền sáng, typography sans sạch (Inter), card bóng mềm, nút pill, hero gradient nghiêng đa sắc. Giữ teal `#0097b2` làm màu điểm nhấn; bỏ chế độ tối và toàn bộ hiệu ứng nặng.
-
-> Thay thế hướng "toggle sáng/tối" trước đó. Kế hoạch: `~/.claude/plans/frolicking-splashing-robin.md`.
+Cập nhật hình ảnh trong section "Tại sao doanh nghiệp lựa chọn" tại trang chủ sang ảnh thực tế `1783918018405_7758341297950364477_7758341297950364477_227cf57779e2d731342416ffd416fafc.jpg`.
 
 ## Progress
-- [x] **Phase 1 — Nền tảng:** viết lại `tailwind.config.js` (token ink/body/muted/surface/line, font Inter, shadow mềm, gradient `hero-stripe`); `index.html` (bỏ `class="dark"`, body sáng, chỉ load Inter); viết lại `index.css` sang base Stripe + utilities (`.btn-primary/.btn-secondary/.link-arrow/.card/.section/.container-page/.gradient-hero/.prose-igen`), giữ & restyle sáng cho Quill; dọn `App.tsx` (bỏ ParticleCanvas, theme, sound, ink-wipe; giữ Lenis dịu).
-- [x] **Phase 2 — Component:** `Navbar.tsx` light sticky + hairline khi cuộn + menu mobile (bỏ toggle theme/sound); `Footer.tsx` light nhiều cột.
-- [x] **Phase 3 — Trang marketing:** Home (hero gradient + 4 card trụ cột + CTA), Solutions, ServiceDetail, About, Contact, News, ArticleDetail — bỏ hết `glass-*/tilt/magnetic/particle`, giữ reveal fade-up nhẹ; giữ nguyên logic API/form.
-- [x] **Phase 4 — Admin & Login:** Login card trắng canh giữa; AdminDashboard quét token tối → sáng (sidebar/bảng/input/badge), Quill sáng, giữ chữ trắng trên nút primary, backdrop modal giữ tối.
-- [x] **Phase 5 — Dọn dẹp & xác minh:** xóa component không dùng (`ParticleCanvas`, `AIRobotCore`, `CustomCursor`), gỡ effect gsap chết ở News, gỡ class `shadow-glow` chết. `tsc --noEmit` sạch; `vite build` OK (CSS 77.9 → 55.5 kB); dev server phục vụ HTTP 200, mọi module transform không lỗi.
-- [x] **Phase 6 — Đồng bộ Logo:** Sao chép logo công ty chính thức (`logo cty 1024x1024.png`) từ `Igen-ERP/assets/img/` sang Landing Page (`logo.png`), cập nhật favicon ở `index.html` và logo chính ở cả `Navbar.tsx` và `Footer.tsx`.
-- [x] **Phase 7 — Hợp nhất cấu hình:** Di chuyển các tệp `.env` riêng biệt của frontend và backend vào chung một tệp `.env` duy nhất tại thư mục gốc, cấu hình `envDir` cho Vite và thiết lập bộ nạp dotenv động có hỗ trợ ghi đè (`override: true`) cho backend.
-- [x] **Phase 8 — Khắc phục lỗi Lint:** Cấu hình tắt rule `'react-hooks/set-state-in-effect'` do đây là các mẫu cập nhật trạng thái hoặc tải dữ liệu tiêu chuẩn khi mount component, chạy lệnh `yarn lint` vượt qua 100% kiểm tra sạch.
-- [x] **Phase 9 — Hợp nhất docker-compose:** Xóa hoàn toàn `docker-compose.prod.yml`, cập nhật `docker-compose.yml` để sử dụng ảnh ghcr.io và nạp `.env` từ thư mục gốc, cập nhật CD pipeline (`cd.yml`) để dùng `docker-compose.yml` when triển khai.
-- [x] **Phase 10 — Nền trắng xanh cyan cho Hero:** Thay đổi màu nền của `SilkBackground` (section đầu tiên của tất cả các trang) thành màu trắng xanh cyan #00FFFF sáng. Điều chỉnh toàn bộ text, badge, icon và nút bấm trong các section này sang màu tối (`text-ink`, `text-body`, `bg-primary-light` / `text-slate-900` / `text-slate-600`) để đảm bảo độ tương phản sắc nét và tính thẩm mỹ cao. Cập nhật thẻ CTA (Sẵn sàng chuyển đổi cùng AI?) ở trang chủ đồng bộ sang giao diện nền trắng xanh cyan #00FFFF và chữ/nút tối màu tương ứng.
-- [x] **Phase 11 — Hiển thị Ảnh đại diện & Quản lý Nhiều Video Dịch vụ:** Thêm trường `videos` vào Schema & Joi Validation của Service ở backend. Cập nhật trang Giải pháp (`Solutions.tsx`) hiển thị ảnh đại diện (thumbnail) trên mỗi card. Bổ sung giao diện quản lý danh sách URL video (mỗi dòng một URL) trong form sửa/thêm của Admin Dashboard. Hiển thị phần phát video (hỗ trợ cả iframe YouTube và video MP4 trực tiếp) tại trang chi tiết dịch vụ (`ServiceDetail.tsx`). Cấu hình cho phép tải lên tệp video lên Cloudinary (dung lượng tối đa 25MB) và tự động nối URL mới vào danh sách.
-- [x] **Phase 12 — Mở rộng các phần trang chủ:** Thiết kế và thêm 3 phần mới vào Trang chủ (`Home.tsx`) bao gồm: Lý do chọn iGen (Why Choose Us - grid 4 card giá trị), Quy trình chuyển đổi AI (Workflow - 4 bước tuyến tính) và Câu hỏi thường gặp (FAQ - accordion đóng mở dùng React state).
-- [x] **Phase 13 — Tái cấu trúc Layout chia đôi cột & Hình ảnh sinh động:** Refactor phần "Tại sao chọn iGen" và "Quy trình triển khai" thành bố cục chia đôi màn hình 2 cột (split image-text layout) sử dụng hình ảnh thực tế chất lượng cao từ thư mục public. Đồng thời tích hợp các hiệu ứng chuyển động tương tác nâng cao bao gồm: zoom scale và rotate nhẹ khi hover ảnh (`group-hover`), hiệu ứng hover nâng thẻ và viền sáng (`hover:-translate-y-1`), hiệu ứng fade-up xuất hiện lần lượt cho các bước quy trình bằng GSAP (`stagger: 0.15`), làm mượt transition mở rộng của FAQ Accordion kèm hiệu ứng mờ dần opacity, và nâng cấp hiệu ứng hover nổi bật cho các lựa chọn dịch vụ (Pillars), lý do chọn (Why Choose Us) và timeline steps (Workflow) - thay đổi nền thẻ sang trắng với bóng đổ mịn màng, làm nổi bật viền teal nhạt, đồng thời phóng to và đổi màu biểu tượng từ xanh dịu sang solid-primary.
-- [x] **Phase 14 — Tự động Tối ưu Phông chữ Trình chiếu (TV & Máy chiếu rộng):** Triển khai cơ chế Fluid Typography sử dụng CSS `clamp` và `vw` trên thẻ `html` để tự động và liên tục co giãn kích thước phông chữ theo tỉ lệ chiều rộng màn hình. Đồng thời cấu hình tự động nhận diện chế độ Toàn màn hình `:fullscreen` (khi thuyết trình/nhấn F11) để tự động phóng to phông chữ thêm 15% - 20% cho người xem từ xa dễ đọc.
+- [x] **Phase 15 — Cập nhật ảnh section "Tại sao doanh nghiệp lựa chọn":** Thay thế nguồn ảnh `src="/workspace.jpg"` thành `src="/1783918018405_7758341297950364477_7758341297950364477_227cf57779e2d731342416ffd416fafc.jpg"` trong file [Home.tsx](file:///d:/Igen%20Tech/ldp/frontend/src/pages/Home.tsx).
+- [x] **Phase 16 — Xác minh và kiểm tra:** Chạy lệnh `npm run lint` kiểm tra lint thành công 100%, chạy `npm run build` build thành công bản phân phối production không có lỗi.
 
 ## Next Steps
-- Kiểm tra tính ổn định của layout co giãn tự động trên các độ phân giải màn hình khác nhau.
-- Chưa commit — chờ người dùng xác nhận giao diện mới.
+- Chờ người dùng kiểm thử và xác nhận giao diện mới.
