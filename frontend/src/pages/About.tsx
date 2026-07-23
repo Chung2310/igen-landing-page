@@ -65,7 +65,7 @@ export const About: React.FC = () => {
             <div className="order-1 md:order-2 reveal-text">
               <div className="relative w-full aspect-video rounded-card overflow-hidden shadow-card">
                 <img
-                  src="/IMG_7181.jpeg"
+                  src="/1784790636892_7758341297950364477_7758341297950364477_c57e0eedbac222f2a8030ee453edc516.jpg"
                   alt="iGen Technology Office"
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
