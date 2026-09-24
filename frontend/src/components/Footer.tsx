@@ -63,6 +63,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-3">
               {[
                 { to: '/', label: 'Trang chủ' },
+                { to: '/products', label: 'Sản phẩm' },
                 { to: '/solutions', label: 'Giải pháp' },
                 { to: '/about', label: 'Về chúng tôi' },
                 { to: '/news', label: 'Tin tức' },

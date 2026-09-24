@@ -9,6 +9,7 @@ import { Footer } from './components/Footer';
 
 // Pages
 import { Home } from './pages/Home';
+import { Products } from './pages/Products';
 import { Solutions } from './pages/Solutions';
 import { ServiceDetail } from './pages/ServiceDetail';
 import { About } from './pages/About';
@@ -31,6 +32,7 @@ const AppContent: React.FC = () => {
       <div className="min-h-screen flex flex-col justify-between">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/solutions" element={<Solutions />} />
           <Route path="/solutions/:slug" element={<ServiceDetail />} />
           <Route path="/about" element={<About />} />

@@ -47,6 +47,7 @@ export const Navbar: React.FC = () => {
 
   const links = [
     { to: '/', label: 'Trang chủ' },
+    { to: '/products', label: 'Sản phẩm' },
     { to: '/solutions', label: 'Giải pháp' },
     { to: '/about', label: 'Về chúng tôi' },
     { to: '/news', label: 'Tin tức' },
