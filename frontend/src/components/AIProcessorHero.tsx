@@ -30,21 +30,6 @@ export const AIProcessorHero: React.FC = () => {
     let currentY = 0;
     let frame = 0;
 
-    const updateTarget = (event: PointerEvent) => {
-      const bounds = stage.getBoundingClientRect();
-      const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-      const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-      targetX = Math.max(-0.5, Math.min(0.5, x));
-      targetY = Math.max(-0.5, Math.min(0.5, y));
-      stage.dataset.interacting = 'true';
-    };
-
-    const resetTarget = () => {
-      targetX = 0;
-      targetY = 0;
-      delete stage.dataset.interacting;
-    };
-
     const render = () => {
       currentX += (targetX - currentX) * 0.065;
       currentY += (targetY - currentY) * 0.065;
@@ -52,14 +37,40 @@ export const AIProcessorHero: React.FC = () => {
       scene.style.setProperty('--processor-rotate-x', `${currentY * -12}deg`);
       scene.style.setProperty('--processor-shift-x', `${currentX * 12}px`);
       scene.style.setProperty('--processor-shift-y', `${currentY * 8}px`);
-      frame = window.requestAnimationFrame(render);
+
+      const isMoving = Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001;
+      if (isMoving) {
+        frame = window.requestAnimationFrame(render);
+      } else {
+        frame = 0;
+      }
+    };
+
+    const requestRender = () => {
+      if (!frame) frame = window.requestAnimationFrame(render);
+    };
+
+    const updateTarget = (event: PointerEvent) => {
+      const bounds = stage.getBoundingClientRect();
+      const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+      const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+      targetX = Math.max(-0.5, Math.min(0.5, x));
+      targetY = Math.max(-0.5, Math.min(0.5, y));
+      stage.dataset.interacting = 'true';
+      requestRender();
+    };
+
+    const resetTarget = () => {
+      targetX = 0;
+      targetY = 0;
+      delete stage.dataset.interacting;
+      requestRender();
     };
 
     if (!reducedMotion) {
       stage.addEventListener('pointermove', updateTarget);
       stage.addEventListener('pointerleave', resetTarget);
       stage.addEventListener('pointercancel', resetTarget);
-      frame = window.requestAnimationFrame(render);
     }
 
     return () => {
