@@ -77,10 +77,10 @@ export const Navbar: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center gap-3 cursor-pointer group interactable">
             <div className="size-10 text-primary transition-transform duration-700 group-hover:rotate-180 flex items-center justify-center">
-              <img src="/logo.png" alt="iGen Tech Logo" className="w-full h-full object-contain" />
+              <img src="/logo.png" alt="iGen Technology Logo" className="w-full h-full object-contain" />
             </div>
             <span className="text-ink text-xl font-bold tracking-tight">
-              iGen <span className="text-primary font-semibold">Tech</span>
+              iGen <span className="text-primary font-semibold">Technology</span>
             </span>
           </Link>
 

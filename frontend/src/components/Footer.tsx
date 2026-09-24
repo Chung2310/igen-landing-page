@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
             <div className="flex items-center gap-3 mb-5">
               <img
                 src="/logo.png"
-                alt="iGen Tech Logo"
+                alt="iGen Technology Logo"
                 className="h-8 w-8 object-contain"
               />
               <span className="text-ink font-bold text-xl tracking-tight">iGen Technology</span>
