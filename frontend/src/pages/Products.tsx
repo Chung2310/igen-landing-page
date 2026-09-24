@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { SilkBackground } from '../components/SilkBackground';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
 import erpImg from '../assets/product/erp.png';
@@ -34,10 +33,10 @@ const PRODUCTS: ProductItem[] = [
     id: 'igen-erp',
     name: 'iGen ERP',
     category: 'Enterprise Hub',
-    headline: 'ERP Quản Trị Doanh Nghiệp',
-    tagline: 'Giải pháp quản trị toàn diện cho doanh nghiệp giáo dục, cung ứng lao động & đào tạo',
+    headline: 'ERP Quản Trị Doanh Nghiệp Toàn Diện',
+    tagline: 'Quản trị tập trung vận hành, nhân sự, quy trình & học viên trên một nền tảng',
     description:
-      'Hệ thống tập trung vận hành, nhân sự, giao việc, hợp đồng, bảng lương và học viên trên một nền tảng thống nhất, loại bỏ phân mảnh dữ liệu và tối đa hóa năng suất vận hành.',
+      'Hệ thống quản trị hợp nhất loại bỏ phân mảnh dữ liệu, tối ưu chi phí và tăng tốc hiệu suất vận hành cho doanh nghiệp giáo dục & cung ứng nhân lực.',
     image: erpImg,
     accent: {
       text: 'text-[#0088cc]',
@@ -47,17 +46,17 @@ const PRODUCTS: ProductItem[] = [
       glow: 'shadow-[0_12px_36px_rgba(0,136,204,0.28)]',
     },
     features: [
-      { icon: 'group', title: 'Quản lý Nhân sự & Bảng lương', desc: 'Theo dõi hồ sơ nhân sự, tính công, tính lương và hợp đồng tự động.' },
-      { icon: 'task_alt', title: 'Giao việc & Lịch làm việc', desc: 'Phân bổ công việc trực quan, theo dõi tiến độ KPI và lịch công tác.' },
-      { icon: 'school', title: 'Quản lý Học viên & Đào tạo', desc: 'Theo dõi lộ trình đào tạo, điểm danh và kết quả học tập thông suốt.' },
-      { icon: 'account_tree', title: 'Quy trình & Tuyển dụng', desc: 'Số hóa quy trình phê duyệt nội bộ và phễu tuyển dụng ứng viên.' },
+      { icon: 'group', title: 'Nhân sự & Bảng lương', desc: 'Tự động tính công, tính lương và quản lý hồ sơ hợp đồng.' },
+      { icon: 'task_alt', title: 'Giao việc & Tiến độ KPI', desc: 'Phân bổ công việc trực quan, theo dõi tiến độ và lịch công tác.' },
+      { icon: 'school', title: 'Học viên & Đào tạo', desc: 'Quản lý điểm danh, lộ trình đào tạo và kết quả học tập.' },
+      { icon: 'account_tree', title: 'Quy trình & Phê duyệt', desc: 'Số hóa quy trình ký duyệt nội bộ và phễu tuyển dụng ứng viên.' },
     ],
     stats: [
-      { value: '70%', label: 'Giảm thời gian xử lý thủ tục' },
-      { value: '100%', label: 'Dữ liệu vận hành tập trung' },
-      { value: '24/7', label: 'Truy cập đa nền tảng linh hoạt' },
+      { value: '70%', label: 'Giảm thời gian thủ tục' },
+      { value: '100%', label: 'Dữ liệu tập trung' },
+      { value: '24/7', label: 'Truy cập đa nền tảng' },
     ],
-    targetAudience: 'Doanh nghiệp Giáo dục, Trung tâm Đào tạo, Cung ứng Lao động & Xuất khẩu Lao động',
+    targetAudience: 'Giáo dục, Đào tạo & Cung ứng nhân lực',
   },
   {
     id: 'luxcare-erp',
@@ -66,7 +65,7 @@ const PRODUCTS: ProductItem[] = [
     headline: 'Nền Tảng Quản Lý Y Tế Toàn Diện',
     tagline: 'Kết nối con người – Tối ưu vận hành – Nâng cao chất lượng chăm sóc',
     description:
-      'LuxCare ERP mang đến chuẩn mực quản trị hiện đại cho bệnh viện, phòng khám và thẩm mỹ viện. Tự động hóa từ khâu tiếp đón, đặt lịch khám, hồ sơ bệnh án điện tử đến kho dược phẩm và viện phí.',
+      'Tự động hóa toàn diện từ tiếp đón, đặt lịch, hồ sơ bệnh án điện tử đến kho dược phẩm và viện phí cho bệnh viện, phòng khám & thẩm mỹ viện.',
     image: luxcareImg,
     accent: {
       text: 'text-[#10b981]',
@@ -76,26 +75,26 @@ const PRODUCTS: ProductItem[] = [
       glow: 'shadow-[0_12px_36px_rgba(16,185,129,0.28)]',
     },
     features: [
-      { icon: 'calendar_month', title: 'Đặt lịch khám thông minh', desc: 'Phân luồng bệnh nhân, nhắc hẹn tự động qua Zalo/SMS giúp giảm thời gian chờ.' },
-      { icon: 'clinical_notes', title: 'Hồ sơ bệnh án điện tử', desc: 'Lưu trữ lịch sử khám, đơn thuốc và kết quả xét nghiệm bảo mật cao.' },
-      { icon: 'medication', title: 'Dược phẩm & Vật tư tiêu hao', desc: 'Quản lý xuất nhập tồn kho thuốc, cảnh báo hạn dùng và dự trù tự động.' },
-      { icon: 'payments', title: 'Thanh toán & Báo cáo viện phí', desc: 'Tích hợp cổng thanh toán đa kênh, minh bạch tài chính và xuất hóa đơn điện tử.' },
+      { icon: 'calendar_month', title: 'Đặt lịch khám thông minh', desc: 'Nhắc hẹn tự động qua Zalo/SMS, giảm thời gian chờ đợi.' },
+      { icon: 'clinical_notes', title: 'Hồ sơ bệnh án điện tử', desc: 'Lưu trữ lịch sử khám, đơn thuốc và cận lâm sàng bảo mật cao.' },
+      { icon: 'medication', title: 'Kho Dược & Vật tư', desc: 'Kiểm soát xuất nhập tồn kho thuốc, cảnh báo hạn dùng tự động.' },
+      { icon: 'payments', title: 'Thanh toán & Viện phí', desc: 'Tích hợp xuất hóa đơn điện tử, đối soát tài chính minh bạch.' },
     ],
     stats: [
-      { value: '95%', label: 'Hài lòng từ khách hàng khám bệnh' },
+      { value: '95%', label: 'Hài lòng từ khách hàng' },
       { value: '60%', label: 'Rút ngắn quy trình tiếp đón' },
-      { value: '0%', label: 'Thất thoát dược phẩm & vật tư' },
+      { value: '0%', label: 'Thất thoát dược phẩm' },
     ],
-    targetAudience: 'Phòng khám Đa khoa, Chuyên khoa, Bệnh viện tư nhân, Thẩm mỹ viện & Nha khoa',
+    targetAudience: 'Phòng khám, Bệnh viện, Thẩm mỹ & Nha khoa',
   },
   {
     id: 'ai-marketing',
     name: 'iGen Marketing',
     category: 'Workspace & Tự Động Hóa',
     headline: 'AI Marketing & Sales Workspace',
-    tagline: 'Trợ thủ AI chốt đơn 24/24 – Tối ưu hóa doanh số đa kênh Facebook',
+    tagline: 'Trợ thủ AI chốt đơn 24/7 – Tối ưu hóa doanh số bán hàng đa kênh',
     description:
-      'Bộ công cụ tiếp thị và bán hàng tự động ứng dụng Trí tuệ Nhân tạo thế hệ mới. Quản lý đồng bộ đa Fanpage, tự động phản hồi bình luận, gom tin nhắn tập trung và nuôi dưỡng khách hàng tiềm năng liên tục 24/7.',
+      'Đồng bộ quản lý đa Fanpage, tự động phản hồi bình luận, gom tin nhắn tập trung và nuôi dưỡng khách hàng tiềm năng bằng AI tiếng Việt.',
     image: marketingImg,
     accent: {
       text: 'text-[#0284c7]',
@@ -105,26 +104,26 @@ const PRODUCTS: ProductItem[] = [
       glow: 'shadow-[0_12px_36px_rgba(2,132,199,0.28)]',
     },
     features: [
-      { icon: 'dynamic_feed', title: 'Quản lý Fanpage tập trung', desc: 'Kết nối không giới hạn Fanpage, quản lý nội dung và lịch đăng bài một điểm.' },
-      { icon: 'chat', title: 'Hộp thư đa kênh thông minh', desc: 'Gom toàn bộ tin nhắn, bình luận về một giao diện duy nhất để phân loại xử lý.' },
-      { icon: 'smart_toy', title: 'AI Phản hồi & Chốt đơn 24/7', desc: 'Chatbot AI hiểu ngữ cảnh tiếng Việt, tư vấn sản phẩm và gửi báo giá tự động.' },
-      { icon: 'leaderboard', title: 'Facebook Leads & Đo lường', desc: 'Thu thập thông tin khách hàng, đánh giá hiệu quả quảng cáo và tỷ lệ chuyển đổi.' },
+      { icon: 'dynamic_feed', title: 'Quản lý đa Fanpage', desc: 'Kết nối không giới hạn fanpage, quản lý nội dung một điểm.' },
+      { icon: 'smart_toy', title: 'AI Chốt đơn 24/7', desc: 'Tự động phản hồi bình luận, tư vấn và gửi báo giá tức thì.' },
+      { icon: 'chat', title: 'Hộp thư gom tập trung', desc: 'Hợp nhất toàn bộ tin nhắn đa kênh về một giao diện xử lý.' },
+      { icon: 'leaderboard', title: 'Thu thập & Đo lường Leads', desc: 'Theo dõi tỷ lệ chuyển đổi và tự động lưu data khách hàng.' },
     ],
     stats: [
-      { value: '24/7', label: 'Phản hồi khách hàng tức thì' },
-      { value: '3×', label: 'Tăng tốc độ chốt đơn thành công' },
-      { value: '80%', label: 'Tiết kiệm chi phí trực Fanpage' },
+      { value: '24/7', label: 'Phản hồi tức thì' },
+      { value: '3×', label: 'Tốc độ chốt đơn' },
+      { value: '80%', label: 'Tiết kiệm chi phí trực page' },
     ],
-    targetAudience: 'Doanh nghiệp Bán lẻ, Thương mại Điện tử, Dịch vụ & Đội ngũ Telesale / Online Sales',
+    targetAudience: 'Bán lẻ, Thương mại điện tử & Đội ngũ Sales Online',
   },
   {
     id: 'igen-ban-hang',
     name: 'iGen Bán Hàng',
     category: 'Phần Mềm Bán Hàng & POS',
     headline: 'Phần Mềm Bán Hàng Thông Minh',
-    tagline: 'Quản lý bán hàng – Tồn kho – Khách hàng trên một nền tảng duy nhất',
+    tagline: 'Quản lý bán hàng, tồn kho & khách hàng trên một nền tảng duy nhất',
     description:
-      'Giải pháp giúp doanh nghiệp theo dõi doanh thu trực quan, quản lý đơn hàng, kho sản phẩm, khách hàng, bảo hành linh hoạt và vận hành bán lẻ hiệu quả hơn.',
+      'Giao diện bán hàng POS mượt mà, kiểm soát tồn kho thời gian thực, quản lý bảo hành và báo cáo doanh thu chính xác không lo thất thoát.',
     image: banHangImg,
     accent: {
       text: 'text-[#2563eb]',
@@ -134,26 +133,26 @@ const PRODUCTS: ProductItem[] = [
       glow: 'shadow-[0_12px_36px_rgba(37,99,235,0.28)]',
     },
     features: [
-      { icon: 'point_of_sale', title: 'Bán hàng tại quầy & POS', desc: 'Giao diện tính tiền siêu tốc, hỗ trợ quét mã vạch và thanh toán đa phương thức.' },
-      { icon: 'inventory_2', title: 'Quản lý kho & Tồn kho', desc: 'Kiểm soát số lượng tồn kho theo thời gian thực, cảnh báo tự động khi sắp hết hàng.' },
-      { icon: 'receipt_long', title: 'Hóa đơn & Quản lý đơn hàng', desc: 'Theo dõi chi tiết trạng thái đơn hàng, đối soát công nợ và xuất hóa đơn.' },
-      { icon: 'handyman', title: 'Bảo hành & Marketing tự động', desc: 'Quản lý quy trình sửa chữa bảo hành, chăm sóc khách hàng và marketing tích hợp.' },
+      { icon: 'point_of_sale', title: 'POS Bán hàng siêu tốc', desc: 'Quét mã vạch, in bill và thanh toán đa phương thức chỉ 3 giây.' },
+      { icon: 'inventory_2', title: 'Quản lý tồn kho Real-time', desc: 'Kiểm soát số lượng tồn tức thì, cảnh báo tự động khi sắp hết hàng.' },
+      { icon: 'receipt_long', title: 'Báo cáo doanh thu & Lãi lỗ', desc: 'Thống kê doanh thu, đơn hàng, công nợ rõ ràng theo ngày/tháng.' },
+      { icon: 'handyman', title: 'Bảo hành & Chăm sóc khách', desc: 'Lưu lịch sử mua sắm, quản lý quy trình sửa chữa bảo hành chu đáo.' },
     ],
     stats: [
-      { value: '3s', label: 'Tốc độ tạo hóa đơn tại quầy' },
-      { value: '100%', label: 'Chính xác số liệu tồn kho' },
-      { value: '0 Đổi', label: 'Không lo thất thoát doanh thu' },
+      { value: '3s', label: 'Tốc độ tạo hóa đơn' },
+      { value: '100%', label: 'Chính xác số liệu kho' },
+      { value: '0 Đổi', label: 'Không lo thất thoát' },
     ],
-    targetAudience: 'Cửa hàng Bán lẻ, Siêu thị mini, Chuỗi Điện máy, Thời trang, Phụ kiện & Dịch vụ',
+    targetAudience: 'Cửa hàng Bán lẻ, Siêu thị mini, Chuỗi Bán buôn',
   },
   {
     id: 'igen-pt',
     name: 'iGen PT Fitness',
     category: 'Quản Lý Huấn Luyện Viên',
     headline: 'Giải Pháp Quản Lý PT & Học Viên',
-    tagline: 'Quản lý học viên dễ dàng hơn với Trợ lý AI Chuyên gia – Tối ưu hóa giáo án & dinh dưỡng',
+    tagline: 'Quản lý học viên & giáo án tập luyện chuyên nghiệp với Trợ lý AI',
     description:
-      'Nền tảng chuyên biệt dành cho huấn luyện viên cá nhân (Personal Trainer), phòng gym và studio fitness. Đồng bộ theo dõi chỉ số InBody, lập giáo án tập luyện, thực đơn dinh dưỡng và trợ lý AI đồng hành 24/7.',
+      'Đồng bộ theo dõi chỉ số InBody, thiết kế giáo án tập luyện, gợi ý thực đơn dinh dưỡng khoa học và AI trợ lý đồng hành cùng hội viên 24/7.',
     image: ptImg,
     accent: {
       text: 'text-[#06b6d4]',
@@ -163,17 +162,17 @@ const PRODUCTS: ProductItem[] = [
       glow: 'shadow-[0_12px_36px_rgba(6,182,212,0.28)]',
     },
     features: [
-      { icon: 'fitness_center', title: 'Chỉ số InBody & Thể chất', desc: 'Theo dõi tiến độ cân nặng, cơ, mỡ trực quan qua biểu đồ sinh động.' },
-      { icon: 'menu_book', title: 'Lập giáo án & Lịch tập', desc: 'Thiết kế bài tập cá nhân hóa, nhắc lịch hẹn tập luyện tự động qua App.' },
-      { icon: 'restaurant', title: 'Dinh dưỡng cá nhân hóa', desc: 'Gợi ý chế độ ăn uống chuẩn khoa học phù hợp với từng mục tiêu học viên.' },
-      { icon: 'smart_toy', title: 'Trợ lý AI Đồng hành', desc: 'AI phân tích tiến độ, gợi ý bài tập nâng cao và hỗ trợ tư vấn 24/7.' },
+      { icon: 'fitness_center', title: 'Theo dõi chỉ số InBody', desc: 'Biểu đồ trực quan tiến độ cơ, mỡ, cân nặng của từng học viên.' },
+      { icon: 'menu_book', title: 'Lập giáo án & Lịch tập', desc: 'Cá nhân hóa bài tập, tự động gửi lịch và nhắc hẹn qua app.' },
+      { icon: 'restaurant', title: 'Thực đơn dinh dưỡng chuẩn', desc: 'Gợi ý chế độ ăn uống khoa học theo thể trạng và mục tiêu.' },
+      { icon: 'smart_toy', title: 'AI Chuyên gia đồng hành', desc: 'Phân tích tiến độ và hỗ trợ giải đáp thắc mắc học viên 24/7.' },
     ],
     stats: [
-      { value: '71%+', label: 'Học viên đạt tiến độ tốt' },
-      { value: '5×', label: 'Tối ưu thời gian quản lý lớp' },
-      { value: 'Web & App', label: 'Linh hoạt mọi thiết bị' },
+      { value: '70%+', label: 'Học viên đạt mục tiêu' },
+      { value: '5×', label: 'Tiết kiệm thời gian quản lý' },
+      { value: 'App/Web', label: 'Linh hoạt mọi thiết bị' },
     ],
-    targetAudience: 'Huấn luyện viên cá nhân (PT), Phòng Gym, Yoga, Pilates & Fitness Studio',
+    targetAudience: 'PT cá nhân, Phòng Gym, Studio Yoga & Fitness',
   },
 ];
 
@@ -244,74 +243,28 @@ export const Products: React.FC = () => {
 
   return (
     <main className="flex flex-col w-full relative bg-white">
-      {/* Hero Header */}
-      <section className="relative pt-36 pb-20 md:pt-44 md:pb-28 overflow-hidden border-b border-line bg-surface-alt">
-        <SilkBackground />
-        <div className="relative z-10 max-w-5xl mx-auto text-center px-4 flex flex-col items-center">
-          <span className="hero-reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            iGen Technology Ecosystem
-          </span>
-
-          <h1 className="hero-reveal text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-ink leading-[1.15] mb-6">
-            Hệ sinh thái <span className="text-primary">Sản phẩm Công nghệ</span>
-          </h1>
-
-          <p className="hero-reveal text-base sm:text-lg md:text-xl text-body max-w-3xl leading-relaxed">
-            Khám phá các nền tảng và phần mềm đột phá được phát triển chuyên biệt bởi <strong className="text-ink font-semibold">iGen Technology</strong> nhằm số hóa toàn diện quy trình vận hành, nâng cao hiệu suất y tế và tự động hóa marketing bán hàng.
-          </p>
-
-          {/* Quick jump tabs */}
-          <div className="hero-reveal mt-8 flex flex-wrap items-center justify-center gap-3">
-            {PRODUCTS.map((prod, idx) => {
-              const active = idx === currentIndex;
-              return (
-                <button
-                  key={prod.id}
-                  onClick={() => goToSlide(idx)}
-                  className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2.5 ${
-                    active
-                      ? 'bg-ink text-white shadow-lg scale-105 border border-ink'
-                      : 'bg-white text-body hover:text-ink hover:bg-surface-alt border border-line shadow-sm'
-                  }`}
-                >
-                  <span className={`w-2.5 h-2.5 rounded-full transition-colors ${active ? 'bg-primary' : 'bg-line'}`} />
-                  {prod.name}
-                  <span className="text-xs opacity-70 font-normal">({prod.category})</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Interactive Slideshow with Embossed Typography */}
-      <section className="section py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-white via-surface-alt/60 to-white">
+      {/* Featured Interactive Slideshow - Compact sizing to fit screen viewport */}
+      <section className="pt-20 pb-8 sm:pt-22 md:pb-12 relative overflow-hidden bg-gradient-to-b from-surface-alt/60 via-white to-surface-alt/30">
         <div className="container-page">
-
-          {/* Slideshow Showcase Container */}
-          <div
-            className="relative rounded-3xl border border-line/80 bg-white shadow-[0_25px_60px_-15px_rgba(10,37,64,0.12)] overflow-hidden transition-all duration-500"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            {/* Top Bar with Status & Autoplay Progress */}
-            <div className="px-6 py-4 border-b border-line/80 flex flex-wrap items-center justify-between gap-4 bg-white/80 backdrop-blur-md">
-              <div className="flex items-center gap-3">
-                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border}`}>
+          
+          <div className="max-w-4xl lg:max-w-[920px] mx-auto">
+            {/* Top Control Bar: Category, Name & Controls */}
+            <div className="mb-3 flex items-center justify-between gap-2 px-1">
+              <div className="flex items-center gap-2">
+                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border}`}>
                   <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
                   {currentProduct.category}
                 </span>
-                <span className="text-sm font-semibold text-ink hidden sm:inline-block">
+                <h1 className="text-sm sm:text-base font-bold text-ink tracking-tight">
                   {currentProduct.name}
-                </span>
+                </h1>
               </div>
 
-              {/* Autoplay Controls & Progress Bar */}
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5 text-xs text-muted font-medium">
-                  <span>0{currentIndex + 1}</span>
-                  <div className="w-24 sm:w-36 h-1.5 bg-line rounded-full overflow-hidden">
+              {/* Slider Navigation & Counter Controls */}
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-1 text-xs text-muted font-semibold">
+                  <span className="text-ink font-bold">0{currentIndex + 1}</span>
+                  <div className="w-14 sm:w-20 h-1 bg-line rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary transition-all duration-100 ease-linear rounded-full"
                       style={{ width: `${progress}%` }}
@@ -320,196 +273,186 @@ export const Products: React.FC = () => {
                   <span>0{PRODUCTS.length}</span>
                 </div>
 
-                {/* Pause/Play indicator */}
                 <button
                   type="button"
                   onClick={() => setIsPaused((prev) => !prev)}
-                  className="p-1.5 rounded-lg text-muted hover:text-ink hover:bg-surface-alt transition-colors text-xs flex items-center gap-1"
+                  className="p-1 rounded-lg text-muted hover:text-ink hover:bg-white border border-line transition-colors text-xs flex items-center gap-1 shadow-xs"
                   title={isPaused ? 'Tiếp tục tự động chuyển' : 'Tạm dừng tự động chuyển'}
                 >
-                  <span className="material-symbols-outlined text-base">
+                  <span className="material-symbols-outlined text-sm">
                     {isPaused ? 'play_arrow' : 'pause'}
                   </span>
-                  <span className="hidden md:inline text-[11px]">
-                    {isPaused ? 'Đang dừng' : 'Tự chuyển'}
+                  <span className="hidden sm:inline text-[11px] pr-1">
+                    {isPaused ? 'Tạm dừng' : 'Tự chuyển'}
                   </span>
                 </button>
 
-                {/* Navigation Arrows */}
-                <div className="flex items-center gap-1 border-l border-line pl-3">
+                <div className="flex items-center gap-1 border-l border-line pl-1.5">
                   <button
                     onClick={goToPrev}
                     aria-label="Slide trước"
-                    className="w-8 h-8 rounded-full border border-line bg-white hover:bg-surface-alt text-ink flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-sm"
+                    className="w-7 h-7 rounded-full border border-line bg-white hover:bg-surface-alt text-ink flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-sm"
                   >
-                    <span className="material-symbols-outlined text-lg">chevron_left</span>
+                    <span className="material-symbols-outlined text-base">chevron_left</span>
                   </button>
                   <button
                     onClick={goToNext}
                     aria-label="Slide tiếp theo"
-                    className="w-8 h-8 rounded-full border border-line bg-white hover:bg-surface-alt text-ink flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-sm"
+                    className="w-7 h-7 rounded-full border border-line bg-white hover:bg-surface-alt text-ink flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-sm"
                   >
-                    <span className="material-symbols-outlined text-lg">chevron_right</span>
+                    <span className="material-symbols-outlined text-base">chevron_right</span>
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Main Stage: Image and Embossed Float Card */}
-            <div className="relative aspect-[16/9] md:aspect-[21/9] w-full bg-slate-900 overflow-hidden group cursor-pointer"
-                 onClick={() => setModalImage(currentProduct.image)}>
-              {/* Product Full Banner Image */}
-              <img
-                key={currentProduct.image}
-                src={currentProduct.image}
-                alt={`${currentProduct.name} - ${currentProduct.headline}`}
-                className="w-full h-full object-cover sm:object-contain md:object-cover transition-all duration-700 ease-out transform group-hover:scale-[1.015]"
-              />
+            {/* MAIN SLIDE: Full clean banner, rounded corners, fits viewport cleanly */}
+            <div
+              className="relative rounded-2xl md:rounded-3xl border border-line/80 bg-slate-950 shadow-[0_16px_40px_-10px_rgba(10,37,64,0.14)] overflow-hidden transition-all duration-500 cursor-pointer group"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onClick={() => setModalImage(currentProduct.image)}
+            >
+              {/* Image container: Constrained height to fit viewport cleanly without scrolling */}
+              <div className="relative aspect-[16/9] max-h-[50vh] sm:max-h-[54vh] w-full overflow-hidden bg-slate-950 flex items-center justify-center">
+                <img
+                  key={currentProduct.image}
+                  src={currentProduct.image}
+                  alt={`${currentProduct.name} - ${currentProduct.headline}`}
+                  className="w-full h-full object-cover transition-all duration-700 ease-out transform group-hover:scale-[1.01]"
+                />
 
-              {/* Ambient gradient overlay for subtle contrast */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
-
-              {/* Magnifier badge indicator */}
-              <div className="absolute top-5 right-5 z-20 pointer-events-none">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-white/90 text-xs font-medium border border-white/20 shadow-lg">
-                  <span className="material-symbols-outlined text-sm">zoom_in</span>
-                  Xem ảnh gốc HD
-                </span>
+                {/* Prev / Next buttons on hover */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goToPrev();
+                  }}
+                  aria-label="Slide trước"
+                  className="absolute left-2.5 sm:left-3.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg hover:scale-110 active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-xl">chevron_left</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goToNext();
+                  }}
+                  aria-label="Slide tiếp theo"
+                  className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg hover:scale-110 active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-xl">chevron_right</span>
+                </button>
               </div>
+            </div>
 
-              {/* EMBOSSED 3D FLOATING HEADLINE OVERLAY */}
-              <div className="absolute bottom-4 left-4 right-4 sm:bottom-8 sm:left-8 sm:right-8 z-20 pointer-events-none">
-                <div className="max-w-2xl bg-white/90 backdrop-blur-xl rounded-2xl p-5 sm:p-7 border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.25)] pointer-events-auto transform transition-all duration-500 hover:translate-y-[-2px]">
-                  
-                  {/* Embossed 3D Title */}
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border}`}>
-                      {currentProduct.name}
-                    </span>
-                    <span className="text-xs text-muted font-medium">• {currentProduct.category}</span>
-                  </div>
-
-                  {/* 3D Embossed Text styling: layered shadows creating physical depth */}
-                  <h2
-                    className="text-2xl sm:text-3xl md:text-4xl font-black text-ink tracking-tight mb-2 leading-tight"
-                    style={{
-                      textShadow: '0 1px 0 rgba(255,255,255,1), 0 2px 3px rgba(10,37,64,0.18), 0 8px 18px rgba(10,37,64,0.12)',
-                    }}
+            {/* Quick Switch Pills - 5 products directly under slide */}
+            <div className="mt-3.5 flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
+              {PRODUCTS.map((prod, idx) => {
+                const isSelected = idx === currentIndex;
+                return (
+                  <button
+                    key={prod.id}
+                    type="button"
+                    onClick={() => goToSlide(idx)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                      isSelected
+                        ? 'bg-ink text-white shadow-sm ring-2 ring-primary/30 scale-102'
+                        : 'bg-white hover:bg-surface-alt text-muted hover:text-ink border border-line shadow-xs'
+                    }`}
                   >
-                    {currentProduct.headline}
-                  </h2>
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        isSelected ? 'bg-primary' : 'bg-slate-300'
+                      }`}
+                    />
+                    <span>{prod.name}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-                  <p className="text-sm sm:text-base text-body leading-relaxed line-clamp-2 sm:line-clamp-3 mb-4">
+            {/* PRODUCT DESCRIPTION - Concise, focused on key business needs */}
+            <div className="mt-6 rounded-2xl md:rounded-3xl border border-line bg-white p-5 sm:p-7 shadow-xs">
+              {/* Header row: Product Title, Tagline & Target Audience */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-line">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border}`}>
+                      {currentProduct.category}
+                    </span>
+                    <h2 className="text-lg sm:text-xl font-bold text-ink">
+                      {currentProduct.name}
+                    </h2>
+                  </div>
+                  <p className="text-xs sm:text-sm text-body font-medium">
                     {currentProduct.tagline}
                   </p>
+                </div>
 
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Link
-                      to="/contact"
-                      className="btn-primary py-2 px-5 text-sm shadow-md"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      Đăng ký tư vấn demo
-                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </Link>
-
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setModalImage(currentProduct.image);
-                      }}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-surface-alt border border-line text-xs font-semibold text-ink transition-colors shadow-sm"
-                    >
-                      <span className="material-symbols-outlined text-sm">fullscreen</span>
-                      Phóng to infographic
-                    </button>
-                  </div>
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-light/60 text-primary text-xs font-semibold border border-primary/20">
+                    <span className="material-symbols-outlined text-sm">target</span>
+                    {currentProduct.targetAudience}
+                  </span>
                 </div>
               </div>
-            </div>
 
-            {/* Detailed Feature Strip Below Current Slide */}
-            <div className="p-6 md:p-10 bg-white border-t border-line">
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                {/* Product Bio & Target Audience */}
-                <div className="md:col-span-5 flex flex-col justify-center">
-                  <span className="text-xs uppercase font-bold tracking-widest text-primary mb-2">
-                    Đối tượng ứng dụng tối ưu
-                  </span>
-                  <p className="text-sm font-semibold text-ink mb-4 p-3 rounded-xl bg-primary-light/60 border border-primary/10">
-                    🎯 {currentProduct.targetAudience}
-                  </p>
-                  <p className="text-body text-sm leading-relaxed mb-6">
-                    {currentProduct.description}
-                  </p>
-
-                  {/* Highlights Stats */}
-                  <div className="grid grid-cols-3 gap-3 pt-4 border-t border-line">
-                    {currentProduct.stats.map((s, si) => (
-                      <div key={si} className="flex flex-col">
-                        <span className="text-xl sm:text-2xl font-black text-ink">{s.value}</span>
-                        <span className="text-[11px] text-muted leading-tight mt-0.5">{s.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 4 Key Modules / Features */}
-                <div className="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {currentProduct.features.map((feat, fi) => (
-                    <div
-                      key={fi}
-                      className="p-4 rounded-2xl bg-surface-alt border border-line/70 hover:border-primary/30 transition-all duration-300 hover:shadow-sm flex flex-col group/f"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-white border border-line/80 flex items-center justify-center text-primary mb-3 shadow-xs group-hover/f:scale-105 group-hover/f:bg-primary group-hover/f:text-white transition-all">
-                        <span className="material-symbols-outlined text-xl">{feat.icon}</span>
-                      </div>
-                      <h4 className="text-sm font-bold text-ink mb-1 group-hover/f:text-primary transition-colors">
-                        {feat.title}
-                      </h4>
-                      <p className="text-xs text-muted leading-relaxed">
-                        {feat.desc}
-                      </p>
+              {/* 4 Core Features: Direct, practical, concise */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 py-4">
+                {currentProduct.features.map((feat, fi) => (
+                  <div
+                    key={fi}
+                    className="p-3.5 rounded-xl bg-surface-alt/70 border border-line/70 hover:border-primary/30 transition-all flex flex-col"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-white border border-line flex items-center justify-center text-primary mb-2 shadow-xs">
+                      <span className="material-symbols-outlined text-lg">{feat.icon}</span>
                     </div>
+                    <h3 className="text-xs font-bold text-ink mb-1">
+                      {feat.title}
+                    </h3>
+                    <p className="text-[11px] text-muted leading-relaxed">
+                      {feat.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom Actions Row */}
+              <div className="pt-3.5 border-t border-line flex flex-wrap items-center justify-between gap-3">
+                <div className="hidden sm:flex items-center gap-3 text-xs text-muted">
+                  {currentProduct.stats.map((s, si) => (
+                    <span key={si} className="inline-flex items-center gap-1">
+                      <strong className="text-ink font-bold">{s.value}</strong>
+                      <span className="text-[11px]">{s.label}</span>
+                      {si < currentProduct.stats.length - 1 && <span className="text-line ml-2">|</span>}
+                    </span>
                   ))}
                 </div>
+
+                <div className="flex items-center gap-2.5 ml-auto">
+                  <button
+                    type="button"
+                    onClick={() => setModalImage(currentProduct.image)}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-alt hover:bg-white border border-line text-xs font-semibold text-ink transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">fullscreen</span>
+                    Phóng to
+                  </button>
+
+                  <Link
+                    to="/contact"
+                    className="btn-primary py-1.5 px-4 text-xs font-bold shadow-xs"
+                  >
+                    Đăng ký tư vấn demo
+                    <span className="material-symbols-outlined text-xs">arrow_forward</span>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Slider Thumbnail Selectors */}
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-            {PRODUCTS.map((prod, idx) => {
-              const isSelected = idx === currentIndex;
-              return (
-                <div
-                  key={prod.id}
-                  onClick={() => goToSlide(idx)}
-                  className={`card p-4 cursor-pointer transition-all duration-300 flex items-center gap-4 ${
-                    isSelected
-                      ? 'border-primary ring-2 ring-primary/20 bg-primary-light/10 shadow-md translate-y-[-2px]'
-                      : 'hover:border-line hover:bg-surface-alt opacity-80 hover:opacity-100'
-                  }`}
-                >
-                  <div className="w-16 h-12 rounded-lg overflow-hidden bg-slate-900 border border-line flex-shrink-0">
-                    <img
-                      src={prod.image}
-                      alt={prod.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-xs text-primary font-bold">{prod.category}</span>
-                    <span className="text-sm font-bold text-ink truncate">{prod.name}</span>
-                    <span className="text-[11px] text-muted truncate">{prod.headline}</span>
-                  </div>
-                  <span className={`material-symbols-outlined ml-auto text-lg transition-transform ${isSelected ? 'text-primary translate-x-1' : 'text-muted'}`}>
-                    arrow_forward
-                  </span>
-                </div>
-              );
-            })}
           </div>
 
         </div>
