@@ -6,9 +6,6 @@ export default defineConfig({
   plugins: [react()],
   envDir: '../',
   server: {
-    watch: {
-      ignored: ['**/public/**'],
-    },
     proxy: {
       '/api': {
         target: 'http://localhost:5001',
