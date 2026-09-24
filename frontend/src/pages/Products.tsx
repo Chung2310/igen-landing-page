@@ -253,65 +253,102 @@ export const Products: React.FC = () => {
   }, [goToNext, goToPrev]);
 
   const currentProduct = PRODUCTS[currentIndex];
+  const prevIndex = (currentIndex - 1 + PRODUCTS.length) % PRODUCTS.length;
+  const nextIndex = (currentIndex + 1) % PRODUCTS.length;
+  const prevProduct = PRODUCTS[prevIndex];
+  const nextProduct = PRODUCTS[nextIndex];
 
   return (
     <main className="flex flex-col w-full relative bg-white">
-      {/* Featured Interactive Slideshow - Compact sizing to fit screen viewport */}
+      {/* Featured Interactive Slideshow - 3D Rotating Carousel */}
       <section className="pt-20 pb-8 sm:pt-22 md:pb-12 relative overflow-hidden bg-gradient-to-b from-surface-alt/60 via-white to-surface-alt/30">
         <div className="container-page">
           
-          <div
-            className="w-full mx-auto"
-            style={{ maxWidth: 'min(920px, calc(58vh * 1.777))' }}
-          >
-            {/* Top Bar: Only Product Name in Brand Color (no clutter, no blinking dots, no buttons) */}
-            <div className="mb-2.5 px-1 flex items-center justify-between">
-              <h1 className={`text-xl sm:text-2xl font-black tracking-tight transition-colors duration-300 ${currentProduct.accent.text}`}>
+          <div className="w-full max-w-6xl mx-auto">
+            {/* Top Bar: Only Product Name in Brand Color (centered, clean, no clutter) */}
+            <div className="mb-3 text-center">
+              <h1 className={`text-2xl sm:text-3xl font-black tracking-tight transition-colors duration-300 ${currentProduct.accent.text}`}>
                 {currentProduct.name}
               </h1>
             </div>
 
-            {/* MAIN SLIDE: Full clean banner, 100% uncropped, rounded frame, with left/right navigation arrows */}
-            <div
-              className="relative w-full aspect-[1672/941] rounded-2xl md:rounded-3xl border border-line/80 bg-white shadow-[0_12px_36px_-10px_rgba(10,37,64,0.12)] overflow-hidden cursor-pointer group flex items-center justify-center transition-all duration-300"
-              onClick={() => setIsModalOpen(true)}
-            >
-              {/* Left Arrow Button */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goToPrev();
-                }}
-                aria-label="Slide trước"
-                className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/45 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-85 sm:opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 shadow-lg"
-              >
-                <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_left</span>
-              </button>
+            {/* 3D Rotating Showcase Stage: Center bright & sharp, Left/Right dimmed & rotated */}
+            <div className="relative w-full overflow-hidden py-2 sm:py-4 [perspective:1200px] select-none">
+              <div className="relative w-full flex items-center justify-center min-h-[220px] sm:min-h-[360px] md:min-h-[440px] lg:min-h-[480px]">
 
-              <img
-                key={currentProduct.image}
-                src={currentProduct.image}
-                alt={`${currentProduct.name} - ${currentProduct.headline}`}
-                className="w-full h-full object-contain block"
-              />
+                {/* Left Slide (Previous) - Dimmed, scaled down, rotated */}
+                <div
+                  onClick={goToPrev}
+                  className="absolute left-0 sm:left-2 md:left-6 top-1/2 -translate-y-1/2 w-[62%] sm:w-[66%] md:w-[68%] aspect-[1672/941] -translate-x-[20%] sm:-translate-x-[15%] md:-translate-x-[12%] scale-[0.84] [transform:translateY(-50%)_rotateY(10deg)] opacity-35 hover:opacity-65 transition-all duration-500 ease-out z-10 cursor-pointer rounded-2xl md:rounded-3xl overflow-hidden border border-line/60 bg-white shadow-md group/prev"
+                  title={`Xem ${prevProduct.name}`}
+                >
+                  <img
+                    src={prevProduct.image}
+                    alt={prevProduct.name}
+                    className="w-full h-full object-contain block pointer-events-none"
+                  />
+                  <div className="absolute inset-0 bg-slate-900/20 group-hover/prev:bg-transparent transition-colors" />
+                </div>
 
-              {/* Right Arrow Button */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goToNext();
-                }}
-                aria-label="Slide tiếp theo"
-                className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/45 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-85 sm:opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 shadow-lg"
-              >
-                <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_right</span>
-              </button>
+                {/* Center Slide (Active) - 100% Bright, full scale, sharp & glowing */}
+                <div
+                  className="relative w-[78%] sm:w-[80%] md:w-[82%] aspect-[1672/941] z-20 cursor-pointer transition-all duration-500 ease-out rounded-2xl md:rounded-3xl overflow-hidden border border-line/90 bg-white shadow-[0_20px_50px_-10px_rgba(10,37,64,0.22)] group flex items-center justify-center"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  {/* Left Arrow Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToPrev();
+                    }}
+                    aria-label="Slide trước"
+                    className="absolute left-2.5 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/45 hover:bg-black/85 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-85 sm:opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 shadow-xl"
+                  >
+                    <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_left</span>
+                  </button>
+
+                  {/* Active Slide Image */}
+                  <img
+                    key={currentProduct.image}
+                    src={currentProduct.image}
+                    alt={`${currentProduct.name} - ${currentProduct.headline}`}
+                    className="w-full h-full object-contain block"
+                  />
+
+                  {/* Right Arrow Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToNext();
+                    }}
+                    aria-label="Slide tiếp theo"
+                    className="absolute right-2.5 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/45 hover:bg-black/85 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-85 sm:opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 shadow-xl"
+                  >
+                    <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_right</span>
+                  </button>
+                </div>
+
+                {/* Right Slide (Next) - Dimmed, scaled down, rotated */}
+                <div
+                  onClick={goToNext}
+                  className="absolute right-0 sm:right-2 md:right-6 top-1/2 -translate-y-1/2 w-[62%] sm:w-[66%] md:w-[68%] aspect-[1672/941] translate-x-[20%] sm:translate-x-[15%] md:translate-x-[12%] scale-[0.84] [transform:translateY(-50%)_rotateY(-10deg)] opacity-35 hover:opacity-65 transition-all duration-500 ease-out z-10 cursor-pointer rounded-2xl md:rounded-3xl overflow-hidden border border-line/60 bg-white shadow-md group/next"
+                  title={`Xem ${nextProduct.name}`}
+                >
+                  <img
+                    src={nextProduct.image}
+                    alt={nextProduct.name}
+                    className="w-full h-full object-contain block pointer-events-none"
+                  />
+                  <div className="absolute inset-0 bg-slate-900/20 group-hover/next:bg-transparent transition-colors" />
+                </div>
+
+              </div>
             </div>
 
-            {/* Quick Switch Pills - 5 products directly under slide */}
-            <div className="mt-3.5 flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
+            {/* Quick Switch Pills - 6 products directly under slide */}
+            <div className="mt-4 flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
               {PRODUCTS.map((prod, idx) => {
                 const isSelected = idx === currentIndex;
                 return (
@@ -337,7 +374,7 @@ export const Products: React.FC = () => {
             </div>
 
             {/* PRODUCT DESCRIPTION - Concise, focused on key business needs */}
-            <div className="mt-6 rounded-2xl md:rounded-3xl border border-line bg-white p-5 sm:p-7 shadow-xs">
+            <div className="max-w-4xl mx-auto mt-6 rounded-2xl md:rounded-3xl border border-line bg-white p-5 sm:p-7 shadow-xs">
               {/* Header row: Product Title, Tagline & Target Audience */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-line">
                 <div>
