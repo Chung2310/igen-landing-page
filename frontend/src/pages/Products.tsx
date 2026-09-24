@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import { SilkBackground } from '../components/SilkBackground';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
+import erpImg from '../assets/product/erp.png';
+import luxcareImg from '../assets/product/luxcare.png';
+import marketingImg from '../assets/product/marketing.png';
+import banHangImg from '../assets/product/ban-hang.png';
+import ptImg from '../assets/product/pt.png';
+
 interface ProductItem {
   id: string;
   name: string;
@@ -32,7 +38,7 @@ const PRODUCTS: ProductItem[] = [
     tagline: 'Giải pháp quản trị toàn diện cho doanh nghiệp giáo dục, cung ứng lao động & đào tạo',
     description:
       'Hệ thống tập trung vận hành, nhân sự, giao việc, hợp đồng, bảng lương và học viên trên một nền tảng thống nhất, loại bỏ phân mảnh dữ liệu và tối đa hóa năng suất vận hành.',
-    image: '/product/erp.png',
+    image: erpImg,
     accent: {
       text: 'text-[#0088cc]',
       bg: 'bg-[#0088cc]/10',
@@ -61,7 +67,7 @@ const PRODUCTS: ProductItem[] = [
     tagline: 'Kết nối con người – Tối ưu vận hành – Nâng cao chất lượng chăm sóc',
     description:
       'LuxCare ERP mang đến chuẩn mực quản trị hiện đại cho bệnh viện, phòng khám và thẩm mỹ viện. Tự động hóa từ khâu tiếp đón, đặt lịch khám, hồ sơ bệnh án điện tử đến kho dược phẩm và viện phí.',
-    image: '/product/luxcare.png',
+    image: luxcareImg,
     accent: {
       text: 'text-[#10b981]',
       bg: 'bg-[#10b981]/10',
@@ -90,7 +96,7 @@ const PRODUCTS: ProductItem[] = [
     tagline: 'Trợ thủ AI chốt đơn 24/24 – Tối ưu hóa doanh số đa kênh Facebook',
     description:
       'Bộ công cụ tiếp thị và bán hàng tự động ứng dụng Trí tuệ Nhân tạo thế hệ mới. Quản lý đồng bộ đa Fanpage, tự động phản hồi bình luận, gom tin nhắn tập trung và nuôi dưỡng khách hàng tiềm năng liên tục 24/7.',
-    image: '/product/marketing.png',
+    image: marketingImg,
     accent: {
       text: 'text-[#0284c7]',
       bg: 'bg-[#0284c7]/10',
@@ -119,7 +125,7 @@ const PRODUCTS: ProductItem[] = [
     tagline: 'Quản lý bán hàng – Tồn kho – Khách hàng trên một nền tảng duy nhất',
     description:
       'Giải pháp giúp doanh nghiệp theo dõi doanh thu trực quan, quản lý đơn hàng, kho sản phẩm, khách hàng, bảo hành linh hoạt và vận hành bán lẻ hiệu quả hơn.',
-    image: '/product/ban-hang.png',
+    image: banHangImg,
     accent: {
       text: 'text-[#2563eb]',
       bg: 'bg-[#2563eb]/10',
@@ -148,7 +154,7 @@ const PRODUCTS: ProductItem[] = [
     tagline: 'Quản lý học viên dễ dàng hơn với Trợ lý AI Chuyên gia – Tối ưu hóa giáo án & dinh dưỡng',
     description:
       'Nền tảng chuyên biệt dành cho huấn luyện viên cá nhân (Personal Trainer), phòng gym và studio fitness. Đồng bộ theo dõi chỉ số InBody, lập giáo án tập luyện, thực đơn dinh dưỡng và trợ lý AI đồng hành 24/7.',
-    image: '/product/pt.png',
+    image: ptImg,
     accent: {
       text: 'text-[#06b6d4]',
       bg: 'bg-[#06b6d4]/10',
