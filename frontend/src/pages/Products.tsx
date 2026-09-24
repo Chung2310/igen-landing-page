@@ -248,7 +248,6 @@ const AUTOPLAY_INTERVAL = 5000; // Default 5 seconds per slide for both main vie
 
 export const Products: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useRevealAnimations(PRODUCTS.length);
@@ -272,12 +271,11 @@ export const Products: React.FC = () => {
 
   // Autoplay loop every 5 seconds (active in both main view and fullscreen mode)
   useEffect(() => {
-    if (isPaused) return;
     const timer = setInterval(() => {
       goToNext();
     }, AUTOPLAY_INTERVAL);
     return () => clearInterval(timer);
-  }, [isPaused, goToNext]);
+  }, [goToNext]);
 
   // Keyboard navigation (ArrowLeft / ArrowRight / Escape)
   useEffect(() => {
@@ -613,60 +611,25 @@ export const Products: React.FC = () => {
         </div>
       </section>
 
-      {/* Fullscreen Interactive Showcase Lightbox Modal */}
+      {/* Fullscreen Interactive Showcase Lightbox Modal - True Fullscreen, Clean, Only X Close Button */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex flex-col items-center justify-between p-3 sm:p-6 animate-fadeIn select-none"
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-0 select-none animate-fadeIn"
           onClick={() => setIsModalOpen(false)}
         >
-          {/* Modal Header Bar */}
-          <div
-            className="w-full max-w-6xl flex items-center justify-between z-20 py-1"
-            onClick={(e) => e.stopPropagation()}
+          {/* Floating Close (X) Button Only */}
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(false)}
+            aria-label="Đóng toàn màn hình"
+            className="absolute top-3 right-3 sm:top-5 sm:right-6 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-2xl hover:border-[#00d2ff] hover:shadow-[0_0_15px_rgba(0,210,255,0.6)] cursor-pointer"
           >
-            {/* Current Product Title in Brand Color */}
-            <div className="flex items-center gap-2">
-              <span className={`material-symbols-outlined text-base sm:text-lg ${currentProduct.accent.text}`}>
-                {currentProduct.icon}
-              </span>
-              <span className={`text-sm sm:text-base font-bold tracking-tight ${currentProduct.accent.text}`}>
-                {currentProduct.name}
-              </span>
-              <span className="hidden sm:inline text-xs text-white/60">
-                • {currentProduct.category}
-              </span>
-            </div>
+            <span className="material-symbols-outlined text-2xl sm:text-3xl">close</span>
+          </button>
 
-            {/* Controls: Autoplay toggle & Close */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              <button
-                type="button"
-                onClick={() => setIsPaused((prev) => !prev)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium backdrop-blur-md border border-white/15 transition-all shadow-sm"
-                title={isPaused ? 'Bật tự động chuyển slide' : 'Tạm dừng tự động chuyển'}
-              >
-                <span className="material-symbols-outlined text-base">
-                  {isPaused ? 'play_arrow' : 'pause'}
-                </span>
-                <span className="text-[11px]">
-                  {isPaused ? 'Tự chuyển: Tắt' : 'Tự chuyển: Bật'}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/25 text-white text-xs font-semibold backdrop-blur-md border border-white/20 transition-all shadow-sm"
-              >
-                <span className="material-symbols-outlined text-base">close</span>
-                <span>Đóng (ESC)</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Modal Center Stage: Big Image + Prev/Next Buttons */}
+          {/* Modal Center Stage: True Fullscreen Slide Track */}
           <div
-            className="relative w-full max-w-6xl flex-1 flex items-center justify-center my-auto min-h-0 overflow-hidden"
+            className="relative w-full h-full flex items-center justify-center overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Prev Button */}
@@ -674,13 +637,13 @@ export const Products: React.FC = () => {
               type="button"
               onClick={goToPrev}
               aria-label="Slide trước"
-              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-black/60 hover:bg-black/90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-2xl hover:border-[#00d2ff] hover:shadow-[0_0_14px_rgba(0,210,255,0.6)]"
+              className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-black/60 hover:bg-black/90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-2xl hover:border-[#00d2ff] hover:shadow-[0_0_15px_rgba(0,210,255,0.6)] cursor-pointer"
             >
               <span className="material-symbols-outlined text-2xl sm:text-3xl">chevron_left</span>
             </button>
 
-            {/* Smooth Modal Slides Track */}
-            <div className="relative w-full h-[76vh] sm:h-[80vh] flex items-center justify-center overflow-hidden">
+            {/* Smooth Modal Slides Track - Maximize Screen Space */}
+            <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
               {PRODUCTS.map((prod, idx) => {
                 let diff = (idx - currentIndex + PRODUCTS.length) % PRODUCTS.length;
                 if (diff > PRODUCTS.length / 2) diff -= PRODUCTS.length;
@@ -695,12 +658,12 @@ export const Products: React.FC = () => {
                       pointerEvents: isCurrent ? 'auto' : 'none',
                       transition: 'transform 650ms cubic-bezier(0.25, 1, 0.5, 1), opacity 500ms ease',
                     }}
-                    className="absolute top-1/2 left-1/2 w-full h-full flex items-center justify-center p-2"
+                    className="absolute top-1/2 left-1/2 w-full h-full flex items-center justify-center p-2 sm:p-6"
                   >
                     <img
                       src={prod.image}
                       alt={prod.name}
-                      className="max-w-full max-h-full w-auto h-auto object-contain rounded-xl sm:rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-white/15"
+                      className="max-w-[96vw] max-h-[94vh] sm:max-h-[95vh] w-auto h-auto object-contain rounded-xl sm:rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] border border-white/10"
                     />
                   </div>
                 );
@@ -712,41 +675,10 @@ export const Products: React.FC = () => {
               type="button"
               onClick={goToNext}
               aria-label="Slide tiếp theo"
-              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-black/60 hover:bg-black/90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-2xl hover:border-[#00d2ff] hover:shadow-[0_0_14px_rgba(0,210,255,0.6)]"
+              className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-black/60 hover:bg-black/90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-2xl hover:border-[#00d2ff] hover:shadow-[0_0_15px_rgba(0,210,255,0.6)] cursor-pointer"
             >
               <span className="material-symbols-outlined text-2xl sm:text-3xl">chevron_right</span>
             </button>
-          </div>
-
-          {/* Modal Footer Bar: 7 Product Quick Pills in Fullscreen */}
-          <div
-            className="w-full max-w-6xl flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap z-20 py-1"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {PRODUCTS.map((prod, idx) => {
-              const isSelected = idx === currentIndex;
-              return (
-                <button
-                  key={prod.id}
-                  type="button"
-                  onClick={() => goToSlide(idx)}
-                  className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-300 flex items-center gap-2 ${
-                    isSelected
-                      ? 'bg-black/50 text-white border-2 border-[#00d2ff] shadow-[0_0_18px_rgba(0,210,255,0.7)] ring-2 ring-[#00d2ff]/30 scale-105'
-                      : 'bg-white/15 hover:bg-white/25 text-white/80 hover:text-white backdrop-blur-md border border-white/10 hover:border-[#00d2ff]/40'
-                  }`}
-                >
-                  <span
-                    className={`rounded-full transition-all duration-300 ${
-                      isSelected
-                        ? 'w-2 h-2 bg-[#00d2ff] shadow-[0_0_8px_#00d2ff] animate-pulse'
-                        : 'w-1.5 h-1.5 bg-white/40'
-                    }`}
-                  />
-                  <span>{prod.name}</span>
-                </button>
-              );
-            })}
           </div>
         </div>
       )}
