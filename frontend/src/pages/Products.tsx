@@ -206,7 +206,7 @@ const PRODUCTS: ProductItem[] = [
   },
 ];
 
-const AUTOPLAY_INTERVAL = 6000; // 6 seconds per slide
+const AUTOPLAY_INTERVAL = 5000; // Default 5 seconds per slide for both main view and fullscreen
 
 export const Products: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -232,7 +232,7 @@ export const Products: React.FC = () => {
     setCurrentIndex(idx);
   };
 
-  // Autoplay loop every 5 seconds (continues in fullscreen unless paused)
+  // Autoplay loop every 5 seconds (active in both main view and fullscreen mode)
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
@@ -271,19 +271,43 @@ export const Products: React.FC = () => {
               </h1>
             </div>
 
-            {/* MAIN SLIDE: Full clean banner, 100% uncropped, rounded frame, no missing corners */}
+            {/* MAIN SLIDE: Full clean banner, 100% uncropped, rounded frame, with left/right navigation arrows */}
             <div
               className="relative w-full aspect-[1672/941] rounded-2xl md:rounded-3xl border border-line/80 bg-white shadow-[0_12px_36px_-10px_rgba(10,37,64,0.12)] overflow-hidden cursor-pointer group flex items-center justify-center transition-all duration-300"
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
               onClick={() => setIsModalOpen(true)}
             >
+              {/* Left Arrow Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToPrev();
+                }}
+                aria-label="Slide trước"
+                className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/45 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-85 sm:opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 shadow-lg"
+              >
+                <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_left</span>
+              </button>
+
               <img
                 key={currentProduct.image}
                 src={currentProduct.image}
                 alt={`${currentProduct.name} - ${currentProduct.headline}`}
                 className="w-full h-full object-contain block"
               />
+
+              {/* Right Arrow Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToNext();
+                }}
+                aria-label="Slide tiếp theo"
+                className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/45 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-85 sm:opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 shadow-lg"
+              >
+                <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_right</span>
+              </button>
             </div>
 
             {/* Quick Switch Pills - 5 products directly under slide */}
