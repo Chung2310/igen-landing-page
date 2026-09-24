@@ -14,6 +14,7 @@ interface ProductItem {
   id: string;
   name: string;
   category: string;
+  icon: string;
   headline: string;
   tagline: string;
   description: string;
@@ -35,6 +36,7 @@ const PRODUCTS: ProductItem[] = [
     id: 'igen-erp',
     name: 'iGen ERP Giáo Dục',
     category: 'Quản Lý Giáo Dục & Đào Tạo',
+    icon: 'school',
     headline: 'ERP Quản Lý Giáo Dục',
     tagline: 'Hỗ trợ quản lý học viên, đào tạo & vận hành cho các trung tâm, trường, lớp học',
     description:
@@ -64,6 +66,7 @@ const PRODUCTS: ProductItem[] = [
     id: 'luxcare-erp',
     name: 'LuxCare ERP',
     category: 'Hệ Thống Y Tế & Thẩm Mỹ',
+    icon: 'medical_services',
     headline: 'Nền Tảng Quản Lý Y Tế Toàn Diện',
     tagline: 'Kết nối con người – Tối ưu vận hành – Nâng cao chất lượng chăm sóc',
     description:
@@ -93,6 +96,7 @@ const PRODUCTS: ProductItem[] = [
     id: 'ai-marketing',
     name: 'iGen Marketing',
     category: 'Workspace & Tự Động Hóa',
+    icon: 'campaign',
     headline: 'AI Marketing & Sales Workspace',
     tagline: 'Quản lý Fanpage • Chăm sóc khách hàng • AI Chốt đơn 24/24',
     description:
@@ -122,6 +126,7 @@ const PRODUCTS: ProductItem[] = [
     id: 'igen-ban-hang',
     name: 'iGen Bán Hàng',
     category: 'Phần Mềm Bán Hàng & POS',
+    icon: 'storefront',
     headline: 'Phần Mềm Bán Hàng Thông Minh',
     tagline: 'Quản lý bán hàng, tồn kho & khách hàng trên một nền tảng duy nhất',
     description:
@@ -151,6 +156,7 @@ const PRODUCTS: ProductItem[] = [
     id: 'igen-pt',
     name: 'iGen PT Fitness',
     category: 'Quản Lý Huấn Luyện Viên',
+    icon: 'fitness_center',
     headline: 'Giải Pháp Quản Lý PT & Học Viên',
     tagline: 'Quản lý học viên & giáo án tập luyện chuyên nghiệp với Trợ lý AI',
     description:
@@ -180,6 +186,7 @@ const PRODUCTS: ProductItem[] = [
     id: 'igen-kien-truc-su',
     name: 'iGen Kiến trúc sư',
     category: 'AI Thiết Kế & 3D',
+    icon: 'architecture',
     headline: 'Render & Thiết Kế Thông Minh',
     tagline: 'Ngoại thất • Nội thất • Floorplan to 3D – Ý tưởng thành hiện thực',
     description:
@@ -209,6 +216,7 @@ const PRODUCTS: ProductItem[] = [
     id: 'igen-lao-dong',
     name: 'iGen Quản Lý Lao Động',
     category: 'Cung Ứng & Quản Lý Lao Động',
+    icon: 'engineering',
     headline: 'Quản Lý Lao Động Thông Minh',
     tagline: 'Hồ sơ • Dự án • Hợp đồng – Tối ưu nguồn lực, an toàn & hiệu quả',
     description:
@@ -291,9 +299,12 @@ export const Products: React.FC = () => {
         <div className="container-page">
           
           <div className="w-full max-w-6xl mx-auto">
-            {/* Top Bar: Only Product Name in Brand Color (centered, clean, no clutter) */}
-            <div className="mb-3 text-center">
-              <h1 className={`text-2xl sm:text-3xl font-black tracking-tight transition-colors duration-300 ${currentProduct.accent.text}`}>
+            {/* Top Bar: Product Name with Icon, aligned to the left side of the slide, sleek & refined */}
+            <div className="w-[76%] sm:w-[78%] md:w-[80%] mx-auto mb-2.5 flex items-center justify-start gap-2 px-1">
+              <span className={`material-symbols-outlined text-lg sm:text-xl transition-colors duration-300 ${currentProduct.accent.text}`}>
+                {currentProduct.icon}
+              </span>
+              <h1 className={`text-base sm:text-lg md:text-xl font-bold tracking-tight transition-colors duration-300 ${currentProduct.accent.text}`}>
                 {currentProduct.name}
               </h1>
             </div>
@@ -449,11 +460,14 @@ export const Products: React.FC = () => {
 
               {/* Main Title & Tagline */}
               <div className="py-4 border-b border-line/70">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1.5">
-                  <h2 className="text-2xl sm:text-3xl font-black text-ink tracking-tight">
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 mb-1.5">
+                  <span className={`material-symbols-outlined text-xl sm:text-2xl ${currentProduct.accent.text}`}>
+                    {currentProduct.icon}
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
                     {currentProduct.name}
                   </h2>
-                  <span className="text-base sm:text-lg font-semibold text-slate-500">
+                  <span className="text-sm sm:text-base font-medium text-slate-500">
                     — {currentProduct.headline}
                   </span>
                 </div>
@@ -612,7 +626,10 @@ export const Products: React.FC = () => {
           >
             {/* Current Product Title in Brand Color */}
             <div className="flex items-center gap-2">
-              <span className={`text-base sm:text-xl font-black tracking-tight ${currentProduct.accent.text}`}>
+              <span className={`material-symbols-outlined text-base sm:text-lg ${currentProduct.accent.text}`}>
+                {currentProduct.icon}
+              </span>
+              <span className={`text-sm sm:text-base font-bold tracking-tight ${currentProduct.accent.text}`}>
                 {currentProduct.name}
               </span>
               <span className="hidden sm:inline text-xs text-white/60">
