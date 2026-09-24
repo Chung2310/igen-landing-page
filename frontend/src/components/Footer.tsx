@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
             <div className="flex items-center gap-3 mb-5">
               <img
                 src="/logo.png"
-                alt="iGen Tech Logo"
+                alt="iGen Technology Logo"
                 className="h-8 w-8 object-contain"
               />
               <span className="text-ink font-bold text-xl tracking-tight">iGen Technology</span>
@@ -63,6 +63,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-3">
               {[
                 { to: '/', label: 'Trang chủ' },
+                { to: '/products', label: 'Sản phẩm' },
                 { to: '/solutions', label: 'Giải pháp' },
                 { to: '/about', label: 'Về chúng tôi' },
                 { to: '/news', label: 'Tin tức' },

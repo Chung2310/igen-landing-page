@@ -5,7 +5,16 @@ import { SilkBackground } from '../components/SilkBackground';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
 import { type ServiceData, MOCK_SERVICES } from '../utils/servicesData';
 
-const PILLARS = MOCK_SERVICES.slice(0, 4);
+const PILLAR_SLUGS = [
+  'tu-van-chuyen-doi-so',
+  'ai-marketing-van-hanh',
+  'nen-tang-ai-theo-yeu-cau',
+  'hoc-vien-doanh-nghiep-1-nguoi',
+];
+
+const PILLARS = PILLAR_SLUGS
+  .map((slug) => MOCK_SERVICES.find((s) => s.slug === slug))
+  .filter((s): s is ServiceData => Boolean(s));
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
@@ -26,6 +35,11 @@ export const Solutions: React.FC = () => {
   useEffect(() => {
     fetchServices();
   }, [fetchServices]);
+
+  const pillars = PILLAR_SLUGS
+    .map((slug) => services.find((s) => s.slug === slug))
+    .filter((s): s is ServiceData => Boolean(s));
+  const activePillars = pillars.length === PILLAR_SLUGS.length ? pillars : PILLARS;
 
   useRevealAnimations(services.length);
 
@@ -59,7 +73,7 @@ export const Solutions: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 reveal-items-container">
-            {PILLARS.map((p) => (
+            {activePillars.map((p) => (
               <div key={p.slug} className="card card-hover p-8 md:p-10 flex flex-col reveal-item">
                 <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center text-primary mb-6">
                   <span className="material-symbols-outlined text-3xl">{p.icon}</span>

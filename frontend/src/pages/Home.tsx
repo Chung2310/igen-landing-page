@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { SilkBackground } from '../components/SilkBackground';
+import { AIProcessorHero } from '../components/AIProcessorHero';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
 const pillars = [
-  { icon: 'school', title: 'Học viện doanh nghiệp 1 người', desc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành để một người vẫn có thể quản lý và phát triển doanh nghiệp hiệu quả.' },
-  { icon: 'business', title: 'Chuyển Đổi AI Doanh Nghiệp', desc: 'Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp. Giúp tăng năng suất làm việc, giảm phụ thuộc vào nhân sự và tối ưu chi phí vận hành.' },
-  { icon: 'settings', title: 'Nền Tảng AI Theo Yêu Cầu', desc: 'Mỗi doanh nghiệp có một bài toán riêng. Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu và nâng cao hiệu quả vận hành theo đúng nhu cầu thực tế.' },
-  { icon: 'campaign', title: 'AI Marketing & Vận Hành', desc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả làm việc và tạo lợi thế cạnh tranh bền vững trong kỷ nguyên số.' },
-];
-
-const heroStats = [
-  { value: 5, prefix: '3–', suffix: 'x', label: 'Tăng năng suất nhân sự' },
-  { value: 90, prefix: '', suffix: '%', label: 'Tiết kiệm chi phí vận hành' },
-  { value: 1000000, prefix: '', suffix: '+', label: 'Doanh nghiệp mục tiêu đồng hành' },
+  {
+    icon: 'trending_up',
+    title: 'Tư vấn & Chuyển đổi Số',
+    desc: 'Tư vấn chiến lược và triển khai chuyển đổi số toàn diện cho doanh nghiệp, từ đánh giá hiện trạng đến xây dựng lộ trình số hóa tối ưu.',
+    slug: 'tu-van-chuyen-doi-so',
+  },
+  {
+    icon: 'campaign',
+    title: 'AI Marketing & Vận Hành',
+    desc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả làm việc và tạo lợi thế cạnh tranh.',
+    slug: 'ai-marketing-van-hanh',
+  },
+  {
+    icon: 'settings',
+    title: 'Nền Tảng AI Theo Yêu Cầu',
+    desc: 'Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu và nâng cao hiệu quả vận hành.',
+    slug: 'nen-tang-ai-theo-yeu-cau',
+  },
+  {
+    icon: 'school',
+    title: 'Học viện doanh nghiệp 1 người',
+    desc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành hiệu quả.',
+    slug: 'hoc-vien-doanh-nghiep-1-nguoi',
+  },
 ];
 
 const industries = [
@@ -56,49 +70,9 @@ export const Home: React.FC = () => {
 
   return (
     <main className="flex flex-col w-full relative">
+      <AIProcessorHero />
 
-      {/* Hero Section */}
-      <section className="relative pt-40 pb-48 md:pt-48 md:pb-56 overflow-hidden">
-        <SilkBackground />
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-4 flex flex-col items-center">
-          <span className="hero-reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-6">
-            Igen Technology
-          </span>
-          <h1 className="hero-reveal text-4xl md:text-6xl font-extrabold tracking-tight text-ink leading-[1.1] mb-6">
-            Tiên phong kỷ nguyên<br className="hidden md:block" /> doanh nghiệp AI
-          </h1>
-          <p className="hero-reveal text-lg md:text-xl text-body font-normal leading-relaxed max-w-2xl">
-            Tiên phong kiến tạo hệ sinh thái AI và giải pháp chuyển đổi số cho doanh nghiệp Việt.
-          </p>
-          <div className="hero-reveal mt-10 flex flex-wrap gap-4 justify-center">
-            <Link to="/solutions" className="btn-primary shadow-lg px-7 py-3.5">
-              Xem giải pháp <span className="material-symbols-outlined text-base">arrow_forward</span>
-            </Link>
-            <Link to="/contact" className="btn-secondary px-7 py-3.5">
-              Liên hệ tư vấn
-            </Link>
-          </div>
 
-          {/* Hero stats */}
-          <div className="hero-reveal mt-16 grid grid-cols-3 gap-4 md:gap-12 w-full max-w-2xl">
-            {heroStats.map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-2xl md:text-4xl font-extrabold text-ink mb-1">
-                  <span
-                    className="stat-number"
-                    data-value={s.value}
-                    data-prefix={s.prefix}
-                    data-suffix={s.suffix}
-                  >
-                    {s.prefix + s.value.toLocaleString('vi-VN') + s.suffix}
-                  </span>
-                </div>
-                <p className="text-xs md:text-sm text-body leading-snug">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Industries Strip */}
       <section className="py-12 bg-white border-b border-line">
@@ -255,7 +229,7 @@ export const Home: React.FC = () => {
                 </div>
                 <h4 className="text-lg font-semibold text-ink mb-2">{pillar.title}</h4>
                 <p className="text-body text-sm leading-relaxed flex-1">{pillar.desc}</p>
-                <Link to="/solutions" className="link-arrow mt-5">
+                <Link to={`/solutions/${pillar.slug}`} className="link-arrow mt-5">
                   Tìm hiểu thêm <span className="material-symbols-outlined text-base">arrow_forward</span>
                 </Link>
               </div>
