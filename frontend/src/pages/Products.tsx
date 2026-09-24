@@ -8,6 +8,7 @@ import marketingImg from '../assets/product/marketing.png';
 import banHangImg from '../assets/product/ban-hang.png';
 import ptImg from '../assets/product/pt.png';
 import kienTrucSuImg from '../assets/product/kien-truc-su.png';
+import laoDongImg from '../assets/product/lao-dong.png';
 
 interface ProductItem {
   id: string;
@@ -204,6 +205,35 @@ const PRODUCTS: ProductItem[] = [
     ],
     targetAudience: 'Kiến trúc sư, Nhà thiết kế Nội thất, Công ty Xây dựng & Bất động sản',
   },
+  {
+    id: 'igen-lao-dong',
+    name: 'iGen Quản Lý Lao Động',
+    category: 'Cung Ứng & Quản Lý Lao Động',
+    headline: 'Quản Lý Lao Động Thông Minh',
+    tagline: 'Hồ sơ • Dự án • Hợp đồng – Tối ưu nguồn lực, an toàn & hiệu quả',
+    description:
+      'Hệ thống quản lý chuyên sâu dành cho các doanh nghiệp, tổ chức cung ứng lao động và nhà thầu xây dựng. Tự động hóa quản lý hồ sơ nhân sự, điều phối dự án công trình, ký duyệt hợp đồng và giám sát an toàn lao động.',
+    image: laoDongImg,
+    accent: {
+      text: 'text-[#0284c7]',
+      bg: 'bg-[#0284c7]/10',
+      border: 'border-[#0284c7]/30',
+      gradient: 'from-[#0284c7] to-[#0369a1]',
+      glow: 'shadow-[0_12px_36px_rgba(2,132,199,0.28)]',
+    },
+    features: [
+      { icon: 'badge', title: 'Quản lý hồ sơ lao động', desc: 'Lưu trữ thông tin cá nhân, tay nghề, CCCD, chứng chỉ và lịch sử công tác tập trung.' },
+      { icon: 'engineering', title: 'Điều phối & Dự án', desc: 'Phân bổ nhân sự linh hoạt theo công trình, theo dõi chấm công và tiến độ ca kíp.' },
+      { icon: 'description', title: 'Hợp đồng & Pháp lý', desc: 'Tự động tạo hợp đồng cung ứng, theo dõi thời hạn, tính công và đối soát công nợ.' },
+      { icon: 'notifications_active', title: 'Cảnh báo & An toàn', desc: 'Nhắc hạn gia hạn chứng chỉ, kiểm soát bảo hộ lao động và cảnh báo rủi ro tức thì.' },
+    ],
+    stats: [
+      { value: '100%', label: 'Hồ sơ số hóa' },
+      { value: '3×', label: 'Tốc độ điều phối dự án' },
+      { value: '0 Sai sót', label: 'Hợp đồng & Bảng công' },
+    ],
+    targetAudience: 'Doanh nghiệp, Tổ chức Cung ứng lao động & Nhà thầu',
+  },
 ];
 
 const AUTOPLAY_INTERVAL = 5000; // Default 5 seconds per slide for both main view and fullscreen
@@ -374,78 +404,86 @@ export const Products: React.FC = () => {
             </div>
 
             {/* PRODUCT DESCRIPTION - Concise, focused on key business needs */}
-            <div className="max-w-4xl mx-auto mt-6 rounded-2xl md:rounded-3xl border border-line bg-white p-5 sm:p-7 shadow-xs">
-              {/* Header row: Product Title, Tagline & Target Audience */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-line">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border}`}>
-                      {currentProduct.category}
-                    </span>
-                    <h2 className="text-lg sm:text-xl font-bold text-ink">
-                      {currentProduct.name}
-                    </h2>
-                  </div>
-                  <p className="text-xs sm:text-sm text-body font-medium">
-                    {currentProduct.tagline}
-                  </p>
-                </div>
+            <div className="max-w-4xl mx-auto mt-6 rounded-2xl md:rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-7 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all duration-300">
+              {/* Header Row 1: Metadata Badges (Category + Target Audience) */}
+              <div className="flex flex-wrap items-center justify-between gap-2.5 mb-3">
+                <span className={`inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border}`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+                  {currentProduct.category}
+                </span>
 
-                <div className="flex-shrink-0">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-light/60 text-primary text-xs font-semibold border border-primary/20">
-                    <span className="material-symbols-outlined text-sm">target</span>
-                    {currentProduct.targetAudience}
-                  </span>
-                </div>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/90 text-slate-700 text-xs font-medium border border-slate-200/80">
+                  <span className="material-symbols-outlined text-sm text-primary">groups</span>
+                  <span><strong className="text-ink font-semibold">Phù hợp:</strong> {currentProduct.targetAudience}</span>
+                </span>
               </div>
 
-              {/* 4 Core Features: Direct, practical, concise */}
+              {/* Header Row 2: Product Title & Tagline with generous full-width hierarchy */}
+              <div className="pb-4 border-b border-line">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
+                  <h2 className="text-xl sm:text-2xl font-black text-ink tracking-tight">
+                    {currentProduct.name}
+                  </h2>
+                  <span className="text-sm sm:text-base font-bold text-primary">
+                    • {currentProduct.headline}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-body leading-relaxed max-w-3xl font-medium">
+                  {currentProduct.tagline}
+                </p>
+              </div>
+
+              {/* 4 Core Features: Direct, practical, concise with product brand accent */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 py-4">
                 {currentProduct.features.map((feat, fi) => (
                   <div
                     key={fi}
-                    className="p-3.5 rounded-xl bg-surface-alt/70 border border-line/70 hover:border-primary/30 transition-all flex flex-col"
+                    className="group p-3.5 rounded-xl bg-slate-50/70 hover:bg-white border border-slate-200/70 hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-white border border-line flex items-center justify-center text-primary mb-2 shadow-xs">
-                      <span className="material-symbols-outlined text-lg">{feat.icon}</span>
+                    <div>
+                      <div className={`w-8 h-8 rounded-lg ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border} flex items-center justify-center mb-2.5 shadow-2xs group-hover:scale-105 transition-transform duration-200`}>
+                        <span className="material-symbols-outlined text-lg">{feat.icon}</span>
+                      </div>
+                      <h3 className="text-xs sm:text-sm font-bold text-ink mb-1 group-hover:text-primary transition-colors">
+                        {feat.title}
+                      </h3>
+                      <p className="text-[11px] text-muted leading-relaxed">
+                        {feat.desc}
+                      </p>
                     </div>
-                    <h3 className="text-xs font-bold text-ink mb-1">
-                      {feat.title}
-                    </h3>
-                    <p className="text-[11px] text-muted leading-relaxed">
-                      {feat.desc}
-                    </p>
                   </div>
                 ))}
               </div>
 
               {/* Bottom Actions Row */}
-              <div className="pt-3.5 border-t border-line flex flex-wrap items-center justify-between gap-3">
-                <div className="hidden sm:flex items-center gap-3 text-xs text-muted">
+              <div className="pt-3.5 border-t border-line flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center gap-2 text-xs">
                   {currentProduct.stats.map((s, si) => (
-                    <span key={si} className="inline-flex items-center gap-1">
-                      <strong className="text-ink font-bold">{s.value}</strong>
-                      <span className="text-[11px]">{s.label}</span>
-                      {si < currentProduct.stats.length - 1 && <span className="text-line ml-2">|</span>}
-                    </span>
+                    <div
+                      key={si}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200/80 text-xs"
+                    >
+                      <strong className="text-ink font-bold text-xs">{s.value}</strong>
+                      <span className="text-muted text-[11px]">{s.label}</span>
+                    </div>
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2.5 ml-auto">
+                <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-alt hover:bg-white border border-line text-xs font-semibold text-ink transition-colors"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-alt hover:bg-white border border-line text-xs font-semibold text-ink transition-colors shadow-2xs"
                   >
                     <span className="material-symbols-outlined text-sm">fullscreen</span>
-                    Phóng to
+                    <span>Phóng to</span>
                   </button>
 
                   <Link
                     to="/contact"
-                    className="btn-primary py-1.5 px-4 text-xs font-bold shadow-xs"
+                    className="btn-primary py-1.5 px-4 text-xs font-bold shadow-xs hover:shadow-md transition-all"
                   >
-                    Đăng ký tư vấn demo
+                    <span>Đăng ký tư vấn demo</span>
                     <span className="material-symbols-outlined text-xs">arrow_forward</span>
                   </Link>
                 </div>
