@@ -4,10 +4,30 @@ import { SilkBackground } from '../components/SilkBackground';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
 const pillars = [
-  { icon: 'school', title: 'Học viện doanh nghiệp 1 người', desc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành để một người vẫn có thể quản lý và phát triển doanh nghiệp hiệu quả.' },
-  { icon: 'business', title: 'Chuyển Đổi AI Doanh Nghiệp', desc: 'Không chỉ đào tạo, chúng tôi trực tiếp chuyển giao quy trình và giải pháp AI phù hợp với từng doanh nghiệp. Giúp tăng năng suất làm việc, giảm phụ thuộc vào nhân sự và tối ưu chi phí vận hành.' },
-  { icon: 'settings', title: 'Nền Tảng AI Theo Yêu Cầu', desc: 'Mỗi doanh nghiệp có một bài toán riêng. Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu và nâng cao hiệu quả vận hành theo đúng nhu cầu thực tế.' },
-  { icon: 'campaign', title: 'AI Marketing & Vận Hành', desc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả làm việc và tạo lợi thế cạnh tranh bền vững trong kỷ nguyên số.' },
+  {
+    icon: 'trending_up',
+    title: 'Tư vấn & Chuyển đổi Số',
+    desc: 'Tư vấn chiến lược và triển khai chuyển đổi số toàn diện cho doanh nghiệp, từ đánh giá hiện trạng đến xây dựng lộ trình số hóa tối ưu.',
+    slug: 'tu-van-chuyen-doi-so',
+  },
+  {
+    icon: 'campaign',
+    title: 'AI Marketing & Vận Hành',
+    desc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả làm việc và tạo lợi thế cạnh tranh.',
+    slug: 'ai-marketing-van-hanh',
+  },
+  {
+    icon: 'settings',
+    title: 'Nền Tảng AI Theo Yêu Cầu',
+    desc: 'Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu và nâng cao hiệu quả vận hành.',
+    slug: 'nen-tang-ai-theo-yeu-cau',
+  },
+  {
+    icon: 'school',
+    title: 'Học viện doanh nghiệp 1 người',
+    desc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành hiệu quả.',
+    slug: 'hoc-vien-doanh-nghiep-1-nguoi',
+  },
 ];
 
 const heroStats = [
@@ -255,7 +275,7 @@ export const Home: React.FC = () => {
                 </div>
                 <h4 className="text-lg font-semibold text-ink mb-2">{pillar.title}</h4>
                 <p className="text-body text-sm leading-relaxed flex-1">{pillar.desc}</p>
-                <Link to="/solutions" className="link-arrow mt-5">
+                <Link to={`/solutions/${pillar.slug}`} className="link-arrow mt-5">
                   Tìm hiểu thêm <span className="material-symbols-outlined text-base">arrow_forward</span>
                 </Link>
               </div>
