@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
@@ -181,10 +181,7 @@ const AUTOPLAY_INTERVAL = 6000; // 6 seconds per slide
 export const Products: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [modalImage, setModalImage] = useState<string | null>(null);
-  const timerRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number>(Date.now());
 
   useRevealAnimations(PRODUCTS.length);
 
@@ -195,49 +192,34 @@ export const Products: React.FC = () => {
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % PRODUCTS.length);
-    setProgress(0);
-    startTimeRef.current = Date.now();
   }, []);
 
   const goToPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + PRODUCTS.length) % PRODUCTS.length);
-    setProgress(0);
-    startTimeRef.current = Date.now();
   }, []);
 
   const goToSlide = (idx: number) => {
     setCurrentIndex(idx);
-    setProgress(0);
-    startTimeRef.current = Date.now();
   };
 
-  // Autoplay loop with smooth progress bar
+  // Autoplay loop every 5 seconds
   useEffect(() => {
-    if (isPaused) {
-      if (timerRef.current) cancelAnimationFrame(timerRef.current);
-      return;
-    }
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      goToNext();
+    }, AUTOPLAY_INTERVAL);
+    return () => clearInterval(timer);
+  }, [isPaused, goToNext]);
 
-    startTimeRef.current = Date.now() - (progress / 100) * AUTOPLAY_INTERVAL;
-
-    const tick = () => {
-      const elapsed = Date.now() - startTimeRef.current;
-      const currentProgress = Math.min((elapsed / AUTOPLAY_INTERVAL) * 100, 100);
-      setProgress(currentProgress);
-
-      if (elapsed >= AUTOPLAY_INTERVAL) {
-        goToNext();
-      } else {
-        timerRef.current = requestAnimationFrame(tick);
-      }
+  // Keyboard navigation (ArrowLeft / ArrowRight)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') goToNext();
+      if (e.key === 'ArrowLeft') goToPrev();
     };
-
-    timerRef.current = requestAnimationFrame(tick);
-
-    return () => {
-      if (timerRef.current) cancelAnimationFrame(timerRef.current);
-    };
-  }, [currentIndex, isPaused, goToNext, progress]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [goToNext, goToPrev]);
 
   const currentProduct = PRODUCTS[currentIndex];
 
@@ -247,105 +229,30 @@ export const Products: React.FC = () => {
       <section className="pt-20 pb-8 sm:pt-22 md:pb-12 relative overflow-hidden bg-gradient-to-b from-surface-alt/60 via-white to-surface-alt/30">
         <div className="container-page">
           
-          <div className="max-w-4xl lg:max-w-[920px] mx-auto">
-            {/* Top Control Bar: Category, Name & Controls */}
-            <div className="mb-3 flex items-center justify-between gap-2 px-1">
-              <div className="flex items-center gap-2">
-                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border}`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
-                  {currentProduct.category}
-                </span>
-                <h1 className="text-sm sm:text-base font-bold text-ink tracking-tight">
-                  {currentProduct.name}
-                </h1>
-              </div>
-
-              {/* Slider Navigation & Counter Controls */}
-              <div className="flex items-center gap-2.5">
-                <div className="flex items-center gap-1 text-xs text-muted font-semibold">
-                  <span className="text-ink font-bold">0{currentIndex + 1}</span>
-                  <div className="w-14 sm:w-20 h-1 bg-line rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary transition-all duration-100 ease-linear rounded-full"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                  <span>0{PRODUCTS.length}</span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsPaused((prev) => !prev)}
-                  className="p-1 rounded-lg text-muted hover:text-ink hover:bg-white border border-line transition-colors text-xs flex items-center gap-1 shadow-xs"
-                  title={isPaused ? 'Tiếp tục tự động chuyển' : 'Tạm dừng tự động chuyển'}
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    {isPaused ? 'play_arrow' : 'pause'}
-                  </span>
-                  <span className="hidden sm:inline text-[11px] pr-1">
-                    {isPaused ? 'Tạm dừng' : 'Tự chuyển'}
-                  </span>
-                </button>
-
-                <div className="flex items-center gap-1 border-l border-line pl-1.5">
-                  <button
-                    onClick={goToPrev}
-                    aria-label="Slide trước"
-                    className="w-7 h-7 rounded-full border border-line bg-white hover:bg-surface-alt text-ink flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-sm"
-                  >
-                    <span className="material-symbols-outlined text-base">chevron_left</span>
-                  </button>
-                  <button
-                    onClick={goToNext}
-                    aria-label="Slide tiếp theo"
-                    className="w-7 h-7 rounded-full border border-line bg-white hover:bg-surface-alt text-ink flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-sm"
-                  >
-                    <span className="material-symbols-outlined text-base">chevron_right</span>
-                  </button>
-                </div>
-              </div>
+          <div
+            className="w-full mx-auto"
+            style={{ maxWidth: 'min(920px, calc(58vh * 1.777))' }}
+          >
+            {/* Top Bar: Only Product Name in Brand Color (no clutter, no blinking dots, no buttons) */}
+            <div className="mb-2.5 px-1 flex items-center justify-between">
+              <h1 className={`text-xl sm:text-2xl font-black tracking-tight transition-colors duration-300 ${currentProduct.accent.text}`}>
+                {currentProduct.name}
+              </h1>
             </div>
 
-            {/* MAIN SLIDE: Full clean banner, rounded corners, fits viewport cleanly */}
+            {/* MAIN SLIDE: Full clean banner, 100% uncropped, rounded frame, no missing corners */}
             <div
-              className="relative rounded-2xl md:rounded-3xl border border-line/80 bg-slate-950 shadow-[0_16px_40px_-10px_rgba(10,37,64,0.14)] overflow-hidden transition-all duration-500 cursor-pointer group"
+              className="relative w-full aspect-[1672/941] rounded-2xl md:rounded-3xl border border-line/80 bg-white shadow-[0_12px_36px_-10px_rgba(10,37,64,0.12)] overflow-hidden cursor-pointer group flex items-center justify-center transition-all duration-300"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
               onClick={() => setModalImage(currentProduct.image)}
             >
-              {/* Image container: Constrained height to fit viewport cleanly without scrolling */}
-              <div className="relative aspect-[16/9] max-h-[50vh] sm:max-h-[54vh] w-full overflow-hidden bg-slate-950 flex items-center justify-center">
-                <img
-                  key={currentProduct.image}
-                  src={currentProduct.image}
-                  alt={`${currentProduct.name} - ${currentProduct.headline}`}
-                  className="w-full h-full object-cover transition-all duration-700 ease-out transform group-hover:scale-[1.01]"
-                />
-
-                {/* Prev / Next buttons on hover */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    goToPrev();
-                  }}
-                  aria-label="Slide trước"
-                  className="absolute left-2.5 sm:left-3.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg hover:scale-110 active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-xl">chevron_left</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    goToNext();
-                  }}
-                  aria-label="Slide tiếp theo"
-                  className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg hover:scale-110 active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-xl">chevron_right</span>
-                </button>
-              </div>
+              <img
+                key={currentProduct.image}
+                src={currentProduct.image}
+                alt={`${currentProduct.name} - ${currentProduct.headline}`}
+                className="w-full h-full object-contain block"
+              />
             </div>
 
             {/* Quick Switch Pills - 5 products directly under slide */}
@@ -357,7 +264,7 @@ export const Products: React.FC = () => {
                     key={prod.id}
                     type="button"
                     onClick={() => goToSlide(idx)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
                       isSelected
                         ? 'bg-ink text-white shadow-sm ring-2 ring-primary/30 scale-102'
                         : 'bg-white hover:bg-surface-alt text-muted hover:text-ink border border-line shadow-xs'
