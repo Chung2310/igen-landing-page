@@ -7,6 +7,7 @@ import luxcareImg from '../assets/product/luxcare.png';
 import marketingImg from '../assets/product/marketing.png';
 import banHangImg from '../assets/product/ban-hang.png';
 import ptImg from '../assets/product/pt.png';
+import kienTrucSuImg from '../assets/product/kien-truc-su.png';
 
 interface ProductItem {
   id: string;
@@ -92,7 +93,7 @@ const PRODUCTS: ProductItem[] = [
     name: 'iGen Marketing',
     category: 'Workspace & Tự Động Hóa',
     headline: 'AI Marketing & Sales Workspace',
-    tagline: 'Trợ thủ AI chốt đơn 24/7 – Tối ưu hóa doanh số bán hàng đa kênh',
+    tagline: 'Quản lý Fanpage • Chăm sóc khách hàng • AI Chốt đơn 24/24',
     description:
       'Đồng bộ quản lý đa Fanpage, tự động phản hồi bình luận, gom tin nhắn tập trung và nuôi dưỡng khách hàng tiềm năng bằng AI tiếng Việt.',
     image: marketingImg,
@@ -104,13 +105,13 @@ const PRODUCTS: ProductItem[] = [
       glow: 'shadow-[0_12px_36px_rgba(2,132,199,0.28)]',
     },
     features: [
-      { icon: 'dynamic_feed', title: 'Quản lý đa Fanpage', desc: 'Kết nối không giới hạn fanpage, quản lý nội dung một điểm.' },
-      { icon: 'smart_toy', title: 'AI Chốt đơn 24/7', desc: 'Tự động phản hồi bình luận, tư vấn và gửi báo giá tức thì.' },
-      { icon: 'chat', title: 'Hộp thư gom tập trung', desc: 'Hợp nhất toàn bộ tin nhắn đa kênh về một giao diện xử lý.' },
-      { icon: 'leaderboard', title: 'Thu thập & Đo lường Leads', desc: 'Theo dõi tỷ lệ chuyển đổi và tự động lưu data khách hàng.' },
+      { icon: 'dynamic_feed', title: 'Quản lý đa Fanpage', desc: 'Kết nối không giới hạn fanpage, quản lý nội dung và lịch đăng bài một điểm.' },
+      { icon: 'leaderboard', title: 'Facebook Leads', desc: 'Thu thập, phân loại và tự động nuôi dưỡng tệp khách hàng tiềm năng.' },
+      { icon: 'chat', title: 'Hộp thư đa kênh (Inbox)', desc: 'Hợp nhất toàn bộ tin nhắn Messenger, bình luận về một giao diện xử lý.' },
+      { icon: 'smart_toy', title: 'AI Reply & Chốt đơn 24/24', desc: 'Trợ thủ AI hiểu ngữ cảnh tiếng Việt, tư vấn và gửi báo giá tự động.' },
     ],
     stats: [
-      { value: '24/7', label: 'Phản hồi tức thì' },
+      { value: '24/24', label: 'Phản hồi tức thì' },
       { value: '3×', label: 'Tốc độ chốt đơn' },
       { value: '80%', label: 'Tiết kiệm chi phí trực page' },
     ],
@@ -173,6 +174,35 @@ const PRODUCTS: ProductItem[] = [
       { value: 'App/Web', label: 'Linh hoạt mọi thiết bị' },
     ],
     targetAudience: 'PT cá nhân, Phòng Gym, Studio Yoga & Fitness',
+  },
+  {
+    id: 'igen-kien-truc-su',
+    name: 'iGen Kiến trúc sư',
+    category: 'AI Thiết Kế & 3D',
+    headline: 'Render & Thiết Kế Thông Minh',
+    tagline: 'Ngoại thất • Nội thất • Floorplan to 3D – Ý tưởng thành hiện thực',
+    description:
+      'Nền tảng AI chuyên biệt cho kiến trúc sư và thiết kế nội ngoại thất. Dựng phối cảnh 3D siêu tốc từ bản vẽ 2D, render không gian thực tế ảo VR 360 và quy hoạch masterplan trực quan.',
+    image: kienTrucSuImg,
+    accent: {
+      text: 'text-[#0284c7]',
+      bg: 'bg-[#0284c7]/10',
+      border: 'border-[#0284c7]/30',
+      gradient: 'from-[#0284c7] to-[#0369a1]',
+      glow: 'shadow-[0_12px_36px_rgba(2,132,199,0.28)]',
+    },
+    features: [
+      { icon: 'bolt', title: 'Render siêu tốc', desc: 'Tạo phối cảnh 3D ngoại thất và nội thất chân thực chỉ trong vài giây bằng AI.' },
+      { icon: 'view_in_ar', title: 'Không gian VR 360', desc: 'Trải nghiệm không gian ảo sống động, giúp khách hàng hình dung trực quan.' },
+      { icon: 'grid_view', title: 'Floorplan to 3D', desc: 'Chuyển đổi bản vẽ mặt bằng 2D thành mô hình kiến trúc 3D chuẩn xác.' },
+      { icon: 'auto_awesome', title: 'AI Hỗ trợ & Masterplan', desc: 'Hỗ trợ quy hoạch phối cảnh tổng thể và tinh chỉnh ý tưởng thiết kế tức thì.' },
+    ],
+    stats: [
+      { value: '10s', label: 'Tốc độ render phối cảnh' },
+      { value: '3D & VR', label: 'Đa định dạng không gian' },
+      { value: '85%', label: 'Tiết kiệm thời gian dựng hình' },
+    ],
+    targetAudience: 'Kiến trúc sư, Nhà thiết kế Nội thất, Công ty Xây dựng & Bất động sản',
   },
 ];
 
