@@ -377,7 +377,7 @@ export const Products: React.FC = () => {
               </div>
             </div>
 
-            {/* Quick Switch Pills - 6 products directly under slide */}
+            {/* Quick Switch Pills - 7 products directly under slide */}
             <div className="mt-4 flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
               {PRODUCTS.map((prod, idx) => {
                 const isSelected = idx === currentIndex;
@@ -386,15 +386,17 @@ export const Products: React.FC = () => {
                     key={prod.id}
                     type="button"
                     onClick={() => goToSlide(idx)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                    className={`px-3.5 py-1.5 rounded-full text-xs transition-all duration-300 flex items-center gap-2 ${
                       isSelected
-                        ? 'bg-ink text-white shadow-sm ring-2 ring-primary/30 scale-102'
-                        : 'bg-white hover:bg-surface-alt text-muted hover:text-ink border border-line shadow-xs'
+                        ? 'bg-white text-ink font-bold border-2 border-[#00d2ff] shadow-[0_0_16px_rgba(0,210,255,0.6)] ring-2 ring-[#00d2ff]/25 scale-105'
+                        : 'bg-white hover:bg-surface-alt text-muted hover:text-ink font-medium border border-line hover:border-[#00d2ff]/40 hover:shadow-[0_0_8px_rgba(0,210,255,0.2)] shadow-xs'
                     }`}
                   >
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        isSelected ? 'bg-primary' : 'bg-slate-300'
+                      className={`rounded-full transition-all duration-300 ${
+                        isSelected
+                          ? 'w-2 h-2 bg-[#00d2ff] shadow-[0_0_8px_#00d2ff] animate-pulse'
+                          : 'w-1.5 h-1.5 bg-slate-300'
                       }`}
                     />
                     <span>{prod.name}</span>
@@ -652,7 +654,7 @@ export const Products: React.FC = () => {
             </button>
           </div>
 
-          {/* Modal Footer Bar: 5 Product Quick Pills in Fullscreen */}
+          {/* Modal Footer Bar: 7 Product Quick Pills in Fullscreen */}
           <div
             className="w-full max-w-6xl flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap z-20 py-1"
             onClick={(e) => e.stopPropagation()}
@@ -664,15 +666,17 @@ export const Products: React.FC = () => {
                   key={prod.id}
                   type="button"
                   onClick={() => goToSlide(idx)}
-                  className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                  className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-300 flex items-center gap-2 ${
                     isSelected
-                      ? 'bg-white text-ink shadow-lg scale-105 ring-2 ring-white/60'
-                      : 'bg-white/15 hover:bg-white/25 text-white/80 hover:text-white backdrop-blur-md border border-white/10'
+                      ? 'bg-black/50 text-white border-2 border-[#00d2ff] shadow-[0_0_18px_rgba(0,210,255,0.7)] ring-2 ring-[#00d2ff]/30 scale-105'
+                      : 'bg-white/15 hover:bg-white/25 text-white/80 hover:text-white backdrop-blur-md border border-white/10 hover:border-[#00d2ff]/40'
                   }`}
                 >
                   <span
-                    className={`w-1.5 h-1.5 rounded-full ${
-                      isSelected ? 'bg-primary' : 'bg-white/40'
+                    className={`rounded-full transition-all duration-300 ${
+                      isSelected
+                        ? 'w-2 h-2 bg-[#00d2ff] shadow-[0_0_8px_#00d2ff] animate-pulse'
+                        : 'w-1.5 h-1.5 bg-white/40'
                     }`}
                   />
                   <span>{prod.name}</span>
