@@ -181,7 +181,7 @@ const AUTOPLAY_INTERVAL = 6000; // 6 seconds per slide
 export const Products: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [modalImage, setModalImage] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useRevealAnimations(PRODUCTS.length);
 
@@ -202,7 +202,7 @@ export const Products: React.FC = () => {
     setCurrentIndex(idx);
   };
 
-  // Autoplay loop every 5 seconds
+  // Autoplay loop every 5 seconds (continues in fullscreen unless paused)
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
@@ -211,11 +211,12 @@ export const Products: React.FC = () => {
     return () => clearInterval(timer);
   }, [isPaused, goToNext]);
 
-  // Keyboard navigation (ArrowLeft / ArrowRight)
+  // Keyboard navigation (ArrowLeft / ArrowRight / Escape)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') goToNext();
       if (e.key === 'ArrowLeft') goToPrev();
+      if (e.key === 'Escape') setIsModalOpen(false);
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -245,7 +246,7 @@ export const Products: React.FC = () => {
               className="relative w-full aspect-[1672/941] rounded-2xl md:rounded-3xl border border-line/80 bg-white shadow-[0_12px_36px_-10px_rgba(10,37,64,0.12)] overflow-hidden cursor-pointer group flex items-center justify-center transition-all duration-300"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
-              onClick={() => setModalImage(currentProduct.image)}
+              onClick={() => setIsModalOpen(true)}
             >
               <img
                 key={currentProduct.image}
@@ -342,7 +343,7 @@ export const Products: React.FC = () => {
                 <div className="flex items-center gap-2.5 ml-auto">
                   <button
                     type="button"
-                    onClick={() => setModalImage(currentProduct.image)}
+                    onClick={() => setIsModalOpen(true)}
                     className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-alt hover:bg-white border border-line text-xs font-semibold text-ink transition-colors"
                   >
                     <span className="material-symbols-outlined text-sm">fullscreen</span>
@@ -362,96 +363,6 @@ export const Products: React.FC = () => {
 
           </div>
 
-        </div>
-      </section>
-
-      {/* Product Deep Dive Section (Cards for all 3 products) */}
-      <section className="section section-alt border-t border-line">
-        <div className="container-page">
-          <div className="mb-14 text-center max-w-3xl mx-auto reveal-text">
-            <span className="text-xs uppercase font-bold tracking-widest text-primary mb-2 block">
-              Danh mục sản phẩm
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4">
-              Toàn cảnh giải pháp phần mềm <span className="text-primary">iGen</span>
-            </h2>
-            <p className="text-body text-base md:text-lg">
-              Mỗi sản phẩm đều được nghiên cứu kỹ lưỡng từ bài toán thực tế của doanh nghiệp Việt, đảm bảo giao diện thân thiện, bảo mật cao và dễ dàng mở rộng.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {PRODUCTS.map((prod) => (
-              <div
-                key={prod.id}
-                className="card card-hover flex flex-col overflow-hidden bg-white border border-line transition-all duration-300 hover:shadow-xl"
-              >
-                {/* Product Header Graphic */}
-                <div
-                  className="aspect-[16/10] w-full bg-slate-900 relative overflow-hidden group cursor-pointer"
-                  onClick={() => setModalImage(prod.image)}
-                >
-                  <img
-                    src={prod.image}
-                    alt={prod.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  
-                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-ink text-xs font-bold shadow-sm">
-                    {prod.category}
-                  </span>
-
-                  <span className="absolute bottom-4 left-4 right-4 text-white font-bold text-lg drop-shadow-md">
-                    {prod.name}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 md:p-8 flex flex-col flex-1">
-                  <h3 className="text-xl font-bold text-ink mb-2">
-                    {prod.headline}
-                  </h3>
-                  <p className="text-sm text-body leading-relaxed mb-6 flex-1">
-                    {prod.tagline}
-                  </p>
-
-                  {/* Bullet features */}
-                  <div className="space-y-2.5 mb-8 pt-4 border-t border-line">
-                    {prod.features.map((f, fi) => (
-                      <div key={fi} className="flex items-start gap-2.5 text-xs text-body">
-                        <span className="material-symbols-outlined text-primary text-base flex-shrink-0 mt-0.5">
-                          check_circle
-                        </span>
-                        <span>
-                          <strong className="text-ink font-semibold">{f.title}:</strong> {f.desc}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-auto pt-4 border-t border-line flex items-center justify-between gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setModalImage(prod.image)}
-                      className="text-xs font-semibold text-muted hover:text-ink flex items-center gap-1 transition-colors"
-                    >
-                      <span className="material-symbols-outlined text-base">zoom_in</span>
-                      Xem infographic
-                    </button>
-
-                    <Link
-                      to="/contact"
-                      className="btn-primary py-2 px-4 text-xs font-bold"
-                    >
-                      Tư vấn triển khai
-                      <span className="material-symbols-outlined text-xs">arrow_forward</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -530,28 +441,115 @@ export const Products: React.FC = () => {
         </div>
       </section>
 
-      {/* Fullscreen HD Image Lightbox Modal */}
-      {modalImage && (
+      {/* Fullscreen Interactive Showcase Lightbox Modal */}
+      {isModalOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-fadeIn"
-          onClick={() => setModalImage(null)}
+          className="fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex flex-col items-center justify-between p-3 sm:p-6 animate-fadeIn select-none"
+          onClick={() => setIsModalOpen(false)}
         >
-          <div className="relative max-w-6xl w-full max-h-[92vh] flex flex-col items-center justify-center">
-            {/* Close button */}
+          {/* Modal Header Bar */}
+          <div
+            className="w-full max-w-6xl flex items-center justify-between z-20 py-1"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Current Product Title in Brand Color */}
+            <div className="flex items-center gap-2">
+              <span className={`text-base sm:text-xl font-black tracking-tight ${currentProduct.accent.text}`}>
+                {currentProduct.name}
+              </span>
+              <span className="hidden sm:inline text-xs text-white/60">
+                • {currentProduct.category}
+              </span>
+            </div>
+
+            {/* Controls: Autoplay toggle & Close */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              <button
+                type="button"
+                onClick={() => setIsPaused((prev) => !prev)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium backdrop-blur-md border border-white/15 transition-all shadow-sm"
+                title={isPaused ? 'Bật tự động chuyển slide' : 'Tạm dừng tự động chuyển'}
+              >
+                <span className="material-symbols-outlined text-base">
+                  {isPaused ? 'play_arrow' : 'pause'}
+                </span>
+                <span className="text-[11px]">
+                  {isPaused ? 'Tự chuyển: Tắt' : 'Tự chuyển: Bật'}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/25 text-white text-xs font-semibold backdrop-blur-md border border-white/20 transition-all shadow-sm"
+              >
+                <span className="material-symbols-outlined text-base">close</span>
+                <span>Đóng (ESC)</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Modal Center Stage: Big Image + Prev/Next Buttons */}
+          <div
+            className="relative w-full max-w-6xl flex-1 flex items-center justify-center my-auto min-h-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Prev Button */}
             <button
-              onClick={() => setModalImage(null)}
-              className="absolute -top-12 right-0 sm:right-2 text-white/80 hover:text-white flex items-center gap-1.5 text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-all"
+              type="button"
+              onClick={goToPrev}
+              aria-label="Slide trước"
+              className="absolute left-1 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-black/60 hover:bg-black/90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-2xl"
             >
-              <span className="material-symbols-outlined text-lg">close</span>
-              Đóng (ESC)
+              <span className="material-symbols-outlined text-2xl sm:text-3xl">chevron_left</span>
             </button>
 
+            {/* Slide Image - 100% Uncropped HD */}
             <img
-              src={modalImage}
-              alt="iGen Product HD Showcase"
-              className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl border border-white/20"
-              onClick={(e) => e.stopPropagation()}
+              key={currentProduct.image}
+              src={currentProduct.image}
+              alt={currentProduct.name}
+              className="max-w-full max-h-[76vh] sm:max-h-[80vh] w-auto h-auto object-contain rounded-xl sm:rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-white/15 transition-all duration-300"
             />
+
+            {/* Next Button */}
+            <button
+              type="button"
+              onClick={goToNext}
+              aria-label="Slide tiếp theo"
+              className="absolute right-1 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-black/60 hover:bg-black/90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-2xl"
+            >
+              <span className="material-symbols-outlined text-2xl sm:text-3xl">chevron_right</span>
+            </button>
+          </div>
+
+          {/* Modal Footer Bar: 5 Product Quick Pills in Fullscreen */}
+          <div
+            className="w-full max-w-6xl flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap z-20 py-1"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {PRODUCTS.map((prod, idx) => {
+              const isSelected = idx === currentIndex;
+              return (
+                <button
+                  key={prod.id}
+                  type="button"
+                  onClick={() => goToSlide(idx)}
+                  className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                    isSelected
+                      ? 'bg-white text-ink shadow-lg scale-105 ring-2 ring-white/60'
+                      : 'bg-white/15 hover:bg-white/25 text-white/80 hover:text-white backdrop-blur-md border border-white/10'
+                  }`}
+                >
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      isSelected ? 'bg-primary' : 'bg-white/40'
+                    }`}
+                  />
+                  <span>{prod.name}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
