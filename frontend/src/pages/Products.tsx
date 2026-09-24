@@ -332,9 +332,9 @@ export const Products: React.FC = () => {
                   const isPrev = diff === -1;
                   const isNext = diff === 1;
 
-                  let transform = '';
-                  let opacity = 0;
-                  let zIndex = 0;
+                  let transform: string;
+                  let opacity: number;
+                  let zIndex: number;
                   let filter = 'none';
 
                   if (isActive) {
