@@ -33,12 +33,12 @@ interface ProductItem {
 const PRODUCTS: ProductItem[] = [
   {
     id: 'igen-erp',
-    name: 'iGen ERP',
-    category: 'Enterprise Hub',
-    headline: 'ERP Quản Trị Doanh Nghiệp Toàn Diện',
-    tagline: 'Quản trị tập trung vận hành, nhân sự, quy trình & học viên trên một nền tảng',
+    name: 'iGen ERP Giáo Dục',
+    category: 'Quản Lý Giáo Dục & Đào Tạo',
+    headline: 'ERP Quản Lý Giáo Dục',
+    tagline: 'Hỗ trợ quản lý học viên, đào tạo & vận hành cho các trung tâm, trường, lớp học',
     description:
-      'Hệ thống quản trị hợp nhất loại bỏ phân mảnh dữ liệu, tối ưu chi phí và tăng tốc hiệu suất vận hành cho doanh nghiệp giáo dục & cung ứng nhân lực.',
+      'Hệ thống ERP chuyên sâu cho ngành giáo dục: số hóa toàn diện quy trình tuyển sinh, quản lý học viên, lớp học, điểm danh, kết quả học tập và tài chính trên một nền tảng thống nhất.',
     image: erpImg,
     accent: {
       text: 'text-[#0088cc]',
@@ -48,17 +48,17 @@ const PRODUCTS: ProductItem[] = [
       glow: 'shadow-[0_12px_36px_rgba(0,136,204,0.28)]',
     },
     features: [
-      { icon: 'group', title: 'Nhân sự & Bảng lương', desc: 'Tự động tính công, tính lương và quản lý hồ sơ hợp đồng.' },
-      { icon: 'task_alt', title: 'Giao việc & Tiến độ KPI', desc: 'Phân bổ công việc trực quan, theo dõi tiến độ và lịch công tác.' },
-      { icon: 'school', title: 'Học viên & Đào tạo', desc: 'Quản lý điểm danh, lộ trình đào tạo và kết quả học tập.' },
-      { icon: 'account_tree', title: 'Quy trình & Phê duyệt', desc: 'Số hóa quy trình ký duyệt nội bộ và phễu tuyển dụng ứng viên.' },
+      { icon: 'school', title: 'Quản lý học viên & Đào tạo', desc: 'Lưu trữ hồ sơ học viên, lộ trình đào tạo, điểm danh và đánh giá học tập.' },
+      { icon: 'class', title: 'Lớp học & Lịch giảng dạy', desc: 'Sắp xếp thời khóa biểu, phân bổ phòng học và theo dõi ca giảng trực quan.' },
+      { icon: 'payments', title: 'Học phí & Báo cáo thu chi', desc: 'Tự động nhắc phí, đối soát học phí, hóa đơn và báo cáo tài chính minh bạch.' },
+      { icon: 'group', title: 'Giảng viên & Nhân sự', desc: 'Tự động tính lương, tính công và quản lý hồ sơ hợp đồng giáo viên.' },
     ],
     stats: [
+      { value: '100%', label: 'Học viên số hóa' },
       { value: '70%', label: 'Giảm thời gian thủ tục' },
-      { value: '100%', label: 'Dữ liệu tập trung' },
-      { value: '24/7', label: 'Truy cập đa nền tảng' },
+      { value: '24/7', label: 'Tra cứu đa nền tảng' },
     ],
-    targetAudience: 'Giáo dục, Đào tạo & Cung ứng nhân lực',
+    targetAudience: 'Trung tâm đào tạo, Trường học, Cơ sở giáo dục & Lớp học',
   },
   {
     id: 'luxcare-erp',
@@ -430,45 +430,47 @@ export const Products: React.FC = () => {
               })}
             </div>
 
-            {/* PRODUCT DESCRIPTION - Concise, focused on key business needs */}
-            <div className="max-w-4xl mx-auto mt-6 rounded-2xl md:rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-7 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all duration-300">
-              {/* Header Row 1: Metadata Badges (Category + Target Audience) */}
-              <div className="flex flex-wrap items-center justify-between gap-2.5 mb-3">
-                <span className={`inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border}`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-                  {currentProduct.category}
-                </span>
+            {/* PRODUCT DESCRIPTION - Pure Typography, Clean, Enterprise Elegance (No colored tag badges) */}
+            <div className="max-w-4xl mx-auto mt-6 rounded-2xl md:rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all duration-300">
+              
+              {/* Top Sub-bar: Minimalist Category & Target Audience Text (No badge boxes) */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 border-b border-line/70">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <span className="w-2 h-2 rounded-full bg-primary" />
+                  <span>{currentProduct.category}</span>
+                </div>
 
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/90 text-slate-700 text-xs font-medium border border-slate-200/80">
-                  <span className="material-symbols-outlined text-sm text-primary">groups</span>
-                  <span><strong className="text-ink font-semibold">Phù hợp:</strong> {currentProduct.targetAudience}</span>
-                </span>
+                <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                  <span className="material-symbols-outlined text-base text-slate-400">domain</span>
+                  <span className="text-slate-400">Phù hợp:</span>
+                  <span className="font-semibold text-ink">{currentProduct.targetAudience}</span>
+                </div>
               </div>
 
-              {/* Header Row 2: Product Title & Tagline with generous full-width hierarchy */}
-              <div className="pb-4 border-b border-line">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
-                  <h2 className="text-xl sm:text-2xl font-black text-ink tracking-tight">
+              {/* Main Title & Tagline */}
+              <div className="py-4 border-b border-line/70">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1.5">
+                  <h2 className="text-2xl sm:text-3xl font-black text-ink tracking-tight">
                     {currentProduct.name}
                   </h2>
-                  <span className="text-sm sm:text-base font-bold text-primary">
-                    • {currentProduct.headline}
+                  <span className="text-base sm:text-lg font-semibold text-slate-500">
+                    — {currentProduct.headline}
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-body leading-relaxed max-w-3xl font-medium">
+                <p className="text-xs sm:text-sm text-body leading-relaxed max-w-3xl">
                   {currentProduct.tagline}
                 </p>
               </div>
 
-              {/* 4 Core Features: Direct, practical, concise with product brand accent */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 py-4">
+              {/* 4 Core Features: Clean, modern cards with subtle neutral icon boxes */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 py-5">
                 {currentProduct.features.map((feat, fi) => (
                   <div
                     key={fi}
-                    className="group p-3.5 rounded-xl bg-slate-50/70 hover:bg-white border border-slate-200/70 hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between"
+                    className="group p-4 rounded-xl bg-slate-50/60 hover:bg-white border border-slate-200/80 hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between"
                   >
                     <div>
-                      <div className={`w-8 h-8 rounded-lg ${currentProduct.accent.bg} ${currentProduct.accent.text} border ${currentProduct.accent.border} flex items-center justify-center mb-2.5 shadow-2xs group-hover:scale-105 transition-transform duration-200`}>
+                      <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-primary mb-2.5 shadow-2xs group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-200">
                         <span className="material-symbols-outlined text-lg">{feat.icon}</span>
                       </div>
                       <h3 className="text-xs sm:text-sm font-bold text-ink mb-1 group-hover:text-primary transition-colors">
@@ -483,12 +485,12 @@ export const Products: React.FC = () => {
               </div>
 
               {/* Bottom Actions Row */}
-              <div className="pt-3.5 border-t border-line flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="pt-4 border-t border-line/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   {currentProduct.stats.map((s, si) => (
                     <div
                       key={si}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200/80 text-xs"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200/80 text-xs"
                     >
                       <strong className="text-ink font-bold text-xs">{s.value}</strong>
                       <span className="text-muted text-[11px]">{s.label}</span>
@@ -500,7 +502,7 @@ export const Products: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-alt hover:bg-white border border-line text-xs font-semibold text-ink transition-colors shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-surface-alt hover:bg-white border border-line text-xs font-semibold text-ink transition-colors shadow-2xs hover:border-slate-300"
                   >
                     <span className="material-symbols-outlined text-sm">fullscreen</span>
                     <span>Phóng to</span>
@@ -508,7 +510,7 @@ export const Products: React.FC = () => {
 
                   <Link
                     to="/contact"
-                    className="btn-primary py-1.5 px-4 text-xs font-bold shadow-xs hover:shadow-md transition-all"
+                    className="btn-primary py-2 px-5 text-xs font-bold shadow-xs hover:shadow-md transition-all"
                   >
                     <span>Đăng ký tư vấn demo</span>
                     <span className="material-symbols-outlined text-xs">arrow_forward</span>
