@@ -112,6 +112,35 @@ const PRODUCTS: ProductItem[] = [
     targetAudience: 'Doanh nghiệp Bán lẻ, Thương mại Điện tử, Dịch vụ & Đội ngũ Telesale / Online Sales',
   },
   {
+    id: 'igen-ban-hang',
+    name: 'iGen Bán Hàng',
+    category: 'Phần Mềm Bán Hàng & POS',
+    headline: 'Phần Mềm Bán Hàng Thông Minh',
+    tagline: 'Quản lý bán hàng – Tồn kho – Khách hàng trên một nền tảng duy nhất',
+    description:
+      'Giải pháp giúp doanh nghiệp theo dõi doanh thu trực quan, quản lý đơn hàng, kho sản phẩm, khách hàng, bảo hành linh hoạt và vận hành bán lẻ hiệu quả hơn.',
+    image: '/product/ban-hang.png',
+    accent: {
+      text: 'text-[#2563eb]',
+      bg: 'bg-[#2563eb]/10',
+      border: 'border-[#2563eb]/30',
+      gradient: 'from-[#2563eb] to-[#1d4ed8]',
+      glow: 'shadow-[0_12px_36px_rgba(37,99,235,0.28)]',
+    },
+    features: [
+      { icon: 'point_of_sale', title: 'Bán hàng tại quầy & POS', desc: 'Giao diện tính tiền siêu tốc, hỗ trợ quét mã vạch và thanh toán đa phương thức.' },
+      { icon: 'inventory_2', title: 'Quản lý kho & Tồn kho', desc: 'Kiểm soát số lượng tồn kho theo thời gian thực, cảnh báo tự động khi sắp hết hàng.' },
+      { icon: 'receipt_long', title: 'Hóa đơn & Quản lý đơn hàng', desc: 'Theo dõi chi tiết trạng thái đơn hàng, đối soát công nợ và xuất hóa đơn.' },
+      { icon: 'handyman', title: 'Bảo hành & Marketing tự động', desc: 'Quản lý quy trình sửa chữa bảo hành, chăm sóc khách hàng và marketing tích hợp.' },
+    ],
+    stats: [
+      { value: '3s', label: 'Tốc độ tạo hóa đơn tại quầy' },
+      { value: '100%', label: 'Chính xác số liệu tồn kho' },
+      { value: '0 Đổi', label: 'Không lo thất thoát doanh thu' },
+    ],
+    targetAudience: 'Cửa hàng Bán lẻ, Siêu thị mini, Chuỗi Điện máy, Thời trang, Phụ kiện & Dịch vụ',
+  },
+  {
     id: 'igen-pt',
     name: 'iGen PT Fitness',
     category: 'Quản Lý Huấn Luyện Viên',
@@ -444,7 +473,7 @@ export const Products: React.FC = () => {
           </div>
 
           {/* Slider Thumbnail Selectors */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
             {PRODUCTS.map((prod, idx) => {
               const isSelected = idx === currentIndex;
               return (
@@ -495,7 +524,7 @@ export const Products: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {PRODUCTS.map((prod) => (
               <div
                 key={prod.id}

@@ -7,18 +7,20 @@ export const AIProcessorHero = () => {
   const mount = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
   const [exploded, setExploded] = useState(false);
-  const [auto, setAuto] = useState(false);
+  const [auto, setAuto] = useState(true);
   const [paused, setPaused] = useState(false);
   useEffect(() => {
     let disposed = false;
     let cleanup: (() => void) | undefined;
     const host = mount.current;
+    const stopAuto = () => setAuto(false);
+    host?.addEventListener('processor-auto-stop', stopAuto);
     const observer = new MutationObserver(() => setReady(host?.dataset.webgl === 'ready'));
     if (host) observer.observe(host, { attributes: true, attributeFilter: ['data-webgl'] });
     import('./processorScene').then(({ createProcessor }) => {
       if (!disposed && host) cleanup = createProcessor(host);
     }).catch(() => { /* Keep the CSS fallback if WebGL is unavailable. */ });
-    return () => { disposed = true; observer.disconnect(); cleanup?.(); };
+    return () => { disposed = true; observer.disconnect(); host?.removeEventListener('processor-auto-stop', stopAuto); cleanup?.(); };
   }, []);
   const action = (action: string, enabled?: boolean) => mount.current?.dispatchEvent(new CustomEvent('processor-action', { detail: { action, enabled } }));
 
@@ -40,7 +42,7 @@ export const AIProcessorHero = () => {
         </div>
         <div className="ai-processor__controls" role="group" aria-label="Điều khiển mô hình">
           <button disabled={!ready} aria-label="Tách lớp" title="Tách lớp" aria-pressed={exploded} onClick={() => { setExploded(!exploded); action('explode', !exploded); }}><Layers size={18} aria-hidden="true" /></button>
-          <button disabled={!ready} aria-label="Tự xoay" title="Tự xoay" aria-pressed={auto} onClick={() => { setAuto(!auto); action('auto', !auto); }}><RotateCw size={18} aria-hidden="true" /></button>
+          <button disabled={!ready} aria-label="Tự xoay qua lại 180 độ" title="Tự xoay 180°" aria-pressed={auto} onClick={() => { setAuto(!auto); action('auto', !auto); }}><RotateCw size={18} aria-hidden="true" /></button>
           <button disabled={!ready} aria-label={paused ? 'Chạy dữ liệu' : 'Dừng dữ liệu'} title={paused ? 'Chạy dữ liệu' : 'Dừng dữ liệu'} aria-pressed={paused} onClick={() => { setPaused(!paused); action('pause', !paused); }}>{paused ? <Play size={18} aria-hidden="true" /> : <Pause size={18} aria-hidden="true" />}</button>
           <button disabled={!ready} aria-label="Phóng to mô hình" title="Phóng to" onClick={() => action('zoom-in')}><Plus size={18} aria-hidden="true" /></button>
           <button disabled={!ready} aria-label="Thu nhỏ mô hình" title="Thu nhỏ" onClick={() => action('zoom-out')}><Minus size={18} aria-hidden="true" /></button>

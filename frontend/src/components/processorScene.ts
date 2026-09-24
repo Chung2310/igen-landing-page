@@ -144,11 +144,15 @@ export function createProcessor(host: HTMLDivElement) {
 
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   let frame = 0, visible = true, alive = true, contextLost = false, lastFrame = 0;
-  let explode = false, separation = 0, autoRotate = false, paused = false, clock = 0;
+  let explode = false, separation = 0, autoRotate = true, paused = false, clock = 0;
   let zoom = 1, targetZoom = 1;
   const neutralPosition = camera.position.clone();
   const targetRotation = new THREE.Quaternion();
   const stepRotation = new THREE.Quaternion();
+  const autoRotation = new THREE.Quaternion();
+  const displayRotation = new THREE.Quaternion();
+  const verticalAxis = new THREE.Vector3(0, 1, 0);
+  let autoPhase = 0;
   const cameraRight = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
   const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
   const pointers = new Map<number, { x: number; y: number }>();
@@ -167,8 +171,12 @@ export function createProcessor(host: HTMLDivElement) {
     const delta = Math.min(50, Math.max(0, time - lastFrame)); lastFrame = time;
     const blend = motion.matches ? 1 : 1 - Math.exp(-delta / 95);
     if (!motion.matches && !paused) clock += delta;
-    if (autoRotate && !motion.matches && !pointers.size) rotate(delta * .008, 0);
-    model.quaternion.slerp(targetRotation, blend);
+    // A 32-second sweep: -90° to +90°, easing smoothly at both ends.
+    if (autoRotate && !motion.matches && !pointers.size) autoPhase += delta * Math.PI * 2 / 32000;
+    const angle = autoRotate ? Math.sin(autoPhase) * Math.PI / 2 : 0;
+    autoRotation.setFromAxisAngle(verticalAxis, angle);
+    displayRotation.copy(targetRotation).premultiply(autoRotation);
+    model.quaternion.slerp(displayRotation, blend);
     separation += ((explode ? 1 : 0) - separation) * blend;
     assembled.forEach(({ object, y, lift }) => { object.position.y = y + lift * separation; });
     zoom += (targetZoom - zoom) * blend;
@@ -183,13 +191,20 @@ export function createProcessor(host: HTMLDivElement) {
       (terminals[i].material as THREE.MeshStandardMaterial).emissiveIntensity = progress > .90 ? 3 : .5;
     });
     renderer.render(scene, camera);
-    const moving = model.quaternion.angleTo(targetRotation) > .001 || Math.abs(zoom - targetZoom) > .001 || Math.abs(separation - (explode ? 1 : 0)) > .001;
+    const moving = model.quaternion.angleTo(displayRotation) > .001 || Math.abs(zoom - targetZoom) > .001 || Math.abs(separation - (explode ? 1 : 0)) > .001;
     if ((!motion.matches && (!paused || autoRotate)) || moving) frame = requestAnimationFrame(draw);
   };
   const wake = () => { if (!frame && alive && visible && !contextLost && !document.hidden) frame = requestAnimationFrame(draw); };
   const resize = () => { const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); wake(); };
+  const stopAuto = () => {
+    targetRotation.copy(model.quaternion);
+    autoRotate = false;
+    autoPhase = 0;
+    host.dispatchEvent(new Event('processor-auto-stop'));
+  };
   const down = (e: PointerEvent) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (autoRotate) stopAuto();
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     host.setPointerCapture(e.pointerId);
     host.focus({ preventScroll: true });
@@ -217,7 +232,11 @@ export function createProcessor(host: HTMLDivElement) {
     const detail = (event as CustomEvent<{ action: string; enabled?: boolean }>).detail;
     if (detail.action === 'reset') { targetRotation.identity(); targetZoom = 1; explode = false; autoRotate = false; }
     if (detail.action === 'explode') explode = !!detail.enabled;
-    if (detail.action === 'auto') autoRotate = !!detail.enabled;
+    if (detail.action === 'auto') {
+      targetRotation.copy(model.quaternion);
+      autoPhase = 0;
+      autoRotate = !!detail.enabled;
+    }
     if (detail.action === 'pause') paused = !!detail.enabled;
     if (detail.action === 'zoom-in') targetZoom = Math.max(.72, targetZoom - .12);
     if (detail.action === 'zoom-out') targetZoom = Math.min(1.4, targetZoom + .12);
@@ -226,6 +245,7 @@ export function createProcessor(host: HTMLDivElement) {
   const keydown = (e: KeyboardEvent) => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '-', 'Home'].includes(e.key)) return;
     e.preventDefault();
+    if (autoRotate) stopAuto();
     if (e.key === 'Home') { targetRotation.identity(); targetZoom = 1; }
     else if (e.key === '+') targetZoom = Math.max(.72, targetZoom - .12);
     else if (e.key === '-') targetZoom = Math.min(1.4, targetZoom + .12);
@@ -251,5 +271,3 @@ export function createProcessor(host: HTMLDivElement) {
     environment.dispose(); renderer.dispose(); renderer.domElement.remove(); delete host.dataset.webgl;
   };
 }
-
-
