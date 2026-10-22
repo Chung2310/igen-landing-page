@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { ArrowRight, GraduationCap, Megaphone, Settings, TrendingUp } from 'lucide-react';
 import axios from 'axios';
-import { SilkBackground } from '../components/SilkBackground';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
 import { type ServiceData, MOCK_SERVICES } from '../utils/servicesData';
+import './Solutions.css';
 
 const PILLAR_SLUGS = [
   'tu-van-chuyen-doi-so',
@@ -16,6 +17,13 @@ const PILLARS = PILLAR_SLUGS
   .map((slug) => MOCK_SERVICES.find((s) => s.slug === slug))
   .filter((s): s is ServiceData => Boolean(s));
 
+const PILLAR_HIGHLIGHTS = [
+  { icon: TrendingUp, title: 'Tư vấn & Chuyển đổi số', description: 'Chiến lược và lộ trình số hóa phù hợp.' },
+  { icon: Megaphone, title: 'AI Marketing & Vận hành', description: 'Tự động hóa quy trình, nâng cao hiệu quả.' },
+  { icon: Settings, title: 'Nền tảng AI theo yêu cầu', description: 'Ứng dụng AI thiết kế riêng cho doanh nghiệp.' },
+  { icon: GraduationCap, title: 'Học viện doanh nghiệp 1 người', description: 'Học cách vận hành và phát triển cùng AI.' },
+];
+
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const Solutions: React.FC = () => {
@@ -25,7 +33,10 @@ export const Solutions: React.FC = () => {
     try {
       const res = await axios.get(`${API_URL}/services`, { params: { limit: 20, status: 'active' } });
       if (res.data?.success && res.data.data.docs.length > 0) {
-        setServices(res.data.data.docs);
+        const apiServices: ServiceData[] = res.data.data.docs;
+        const apiSlugs = new Set(apiServices.map((service) => service.slug));
+        const addedServices = MOCK_SERVICES.filter((service) => service.order >= 11 && !apiSlugs.has(service.slug));
+        setServices([...apiServices, ...addedServices]);
       }
     } catch {
       // Keep mock data when API offline
@@ -44,53 +55,51 @@ export const Solutions: React.FC = () => {
   useRevealAnimations(services.length);
 
   return (
-    <main className="flex flex-col w-full relative">
+    <main className="solutions-page">
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-44 md:pt-48 md:pb-52 overflow-hidden">
-        <SilkBackground />
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-4 flex flex-col items-center">
-          <span className="hero-reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-6">
-            AI Solutions Suite
-          </span>
-          <h1 className="hero-reveal text-4xl md:text-6xl font-extrabold tracking-tight text-ink leading-[1.1] mb-6">
-            Hệ sinh thái giải pháp AI toàn diện
-          </h1>
-          <p className="hero-reveal text-lg md:text-xl text-body max-w-2xl leading-relaxed">
-            Khám phá sức mạnh của trí tuệ nhân tạo được thiết kế riêng cho sự phát triển vượt bậc của doanh nghiệp bạn.
-          </p>
+      <section className="solutions-hero">
+        <div className="solutions-hero__inner">
+          <div className="solutions-hero__copy">
+            <h1 className="hero-reveal">Hệ sinh thái giải pháp<br /><span>AI</span> toàn diện</h1>
+            <p className="hero-reveal">Khám phá sức mạnh của trí tuệ nhân tạo được thiết kế riêng cho sự phát triển vượt bậc của doanh nghiệp bạn.</p>
+            <div className="solutions-hero__actions hero-reveal">
+              <a href="#solutions-pillars" className="solutions-hero__primary">Khám phá giải pháp <ArrowRight size={19} aria-hidden="true" /></a>
+              <RouterLink to="/contact" className="solutions-hero__secondary">Liên hệ tư vấn</RouterLink>
+            </div>
+          </div>
+          <div className="solutions-hero__visual hero-reveal">
+            <img src="/solutions-hero-robot.png" alt="Minh họa robot AI bên máy tính phân tích dữ liệu" fetchPriority="high" />
+          </div>
         </div>
       </section>
 
       {/* Four Pillars Section */}
-      <section className="section">
-        <div className="container-page">
-          <div className="mb-14 text-center max-w-3xl mx-auto reveal-text">
-            <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4">
-              Bốn trụ cột <span className="text-primary">cốt lõi</span>
-            </h2>
-            <p className="text-body text-lg">Nền tảng vững chắc cho mọi chiến lược chuyển đổi số.</p>
+      <section className="solutions-pillars" id="solutions-pillars">
+        <div className="solutions-pillars__inner">
+          <div className="solutions-pillars__heading">
+            <h2>Bốn trụ cột <span>cốt lõi</span></h2>
+            <p>Nền tảng vững chắc cho mọi chiến lược chuyển đổi số.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 reveal-items-container">
-            {activePillars.map((p) => (
-              <div key={p.slug} className="card card-hover p-8 md:p-10 flex flex-col reveal-item">
-                <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center text-primary mb-6">
-                  <span className="material-symbols-outlined text-3xl">{p.icon}</span>
-                </div>
-                <h3 className="text-2xl font-bold text-ink mb-3">{p.title}</h3>
-                <p className="text-body leading-relaxed flex-1">{p.shortDesc}</p>
-                <RouterLink to={`/solutions/${p.slug}`} className="link-arrow mt-6">
-                  Xem chi tiết <span className="material-symbols-outlined text-base">arrow_forward</span>
+          <div className="solutions-pillars__grid">
+            {activePillars.map((p, index) => {
+              const highlight = PILLAR_HIGHLIGHTS[index];
+              const Icon = highlight.icon;
+              return (
+                <RouterLink key={p.slug} to={`/solutions/${p.slug}`} className="solutions-pillars__card">
+                  <span className="solutions-pillars__icon"><Icon aria-hidden="true" /></span>
+                  <span className="solutions-pillars__text"><strong>{highlight.title}</strong><small>{highlight.description}</small></span>
+                  <span className="solutions-pillars__arrow"><ArrowRight size={18} aria-hidden="true" /></span>
                 </RouterLink>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* All Services */}
-      <section className="section section-alt">
+      <section className="section section-alt" id="solutions-catalog">
         <div className="container-page">
           <div className="mb-12 text-center reveal-text">
             <h2 className="text-3xl md:text-4xl font-bold text-ink mb-3">

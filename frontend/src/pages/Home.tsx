@@ -1,44 +1,37 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { ArrowRight, GraduationCap, Megaphone, Settings, TrendingUp } from 'lucide-react';
 import { AIProcessorHero } from '../components/AIProcessorHero';
+import { ServiceExplorer } from '../components/ServiceExplorer';
+import { IndustriesMarquee } from '../components/IndustriesMarquee';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
+import './HomePillars.css';
 
 const pillars = [
   {
-    icon: 'trending_up',
+    icon: TrendingUp,
     title: 'Tư vấn & Chuyển đổi Số',
     desc: 'Tư vấn chiến lược và triển khai chuyển đổi số toàn diện cho doanh nghiệp, từ đánh giá hiện trạng đến xây dựng lộ trình số hóa tối ưu.',
     slug: 'tu-van-chuyen-doi-so',
   },
   {
-    icon: 'campaign',
+    icon: Megaphone,
     title: 'AI Marketing & Vận Hành',
     desc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả làm việc và tạo lợi thế cạnh tranh.',
     slug: 'ai-marketing-van-hanh',
   },
   {
-    icon: 'settings',
+    icon: Settings,
     title: 'Nền Tảng AI Theo Yêu Cầu',
     desc: 'Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu và nâng cao hiệu quả vận hành.',
     slug: 'nen-tang-ai-theo-yeu-cau',
   },
   {
-    icon: 'school',
+    icon: GraduationCap,
     title: 'Học viện doanh nghiệp 1 người',
     desc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành hiệu quả.',
     slug: 'hoc-vien-doanh-nghiep-1-nguoi',
   },
-];
-
-const industries = [
-  'Bán lẻ & TMĐT',
-  'Sản xuất',
-  'Giáo dục & Đào tạo',
-  'F&B & Dịch vụ',
-  'Bất động sản',
-  'Logistics & Vận tải',
-  'Tài chính & Kế toán',
-  'Y tế & Sức khỏe',
 ];
 
 const faqItems = [
@@ -61,6 +54,13 @@ const faqItems = [
 ];
 
 export const Home: React.FC = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash !== '#home-pillars') return;
+    const frame = requestAnimationFrame(() => document.getElementById('home-pillars')?.scrollIntoView());
+    return () => cancelAnimationFrame(frame);
+  }, [location.hash]);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {
@@ -75,23 +75,9 @@ export const Home: React.FC = () => {
 
 
       {/* Industries Strip */}
-      <section className="py-12 bg-white border-b border-line">
-        <div className="container-page">
-          <p className="text-center text-muted text-xs font-semibold uppercase tracking-widest mb-7 reveal-text">
-            Đồng hành cùng doanh nghiệp trong nhiều lĩnh vực
-          </p>
-          <div className="flex flex-wrap justify-center gap-3 reveal-items-container">
-            {industries.map((name) => (
-              <span
-                key={name}
-                className="reveal-item px-4 py-2 rounded-full border border-line bg-surface-alt text-body text-sm font-medium hover:border-primary/30 hover:text-primary transition-colors duration-300"
-              >
-                {name}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+      <IndustriesMarquee />
+
+      <ServiceExplorer />
 
       {/* Vision Section */}
       <section className="section">
@@ -144,9 +130,6 @@ export const Home: React.FC = () => {
             {/* Text Column */}
             <div className="lg:col-span-7 order-1 lg:order-2">
               <div className="reveal-text">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-light border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-4">
-                  Sự khác biệt vượt trội
-                </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-ink mb-6">
                   Tại sao doanh nghiệp lựa chọn <span className="text-primary">iGen Technology?</span>
                 </h2>
@@ -156,7 +139,7 @@ export const Home: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 reveal-items-container">
-                <div className="reveal-item flex gap-4 p-4 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-card transition-all duration-300 hover:-translate-y-1 group">
+                <div className="igen-rainbow-border reveal-item flex gap-4 p-4 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-card transition-all duration-300 hover:-translate-y-1 group">
                   <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-light flex items-center justify-center text-primary mt-1 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-white">
                     <span className="material-symbols-outlined text-xl">verified</span>
                   </div>
@@ -168,7 +151,7 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="reveal-item flex gap-4 p-4 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-card transition-all duration-300 hover:-translate-y-1 group">
+                <div className="igen-rainbow-border reveal-item flex gap-4 p-4 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-card transition-all duration-300 hover:-translate-y-1 group">
                   <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-light flex items-center justify-center text-primary mt-1 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-white">
                     <span className="material-symbols-outlined text-xl">group_work</span>
                   </div>
@@ -180,7 +163,7 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="reveal-item flex gap-4 p-4 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-card transition-all duration-300 hover:-translate-y-1 group">
+                <div className="igen-rainbow-border reveal-item flex gap-4 p-4 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-card transition-all duration-300 hover:-translate-y-1 group">
                   <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-light flex items-center justify-center text-primary mt-1 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-white">
                     <span className="material-symbols-outlined text-xl">trending_down</span>
                   </div>
@@ -192,7 +175,7 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="reveal-item flex gap-4 p-4 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-card transition-all duration-300 hover:-translate-y-1 group">
+                <div className="igen-rainbow-border reveal-item flex gap-4 p-4 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-card transition-all duration-300 hover:-translate-y-1 group">
                   <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-light flex items-center justify-center text-primary mt-1 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-white">
                     <span className="material-symbols-outlined text-xl">security</span>
                   </div>
@@ -210,29 +193,24 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Pillars Showcase */}
-      <section className="section section-alt">
-        <div className="container-page">
-          <div className="text-center mb-14 reveal-text">
-            <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4">
-              Hệ sinh thái <span className="text-primary">Giải pháp AI</span>
-            </h2>
-            <p className="text-body max-w-xl mx-auto">
-              Trải nghiệm dịch vụ tối ưu hiệu suất vận hành doanh nghiệp.
-            </p>
+      <section className="home-pillars" id="home-pillars" aria-labelledby="home-pillars-title">
+        <div className="home-pillars__inner">
+          <div className="home-pillars__heading reveal-text">
+            <h2 id="home-pillars-title">Hệ sinh thái <span>Giải pháp AI</span></h2>
+            <p>Trải nghiệm dịch vụ tối ưu hiệu suất vận hành doanh nghiệp.</p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal-items-container">
-            {pillars.map((pillar) => (
-              <div key={pillar.title} className="card card-hover p-8 flex flex-col reveal-item group hover:border-primary/30 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary">
-                  <span className="material-symbols-outlined text-2xl text-primary group-hover:text-white transition-colors duration-300">{pillar.icon}</span>
-                </div>
-                <h4 className="text-lg font-semibold text-ink mb-2">{pillar.title}</h4>
-                <p className="text-body text-sm leading-relaxed flex-1">{pillar.desc}</p>
-                <Link to={`/solutions/${pillar.slug}`} className="link-arrow mt-5">
-                  Tìm hiểu thêm <span className="material-symbols-outlined text-base">arrow_forward</span>
+          <div className="home-pillars__grid reveal-items-container">
+            {pillars.map(({ icon: Icon, title, desc, slug }) => (
+              <article className="home-pillars__card reveal-item" key={slug}>
+                <span className="home-pillars__icon"><Icon size={32} strokeWidth={2} aria-hidden="true" /></span>
+                <Icon className="home-pillars__watermark" aria-hidden="true" />
+                <h3>{title}</h3>
+                <p>{desc}</p>
+                <Link to={`/solutions/${slug}`} aria-label={`Tìm hiểu thêm về ${title}`}>
+                  Tìm hiểu thêm
+                  <span className="home-pillars__arrow"><ArrowRight size={18} aria-hidden="true" /></span>
                 </Link>
-              </div>
+              </article>
             ))}
           </div>
         </div>
@@ -244,9 +222,6 @@ export const Home: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Text Column */}
             <div className="lg:col-span-7 reveal-text">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-light border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-4">
-                Lộ trình chuyển đổi
-              </span>
               <h2 className="text-3xl md:text-4xl font-bold text-ink mb-6">
                 Quy trình triển khai <span className="text-primary">Chuyển đổi AI</span>
               </h2>
@@ -257,7 +232,7 @@ export const Home: React.FC = () => {
               {/* Vertical Timeline Steps */}
               <div className="space-y-8 relative before:absolute before:top-4 before:bottom-4 before:left-[22px] before:w-[2px] before:bg-line reveal-steps-container">
                 {/* Step 1 */}
-                <div className="relative flex gap-6 pl-1.5 reveal-step group hover:bg-white hover:shadow-md hover:border-primary/20 border border-transparent p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                <div className="igen-rainbow-border relative flex gap-6 pl-1.5 reveal-step group hover:bg-white hover:shadow-md hover:border-primary/20 border border-transparent p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1">
                   <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-md shadow-primary/25 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary-dark">
                     01
                   </div>
@@ -270,7 +245,7 @@ export const Home: React.FC = () => {
                 </div>
 
                 {/* Step 2 */}
-                <div className="relative flex gap-6 pl-1.5 reveal-step group hover:bg-white hover:shadow-md hover:border-primary/20 border border-transparent p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                <div className="igen-rainbow-border relative flex gap-6 pl-1.5 reveal-step group hover:bg-white hover:shadow-md hover:border-primary/20 border border-transparent p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1">
                   <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-md shadow-primary/25 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary-dark">
                     02
                   </div>
@@ -283,7 +258,7 @@ export const Home: React.FC = () => {
                 </div>
 
                 {/* Step 3 */}
-                <div className="relative flex gap-6 pl-1.5 reveal-step group hover:bg-white hover:shadow-md hover:border-primary/20 border border-transparent p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                <div className="igen-rainbow-border relative flex gap-6 pl-1.5 reveal-step group hover:bg-white hover:shadow-md hover:border-primary/20 border border-transparent p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1">
                   <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-md shadow-primary/25 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary-dark">
                     03
                   </div>
@@ -296,7 +271,7 @@ export const Home: React.FC = () => {
                 </div>
 
                 {/* Step 4 */}
-                <div className="relative flex gap-6 pl-1.5 reveal-step group hover:bg-white hover:shadow-md hover:border-primary/20 border border-transparent p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                <div className="igen-rainbow-border relative flex gap-6 pl-1.5 reveal-step group hover:bg-white hover:shadow-md hover:border-primary/20 border border-transparent p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1">
                   <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-md shadow-primary/25 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary-dark">
                     04
                   </div>
@@ -341,7 +316,7 @@ export const Home: React.FC = () => {
             {faqItems.map((item, index) => {
               const isOpen = openFaqIndex === index;
               return (
-                <div key={index} className="border border-line rounded-2xl bg-white overflow-hidden transition-all duration-300 reveal-item shadow-sm">
+                <div key={index} className={`igen-rainbow-border border border-line rounded-2xl bg-white overflow-hidden transition-all duration-300 reveal-item shadow-sm${isOpen ? ' is-active' : ''}`}>
                   <button
                     onClick={() => toggleFaq(index)}
                     aria-expanded={isOpen}

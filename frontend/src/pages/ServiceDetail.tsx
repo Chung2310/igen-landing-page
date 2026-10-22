@@ -16,8 +16,10 @@ export const ServiceDetail: React.FC = () => {
   const fetchService = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/services/${slug}`);
-      if (res.data?.success) {
+      if (res.data?.success && res.data.data) {
         setService(res.data.data);
+      } else {
+        setService(MOCK_SERVICES.find((s) => s.slug === slug) || null);
       }
     } catch {
       // Fallback to mock data when API offline
@@ -73,15 +75,13 @@ export const ServiceDetail: React.FC = () => {
       <section className="relative pt-36 pb-40 overflow-hidden">
         <SilkBackground />
         <div className="relative z-10 max-w-4xl mx-auto px-6">
-          <div className="sd-reveal mb-6">
-            <Link
-              to="/solutions"
-              className="inline-flex items-center gap-2 text-sm font-medium text-body hover:text-primary transition-colors"
-            >
-              <span className="material-symbols-outlined text-base">arrow_back</span>
-              Sản phẩm &amp; Dịch vụ
-            </Link>
-          </div>
+          <nav aria-label="Đường dẫn trang" className="sd-reveal mb-6 flex flex-wrap items-center gap-2 text-sm text-body">
+            <Link to="/" className="hover:text-primary transition-colors">Trang chủ</Link>
+            <span aria-hidden="true">/</span>
+            <Link to="/solutions" className="hover:text-primary transition-colors">Dịch vụ</Link>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page" className="text-ink">{service.title}</span>
+          </nav>
 
           <div className="sd-reveal flex items-center gap-4 mb-5">
             <span className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center">
