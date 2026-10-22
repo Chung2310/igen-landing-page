@@ -35,7 +35,10 @@ export class AuthService {
   }
 
   static async login(username: string, password: string) {
-    const user = await User.findOne({ username: username.trim() });
+    const identifier = username.trim();
+    const user = await User.findOne({
+      $or: [{ username: identifier }, { email: identifier.toLowerCase() }],
+    });
     if (!user) {
       throw new Error('Tên đăng nhập hoặc mật khẩu không chính xác.');
     }
