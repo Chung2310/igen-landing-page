@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { PhoneCall } from 'lucide-react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 
@@ -63,6 +64,29 @@ const AppContent: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
+
+        {!isAdminPage && location.pathname !== '/login' && (
+          <div className="fixed bottom-6 right-5 z-40 flex flex-col items-center gap-3">
+            <a
+              href="tel:0353710189"
+              aria-label="Gọi ngay 0353.710.189"
+              title="Gọi ngay: 0353.710.189"
+              className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#00adfc] text-white shadow-lg shadow-sky-500/20 transition-transform hover:scale-110 hover:bg-[#0095d9] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0077b3]"
+            >
+              <PhoneCall size={25} strokeWidth={2.1} aria-hidden="true" />
+            </a>
+            <a
+              href="https://zalo.me/0353710189"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Nhắn Zalo qua số 0353.710.189"
+              title="Zalo: 0353.710.189"
+              className="block h-12 w-12 rounded-xl shadow-lg shadow-blue-500/20 transition-transform hover:scale-110 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0077b3]"
+            >
+              <img src="/zalo-logo.svg" alt="" width={48} height={48} className="h-12 w-12" />
+            </a>
+          </div>
+        )}
 
         {/* Footer */}
         {!isAdminPage && <Footer />}
