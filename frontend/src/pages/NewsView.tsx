@@ -42,9 +42,9 @@ export function NewsView({ articles, loading, search, selectedCategory, categori
       <section className="news-hero" aria-labelledby="news-title">
         <div className="news-hero__inner">
           <div className="news-hero__copy">
-            <span className="news-hero__eyebrow">iGen News</span>
-            <h1 id="news-title">Tin tức &amp; <span>Xu hướng</span></h1>
-            <p>Cập nhật những chuyển biến và đột phá mới trong thế giới trí tuệ nhân tạo, công nghệ và chuyển đổi số.</p>
+            <span className="news-hero__eyebrow hero-reveal">iGen News</span>
+            <h1 id="news-title" className="hero-reveal">Tin tức &amp; <span>Xu hướng</span></h1>
+            <p className="hero-reveal">Cập nhật những chuyển biến và đột phá mới trong thế giới trí tuệ nhân tạo, công nghệ và chuyển đổi số.</p>
             <div className="news-hero__highlights" aria-label="Nội dung tin tức">
               <div><span className="material-symbols-outlined">feed</span><span><strong>Cập nhật nhanh</strong><small>Thông tin mới nhất</small></span></div>
               <div><span className="material-symbols-outlined">lightbulb</span><span><strong>Kiến thức thực tiễn</strong><small>Ứng dụng vào doanh nghiệp</small></span></div>
