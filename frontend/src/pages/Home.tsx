@@ -113,7 +113,7 @@ export const Home: React.FC = () => {
         <div className="container-page">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Image Column */}
-            <div className="lg:col-span-5 reveal-text order-2 lg:order-1 group">
+            <div className="lg:col-span-5 xl:col-span-4 reveal-text order-2 lg:order-1 group">
               <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-card border border-line">
                 <img
                   src="/1783918018405_7758341297950364477_7758341297950364477_227cf57779e2d731342416ffd416fafc.jpg"
@@ -125,10 +125,10 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Text Column */}
-            <div className="lg:col-span-7 order-1 lg:order-2">
+            <div className="lg:col-span-7 xl:col-span-8 order-1 lg:order-2">
               <div className="reveal-text">
-                <h2 className="text-3xl md:text-4xl font-bold text-ink mb-6">
-                  Vì sao chọn <span className="text-primary">iGen?</span>
+                <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-ink mb-6 xl:whitespace-nowrap">
+                  Vì sao nên chọn <span className="text-primary">iGen Technology?</span>
                 </h2>
                 <p className="text-body text-base leading-relaxed mb-8">
                   Giải pháp AI phù hợp với công việc thực tế, có hướng dẫn triển khai và hỗ trợ lâu dài.
