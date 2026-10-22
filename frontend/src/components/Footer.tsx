@@ -9,13 +9,14 @@ export const Footer: React.FC = () => {
 
           {/* Column 1: Intro */}
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center gap-3 mb-5">
+            <div className="relative mb-5 h-14 w-28 overflow-hidden">
               <img
-                src="/logo.png"
-                alt="iGen Technology Logo"
-                className="h-8 w-8 object-contain"
+                src="/brand-icon.png"
+                alt="iGen Technology"
+                width="1024"
+                height="1024"
+                className="absolute left-1/2 top-[58%] h-[136px] w-[136px] max-w-none -translate-x-1/2 -translate-y-1/2"
               />
-              <span className="text-ink font-bold text-xl tracking-tight">iGen Technology</span>
             </div>
             <p className="text-body text-sm leading-relaxed max-w-md mb-5">
               Tiên phong kiến tạo hệ sinh thái AI tại Việt Nam, mang đến giải pháp đột phá cho doanh nghiệp.
@@ -63,7 +64,6 @@ export const Footer: React.FC = () => {
             <ul className="space-y-3">
               {[
                 { to: '/', label: 'Trang chủ' },
-                { to: '/products', label: 'Sản phẩm' },
                 { to: '/solutions', label: 'Giải pháp' },
                 { to: '/about', label: 'Về chúng tôi' },
                 { to: '/news', label: 'Tin tức' },

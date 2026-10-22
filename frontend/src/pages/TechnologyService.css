@@ -1,0 +1,8 @@
+.technology-page .software-hero { background: radial-gradient(circle at 82% 32%, #dff4ff, transparent 50%), linear-gradient(115deg, #fff, #f8fcff 58%, #eff9ff); }
+.technology-page h2 { font-weight: 550; }
+.technology-page .software-hero h1 { font-weight: 570; }
+.technology-page .software-scope-card > span,
+.technology-page .software-process article > span,
+.technology-page .software-outcomes__list article > span { font-weight: 550; }
+.technology-page .software-visual img { aspect-ratio: 16 / 9; object-fit: cover; }
+.technology-page .software-process article { border-top-width: 2px; }

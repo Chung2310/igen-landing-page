@@ -3,13 +3,17 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 
 const loadEnv = () => {
-  const paths = [
-    path.resolve(process.cwd(), '.env'),
-    path.resolve(process.cwd(), '../.env'),
-    path.resolve(__dirname, '../../.env'),
-    path.resolve(__dirname, '../../../.env'),
-    path.resolve(__dirname, '../../../../.env')
+  const directories = [
+    process.cwd(),
+    path.resolve(process.cwd(), '..'),
+    path.resolve(__dirname, '../..'),
+    path.resolve(__dirname, '../../..'),
+    path.resolve(__dirname, '../../../..')
   ];
+  const paths = directories.flatMap(directory => [
+    path.resolve(directory, '.env.local'),
+    path.resolve(directory, '.env')
+  ]);
   
   for (const envPath of paths) {
     if (fs.existsSync(envPath)) {
