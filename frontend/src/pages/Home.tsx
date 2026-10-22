@@ -11,25 +11,25 @@ const pillars = [
   {
     icon: TrendingUp,
     title: 'Tư vấn & Chuyển đổi Số',
-    desc: 'Tư vấn chiến lược và triển khai chuyển đổi số toàn diện cho doanh nghiệp, từ đánh giá hiện trạng đến xây dựng lộ trình số hóa tối ưu.',
+    desc: 'Đánh giá cách vận hành và lập lộ trình số hóa phù hợp.',
     slug: 'tu-van-chuyen-doi-so',
   },
   {
     icon: Megaphone,
     title: 'AI Marketing & Vận Hành',
-    desc: 'Ứng dụng AI vào marketing, truyền thông và quản trị doanh nghiệp nhằm tự động hóa quy trình, nâng cao hiệu quả làm việc và tạo lợi thế cạnh tranh.',
+    desc: 'Dùng AI để làm nội dung, chăm sóc khách hàng và giảm việc lặp lại.',
     slug: 'ai-marketing-van-hanh',
   },
   {
     icon: Settings,
     title: 'Nền Tảng AI Theo Yêu Cầu',
-    desc: 'Chúng tôi thiết kế và phát triển các ứng dụng AI chuyên biệt giúp tự động hóa công việc, quản lý dữ liệu và nâng cao hiệu quả vận hành.',
+    desc: 'Xây dựng công cụ AI theo quy trình và dữ liệu riêng của doanh nghiệp.',
     slug: 'nen-tang-ai-theo-yeu-cau',
   },
   {
     icon: GraduationCap,
     title: 'Học viện doanh nghiệp 1 người',
-    desc: 'Biến AI thành đội ngũ nhân sự số của riêng bạn. Học cách tự động hóa marketing, bán hàng, chăm sóc khách hàng và vận hành hiệu quả.',
+    desc: 'Học cách dùng AI cho marketing, bán hàng và công việc hằng ngày.',
     slug: 'hoc-vien-doanh-nghiep-1-nguoi',
   },
 ];
@@ -87,13 +87,10 @@ export const Home: React.FC = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-ink mb-6">Tầm nhìn chiến lược</h2>
               <div className="space-y-4 text-body leading-relaxed">
                 <p>
-                  iGen Technology được thành lập với sứ mệnh xây dựng Hệ sinh thái AI toàn diện dành cho doanh nghiệp hiện đại. Chúng tôi giúp cá nhân và doanh nghiệp ứng dụng AI vào mọi hoạt động cốt lõi, từ vận hành, quản trị, marketing, bán hàng đến chăm sóc khách hàng và phát triển sản phẩm.
+                  iGen xây dựng hệ sinh thái AI giúp doanh nghiệp ứng dụng công nghệ vào vận hành, quản trị, marketing và chăm sóc khách hàng.
                 </p>
                 <p>
-                  Không chỉ cung cấp công nghệ, iGen Technology tập trung đào tạo, chuyển giao và triển khai các giải pháp AI thực tiễn, giúp doanh nghiệp nâng cao năng suất, tối ưu chi phí và xây dựng mô hình vận hành thông minh.
-                </p>
-                <p>
-                  Với khát vọng lan tỏa giá trị của AI đến cộng đồng doanh nghiệp Việt Nam, iGen Technology đặt mục tiêu đồng hành cùng 1.000.000 doanh nghiệp trên toàn quốc trong hành trình hiểu đúng, ứng dụng hiệu quả và từng bước xây dựng doanh nghiệp vận hành bằng AI.
+                  Qua giải pháp thực tiễn, đào tạo và chuyển giao, chúng tôi hướng tới nâng cao năng suất, tối ưu chi phí và đồng hành cùng 1.000.000 doanh nghiệp Việt Nam trên hành trình chuyển đổi số.
                 </p>
               </div>
             </div>
@@ -131,10 +128,10 @@ export const Home: React.FC = () => {
             <div className="lg:col-span-7 order-1 lg:order-2">
               <div className="reveal-text">
                 <h2 className="text-3xl md:text-4xl font-bold text-ink mb-6">
-                  Tại sao doanh nghiệp lựa chọn <span className="text-primary">iGen Technology?</span>
+                  Vì sao chọn <span className="text-primary">iGen?</span>
                 </h2>
                 <p className="text-body text-base leading-relaxed mb-8">
-                  Chúng tôi không chỉ cung cấp công nghệ AI tiên tiến, mà mang lại sự đột phá về hiệu suất vận hành thực tế và sự đồng hành dài hạn giúp đối tác tự tin làm chủ công nghệ.
+                  Giải pháp AI phù hợp với công việc thực tế, có hướng dẫn triển khai và hỗ trợ lâu dài.
                 </p>
               </div>
 
@@ -144,9 +141,9 @@ export const Home: React.FC = () => {
                     <span className="material-symbols-outlined text-xl">verified</span>
                   </div>
                   <div>
-                    <h4 className="text-base font-semibold text-ink mb-1.5">Giải pháp Thực tiễn &amp; Đo lường được</h4>
+                    <h4 className="text-base font-semibold text-ink mb-1.5">Hiệu quả rõ ràng</h4>
                     <p className="text-body text-sm leading-relaxed">
-                      Công nghệ AI được tinh chỉnh và tích hợp trực tiếp vào luồng công việc hàng ngày của từng phòng ban, đảm bảo mang lại hiệu quả năng suất rõ rệt có thể đo lường ngay qua báo cáo số liệu.
+                      Tích hợp AI vào quy trình hiện có và theo dõi kết quả bằng số liệu.
                     </p>
                   </div>
                 </div>
@@ -156,9 +153,9 @@ export const Home: React.FC = () => {
                     <span className="material-symbols-outlined text-xl">group_work</span>
                   </div>
                   <div>
-                    <h4 className="text-base font-semibold text-ink mb-1.5">Đồng hành &amp; Chuyển giao Trực tiếp</h4>
+                    <h4 className="text-base font-semibold text-ink mb-1.5">Đào tạo trực tiếp</h4>
                     <p className="text-body text-sm leading-relaxed">
-                      iGen sát cánh đào tạo trực tiếp cho đội ngũ nhân viên của bạn từ tư duy đến kỹ năng vận hành công cụ, cam kết đồng hành cho tới khi nhân sự của doanh nghiệp làm chủ hoàn toàn hệ thống.
+                      Hướng dẫn đội ngũ sử dụng và vận hành công cụ trong công việc hằng ngày.
                     </p>
                   </div>
                 </div>
@@ -168,9 +165,9 @@ export const Home: React.FC = () => {
                     <span className="material-symbols-outlined text-xl">trending_down</span>
                   </div>
                   <div>
-                    <h4 className="text-base font-semibold text-ink mb-1.5">Tối ưu Chi phí Vận hành</h4>
+                    <h4 className="text-base font-semibold text-ink mb-1.5">Tiết kiệm chi phí</h4>
                     <p className="text-body text-sm leading-relaxed">
-                      Giúp tự động hóa các khâu sản xuất nội dung marketing, thiết kế hình ảnh và phản hồi CSKH, từ đó tiết kiệm tới 70-90% chi phí vận hành và tối giản bộ máy nhân sự.
+                      Tự động hóa việc lặp lại để giảm thời gian và chi phí vận hành.
                     </p>
                   </div>
                 </div>
@@ -180,9 +177,9 @@ export const Home: React.FC = () => {
                     <span className="material-symbols-outlined text-xl">security</span>
                   </div>
                   <div>
-                    <h4 className="text-base font-semibold text-ink mb-1.5">Bảo mật An toàn Tuyệt đối</h4>
+                    <h4 className="text-base font-semibold text-ink mb-1.5">Bảo vệ dữ liệu</h4>
                     <p className="text-body text-sm leading-relaxed">
-                      Toàn bộ dữ liệu tri thức của doanh nghiệp được lưu trữ bảo mật trên hạ tầng đám mây an toàn hoặc máy chủ nội bộ theo chuẩn bảo mật nghiêm ngặt cùng các điều khoản NDA pháp lý.
+                      Chọn cách lưu trữ và phân quyền phù hợp với nhu cầu của doanh nghiệp.
                     </p>
                   </div>
                 </div>
@@ -197,7 +194,7 @@ export const Home: React.FC = () => {
         <div className="home-pillars__inner">
           <div className="home-pillars__heading reveal-text">
             <h2 id="home-pillars-title">Hệ sinh thái <span>Giải pháp AI</span></h2>
-            <p>Trải nghiệm dịch vụ tối ưu hiệu suất vận hành doanh nghiệp.</p>
+            <p>Giải pháp AI cho từng nhu cầu của doanh nghiệp.</p>
           </div>
           <div className="home-pillars__grid reveal-items-container">
             {pillars.map(({ icon: Icon, title, desc, slug }) => (
@@ -223,10 +220,10 @@ export const Home: React.FC = () => {
             {/* Text Column */}
             <div className="lg:col-span-7 reveal-text">
               <h2 className="text-3xl md:text-4xl font-bold text-ink mb-6">
-                Quy trình triển khai <span className="text-primary">Chuyển đổi AI</span>
+                Quy trình <span className="text-primary">triển khai AI</span>
               </h2>
               <p className="text-body text-base leading-relaxed mb-10">
-                Các bước thiết kế bài bản, chuyên nghiệp giúp doanh nghiệp chuyển mình bằng công nghệ AI một cách an toàn, nhanh chóng và đạt tỷ lệ ROI tốt nhất.
+                Bốn bước từ tìm hiểu nhu cầu đến đưa AI vào công việc hằng ngày.
               </p>
 
               {/* Vertical Timeline Steps */}
@@ -237,9 +234,9 @@ export const Home: React.FC = () => {
                     01
                   </div>
                   <div>
-                    <h4 className="text-base font-semibold text-ink mb-1.5">Khảo sát hiện trạng &amp; Phân tích cơ hội</h4>
+                    <h4 className="text-base font-semibold text-ink mb-1.5">Khảo sát nhu cầu</h4>
                     <p className="text-body text-sm leading-relaxed">
-                      Đội ngũ chuyên gia công nghệ của iGen trực tiếp làm việc, khảo sát quy trình vận hành và nhân sự của doanh nghiệp để xác định chính xác các điểm nghẽn có thể giải quyết hiệu quả bằng trí tuệ nhân tạo.
+                      Tìm hiểu quy trình hiện tại và xác định việc AI có thể hỗ trợ.
                     </p>
                   </div>
                 </div>
@@ -250,9 +247,9 @@ export const Home: React.FC = () => {
                     02
                   </div>
                   <div>
-                    <h4 className="text-base font-semibold text-ink mb-1.5">Thiết kế Giải pháp &amp; Kiến trúc hệ thống</h4>
+                    <h4 className="text-base font-semibold text-ink mb-1.5">Thiết kế giải pháp</h4>
                     <p className="text-body text-sm leading-relaxed">
-                      Chúng tôi lên bản vẽ thiết kế luồng tự động hóa, lựa chọn mô hình AI tối ưu nhất (như ChatGPT, các mô hình ngôn ngữ lớn LLMs nội bộ hoặc thị giác máy tính) và tích hợp vào quy trình vận hành SOP hiện tại.
+                      Chọn công cụ, cách kết nối dữ liệu và kế hoạch triển khai phù hợp.
                     </p>
                   </div>
                 </div>
@@ -263,9 +260,9 @@ export const Home: React.FC = () => {
                     03
                   </div>
                   <div>
-                    <h4 className="text-base font-semibold text-ink mb-1.5">Tích hợp thực tế &amp; Đào tạo chuyển giao</h4>
+                    <h4 className="text-base font-semibold text-ink mb-1.5">Triển khai và đào tạo</h4>
                     <p className="text-body text-sm leading-relaxed">
-                      Triển khai kết nối API, tích hợp các công cụ AI vào hệ thống làm việc của doanh nghiệp, đồng thời trực tiếp đứng lớp hướng dẫn, cầm tay chỉ việc giúp nhân viên thực hành và sử dụng công cụ thành thạo.
+                      Tích hợp AI vào hệ thống và hướng dẫn đội ngũ sử dụng.
                     </p>
                   </div>
                 </div>
@@ -276,9 +273,9 @@ export const Home: React.FC = () => {
                     04
                   </div>
                   <div>
-                    <h4 className="text-base font-semibold text-ink mb-1.5">Đồng hành vận hành &amp; Liên tục cải tiến</h4>
+                    <h4 className="text-base font-semibold text-ink mb-1.5">Theo dõi và cải tiến</h4>
                     <p className="text-body text-sm leading-relaxed">
-                      iGen cam kết sát cánh cùng doanh nghiệp kiểm soát và duy trì tính ổn định của hệ thống trong suốt thời gian đầu, liên tục tinh chỉnh các phản hồi của AI và nâng cấp tính năng mới nhằm tối đa hóa hiệu quả hoạt động.
+                      Theo dõi kết quả, xử lý vướng mắc và điều chỉnh khi cần.
                     </p>
                   </div>
                 </div>

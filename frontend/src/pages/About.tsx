@@ -5,17 +5,17 @@ import { useRevealAnimations } from '../hooks/useRevealAnimations';
 import './About.css';
 
 const ABOUT_PILLARS = [
-  { icon: Target, title: 'Sứ mệnh', description: 'Kiến tạo hệ sinh thái AI giúp doanh nghiệp phát triển bền vững.' },
-  { icon: Eye, title: 'Tầm nhìn', description: 'Trở thành đối tác công nghệ AI hàng đầu tại Việt Nam và khu vực.' },
-  { icon: Gem, title: 'Giá trị cốt lõi', description: 'Đổi mới – Thực tiễn – Hiệu quả – Đồng hành.' },
-  { icon: UsersRound, title: 'Đối tượng phục vụ', description: 'Doanh nghiệp vừa và nhỏ, doanh nghiệp lớn và các tổ chức giáo dục, dịch vụ.' },
+  { icon: Target, title: 'Sứ mệnh', description: 'Giúp doanh nghiệp ứng dụng AI hiệu quả.' },
+  { icon: Eye, title: 'Tầm nhìn', description: 'Trở thành đối tác AI đáng tin cậy.' },
+  { icon: Gem, title: 'Giá trị cốt lõi', description: 'Đổi mới, thực tiễn, hiệu quả, đồng hành.' },
+  { icon: UsersRound, title: 'Đối tượng phục vụ', description: 'Doanh nghiệp và tổ chức muốn ứng dụng AI.' },
 ];
 
 const ABOUT_VALUES = [
-  { icon: Lightbulb, title: 'Đổi mới', description: 'Luôn tìm kiếm giải pháp hiệu quả hơn' },
-  { icon: BarChart3, title: 'Thực tiễn', description: 'Tập trung vào giá trị ứng dụng' },
-  { icon: ShieldCheck, title: 'Hiệu quả', description: 'Tạo ra kết quả đo lường được' },
-  { icon: Handshake, title: 'Đồng hành', description: 'Phát triển cùng khách hàng trên hành trình dài hạn' },
+  { icon: Lightbulb, title: 'Đổi mới', description: 'Không ngừng cải tiến' },
+  { icon: BarChart3, title: 'Thực tiễn', description: 'Giải quyết việc thực tế' },
+  { icon: ShieldCheck, title: 'Hiệu quả', description: 'Đo lường bằng kết quả' },
+  { icon: Handshake, title: 'Đồng hành', description: 'Đi cùng khách hàng' },
 ];
 
 const PARTNERS = [
@@ -73,7 +73,7 @@ export const About: React.FC = () => {
         <div className="about-shell about-hero__layout">
           <div className="about-hero__copy">
             <h1 className="hero-reveal">Kiến tạo hệ sinh thái <span>AI thông minh</span></h1>
-            <p className="hero-reveal">Đồng hành cùng doanh nghiệp trong hành trình chuyển đổi số và phát triển bền vững bằng công nghệ và kiến thức.</p>
+            <p className="hero-reveal">Giúp doanh nghiệp ứng dụng AI vào công việc hằng ngày.</p>
             <div className="about-stats hero-reveal">
               <div className="about-stat" aria-label="10+ giải pháp công nghệ">
                 <span className="about-stat__icon"><Settings aria-hidden="true" /></span>
@@ -94,10 +94,9 @@ export const About: React.FC = () => {
       <section className="about-story">
         <div className="about-shell about-story__layout">
           <div className="about-story__copy reveal-text">
-            <h2>Từ ý tưởng đến <span>hệ sinh thái AI toàn diện</span></h2>
-            <p>iGen Technology được thành lập với sứ mệnh xây dựng hệ sinh thái AI toàn diện dành cho doanh nghiệp hiện đại. Chúng tôi giúp cá nhân và doanh nghiệp ứng dụng AI vào mọi hoạt động cốt lõi, từ vận hành, quản trị, marketing, bán hàng đến chăm sóc khách hàng và phát triển sản phẩm.</p>
-            <p>Không chỉ cung cấp công nghệ, iGen Technology tập trung đào tạo, chuyển giao và triển khai các giải pháp AI thực tiễn, giúp doanh nghiệp nâng cao năng suất, tối ưu chi phí và xây dựng mô hình vận hành thông minh.</p>
-            <p>Với khát vọng lan tỏa giá trị của AI đến cộng đồng doanh nghiệp Việt Nam, iGen Technology đặt mục tiêu đồng hành cùng 1.000.000 doanh nghiệp trên toàn quốc trong hành trình chuyển đổi số.</p>
+            <h2>Từ ý tưởng đến <span>giải pháp AI</span></h2>
+            <p>iGen phát triển giải pháp AI cho vận hành, marketing, bán hàng và chăm sóc khách hàng.</p>
+            <p>Chúng tôi triển khai, đào tạo và chuyển giao để doanh nghiệp áp dụng AI vào công việc thực tế.</p>
             <Link className="about-story__link" to="/contact">Tìm hiểu thêm <ArrowRight size={16} aria-hidden="true" /></Link>
           </div>
           <div className="about-pillars reveal-items-container">
@@ -110,7 +109,7 @@ export const About: React.FC = () => {
           </div>
           <div className="about-story__visual reveal-text">
             <img src="/IMG_7181.jpeg" alt="Đội ngũ iGen Technology tại văn phòng" loading="lazy" />
-            <blockquote><span>“</span><p>“Công nghệ không chỉ là công cụ,<br />mà là bệ phóng cho những giá trị bền vững”</p><cite>— iGen Technology</cite></blockquote>
+            <blockquote><span>“</span><p>“Công nghệ tạo giá trị khi được ứng dụng đúng cách.”</p><cite>— iGen Technology</cite></blockquote>
           </div>
         </div>
         <div className="about-values">
