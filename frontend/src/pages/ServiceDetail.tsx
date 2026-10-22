@@ -5,10 +5,24 @@ import gsap from 'gsap';
 import { SilkBackground } from '../components/SilkBackground';
 import { getVideoEmbed } from '../utils/videoEmbed';
 import { type ServiceData, MOCK_SERVICES } from '../utils/servicesData';
+import { PillarDetail } from './PillarDetail';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
+const PILLAR_SLUGS = new Set([
+  'tu-van-chuyen-doi-so',
+  'ai-marketing-van-hanh',
+  'nen-tang-ai-theo-yeu-cau',
+  'hoc-vien-doanh-nghiep-1-nguoi',
+]);
+
 export const ServiceDetail: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
+  if (slug && PILLAR_SLUGS.has(slug)) return <PillarDetail slug={slug} />;
+  return <DefaultServiceDetail />;
+};
+
+const DefaultServiceDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [service, setService] = useState<ServiceData | null>(null);
   const [loading, setLoading] = useState(true);

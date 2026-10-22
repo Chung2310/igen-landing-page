@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowDown, ArrowRight, Check, ChevronRight, Lightbulb, Megaphone, Settings2, GraduationCap } from 'lucide-react';
+import { ArrowDown, ArrowRight, Check, ChevronRight } from 'lucide-react';
 import './PillarDetail.css';
 
 type Pillar = {
@@ -11,7 +11,6 @@ type Pillar = {
   intro: string;
   image: string;
   imageAlt: string;
-  icon: React.ComponentType<{ size?: number; strokeWidth?: number; 'aria-hidden'?: boolean }>;
   highlights: string[];
   overviewTitle: string;
   overview: string;
@@ -31,7 +30,6 @@ const pillars: Record<string, Pillar> = {
     intro: 'iGen cùng doanh nghiệp nhìn lại cách vận hành, chọn việc cần ưu tiên và xây dựng lộ trình số hóa phù hợp với nguồn lực thực tế.',
     image: '/service-illustrations/remote-development-center.png',
     imageAlt: 'Minh họa các quy trình và hệ thống được kết nối trên nhiều màn hình',
-    icon: Lightbulb,
     highlights: ['Hiểu hiện trạng', 'Ưu tiên rõ ràng', 'Thử nghiệm thực tế', 'Mở rộng theo giai đoạn'],
     overviewTitle: 'Một lộ trình xuất phát từ công việc hằng ngày',
     overview: 'Chuyển đổi số hiệu quả bắt đầu bằng việc xác định thông tin đang nằm ở đâu, các bước nào đang làm thủ công và bộ phận nào cần phối hợp. Từ đó, chúng tôi đề xuất những thay đổi có thể triển khai và đánh giá được.',
@@ -61,7 +59,6 @@ const pillars: Record<string, Pillar> = {
     intro: 'Kết nối kế hoạch nội dung, dữ liệu khách hàng và các bước phối hợp trong một quy trình rõ ràng, với AI hỗ trợ những công việc lặp lại.',
     image: '/service-illustrations/marketing-automation-hero.png',
     imageAlt: 'Minh họa bảng theo dõi marketing và các kênh tương tác khách hàng',
-    icon: Megaphone,
     highlights: ['Kế hoạch nội dung', 'Quản lý tương tác', 'Phối hợp đội ngũ', 'Theo dõi hiệu quả'],
     overviewTitle: 'Từ ý tưởng chiến dịch đến phản hồi khách hàng',
     overview: 'Một chiến dịch thường đi qua nhiều người và nhiều kênh. iGen giúp tổ chức lại các bước lên kế hoạch, tạo nội dung, duyệt, xuất bản và chăm sóc sau tương tác để đội ngũ nắm được tình trạng công việc.',
@@ -91,7 +88,6 @@ const pillars: Record<string, Pillar> = {
     intro: 'Từ trợ lý tra cứu tri thức đến tự động hóa nghiệp vụ, iGen thiết kế ứng dụng AI dựa trên dữ liệu, vai trò và cách làm việc của từng tổ chức.',
     image: '/service-illustrations/generative-ai-hero.png',
     imageAlt: 'Minh họa các nguồn dữ liệu và ứng dụng kết nối qua lõi AI',
-    icon: Settings2,
     highlights: ['Theo nhu cầu riêng', 'Kết nối dữ liệu', 'Có bước kiểm duyệt', 'Sẵn sàng mở rộng'],
     overviewTitle: 'Ứng dụng AI vào một công việc cụ thể',
     overview: 'Nền tảng theo yêu cầu được xác định từ người dùng thực tế: họ cần tìm thông tin gì, xử lý đầu vào nào và quyết định nào cần con người phê duyệt. Kiến trúc và tính năng được chọn theo những nhu cầu đó.',
@@ -121,7 +117,6 @@ const pillars: Record<string, Pillar> = {
     intro: 'Một lộ trình học thực hành dành cho người đang tự xây dựng công việc kinh doanh: hiểu công cụ, thiết kế quy trình và biết khi nào cần kiểm tra kết quả của AI.',
     image: '/academy-ai-hero.png',
     imageAlt: 'Người học thực hành cùng trợ lý AI trên máy tính trong không gian sáng',
-    icon: GraduationCap,
     highlights: ['Học theo tình huống', 'Làm trực tiếp', 'Có mẫu áp dụng', 'Tự cải tiến'],
     overviewTitle: 'Học từ chính việc bạn cần làm',
     overview: 'Thay vì học một danh sách công cụ rời rạc, người học chọn công việc đang tốn thời gian và thực hành từng bước: mô tả đầu việc, giao nhiệm vụ cho AI, kiểm tra đầu ra và lưu lại cách làm có thể lặp lại.',
@@ -154,7 +149,6 @@ export const PillarDetail: React.FC<{ slug: string }> = ({ slug }) => {
 
   if (!pillar) return null;
 
-  const Icon = pillar.icon;
   const contactUrl = `/contact?service=${encodeURIComponent(pillar.eyebrow)}`;
 
   return (
@@ -167,7 +161,6 @@ export const PillarDetail: React.FC<{ slug: string }> = ({ slug }) => {
               <Link to="/#home-pillars">Hệ sinh thái Giải pháp AI</Link><ChevronRight size={15} aria-hidden="true" />
               <span aria-current="page">{pillar.eyebrow}</span>
             </nav>
-            <span className="pillar-eyebrow"><Icon size={17} aria-hidden={true} /> {pillar.eyebrow}</span>
             <h1>{pillar.title} <span>{pillar.accent}</span></h1>
             <p>{pillar.intro}</p>
             <div className="pillar-hero__actions">
