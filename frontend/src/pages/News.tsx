@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { SilkBackground } from '../components/SilkBackground';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
+import { NewsView } from './NewsView';
 
 interface ArticleData {
   _id?: string;
@@ -268,150 +267,17 @@ export const News: React.FC = () => {
   };
 
   return (
-    <main className="flex flex-col w-full relative">
-
-      {/* Hero Section */}
-      <section className="relative pt-40 pb-40 overflow-hidden">
-        <SilkBackground />
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
-          <h1 className="hero-reveal text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight leading-[1.1]">
-            Tin tức & Xu hướng
-          </h1>
-          <p className="hero-reveal text-lg text-slate-600 max-w-2xl mx-auto">
-            Cập nhật những chuyển biến và đột phá mới nhất trong thế giới trí tuệ nhân tạo.
-          </p>
-        </div>
-      </section>
-
-      {/* Articles Grid & Controls Section */}
-      <section className="section">
-        <div className="container-page">
-
-          {/* Filters and Search toolbar */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
-
-            {/* Category Selectors */}
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => handleCategorySelect(cat)}
-                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all border ${
-                    selectedCategory === cat
-                      ? 'bg-primary text-white border-primary'
-                      : 'bg-white text-body border-line hover:border-primary/40 hover:text-ink'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Search input */}
-            <div className="relative w-full md:w-80 group">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors">
-                search
-              </span>
-              <input
-                type="text"
-                value={search}
-                onChange={handleSearchChange}
-                placeholder="Tìm kiếm bài viết..."
-                className="w-full bg-surface-alt border border-line text-ink rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted text-sm"
-              />
-            </div>
-
-          </div>
-
-          {/* Grid display */}
-          {loading ? (
-            <div className="flex justify-center items-center py-32">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-            </div>
-          ) : articles.length === 0 ? (
-            <div className="text-center py-32">
-              <span className="material-symbols-outlined text-6xl text-muted mb-4">search_off</span>
-              <p className="text-body">Không tìm thấy bài viết nào phù hợp.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {articles.map((art, index) => (
-                <Link
-                  key={art.slug}
-                  to={`/news/${art.slug}`}
-                  className="card card-hover overflow-hidden flex flex-col group fade-up-in"
-                  style={{ animationDelay: `${index * 90}ms` }}
-                >
-                  {/* Thumbnail */}
-                  <div className="aspect-video relative overflow-hidden bg-surface-alt">
-                    {art.thumbnail ? (
-                      <img
-                        src={art.thumbnail}
-                        alt={art.title}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-primary/30">
-                        <span className="material-symbols-outlined text-6xl">article</span>
-                      </div>
-                    )}
-                    <span className="absolute top-4 left-4 bg-white/90 backdrop-blur text-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full">
-                      {art.category}
-                    </span>
-                  </div>
-
-                  {/* Meta */}
-                  <div className="p-6 flex flex-col flex-1">
-                    <div className="text-muted text-xs mb-3 flex items-center gap-2">
-                      <span>{art.author}</span>
-                      <span>•</span>
-                      <span>
-                        {art.publishedAt
-                          ? new Date(art.publishedAt).toLocaleDateString('vi-VN')
-                          : new Date(art.createdAt).toLocaleDateString('vi-VN')}
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-ink mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                      {art.title}
-                    </h3>
-                    <p className="text-body text-sm leading-relaxed line-clamp-3 flex-1">
-                      {art.excerpt}
-                    </p>
-                    <span className="link-arrow mt-5">
-                      Đọc tiếp <span className="material-symbols-outlined text-base">arrow_forward</span>
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-
-          {/* Pagination controls */}
-          {totalPages > 1 && (
-            <div className="flex justify-center gap-4 mt-16">
-              <button
-                disabled={page === 1}
-                onClick={() => setPage(page - 1)}
-                className="w-12 h-12 rounded-full border border-line bg-white flex items-center justify-center text-body hover:border-primary hover:text-primary transition-all disabled:opacity-30"
-              >
-                <span className="material-symbols-outlined">chevron_left</span>
-              </button>
-              <span className="flex items-center text-sm font-semibold text-body">
-                {page} / {totalPages}
-              </span>
-              <button
-                disabled={page === totalPages}
-                onClick={() => setPage(page + 1)}
-                className="w-12 h-12 rounded-full border border-line bg-white flex items-center justify-center text-body hover:border-primary hover:text-primary transition-all disabled:opacity-30"
-              >
-                <span className="material-symbols-outlined">chevron_right</span>
-              </button>
-            </div>
-          )}
-
-        </div>
-      </section>
-
-    </main>
+    <NewsView
+      articles={articles}
+      loading={loading}
+      search={search}
+      selectedCategory={selectedCategory}
+      categories={categories}
+      page={page}
+      totalPages={totalPages}
+      onSearchChange={handleSearchChange}
+      onCategorySelect={handleCategorySelect}
+      onPageChange={setPage}
+    />
   );
 };

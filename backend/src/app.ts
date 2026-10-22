@@ -87,6 +87,10 @@ export const seedAdmin = async () => {
       });
       await admin.save();
       console.log('Admin user seeded successfully.');
+    } else if (process.env.NODE_ENV === 'development' && !(await existingAdmin.comparePassword(adminPassword))) {
+      existingAdmin.passwordHash = adminPassword;
+      await existingAdmin.save();
+      console.log('Local admin password updated successfully.');
     }
   } catch (error) {
     console.error('Failed to seed default admin:', error);

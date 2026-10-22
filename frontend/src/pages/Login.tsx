@@ -61,13 +61,13 @@ export const Login: React.FC = () => {
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-ink mb-2">Tên đăng nhập</label>
+            <label className="block text-sm font-medium text-ink mb-2">Tên đăng nhập hoặc email</label>
             <input
               type="text"
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="admin"
+              placeholder="Nhập tên đăng nhập hoặc email"
               autoComplete="username"
               className={inputClass}
             />

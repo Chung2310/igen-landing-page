@@ -1,22 +1,109 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { type ServiceData, MOCK_SERVICES } from '../utils/servicesData';
+import { ServiceMenuIcon } from './ServiceMenuIcon';
+import { INDUSTRIES } from '../data/industries';
+import './Navbar.css';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
+const MENU_ICONS: Record<string, Parameters<typeof ServiceMenuIcon>[0]['name']> = {
+  'Phát triển ứng dụng di động': 'mobile',
+  'Phát triển ứng dụng web': 'web',
+  'Kiểm thử phần mềm tự động': 'testing',
+  'Thiết kế UI/UX': 'design',
+  'Trung tâm phát triển phần mềm từ xa': 'office',
+  'Đội ngũ chuyên trách': 'team',
+  'Dịch vụ quản lý hệ thống IT': 'server',
+  ERP: 'erp',
+  CRM: 'crm',
+  'Marketing tự động': 'marketing',
+  'Generative AI': 'ai',
+  'Computer Vision (AI nhận diện hình ảnh)': 'vision',
+  'Chatbot AI': 'chat',
+  'Machine Learning & Data Analytics': 'analytics',
+};
+
+const SERVICE_MENU = [
+  {
+    label: 'Chuyên môn',
+    columns: [
+      [
+        {
+          title: 'Phát triển phần mềm',
+          items: [
+            'Phát triển ứng dụng di động',
+            'Phát triển ứng dụng web',
+            'Kiểm thử phần mềm tự động',
+            'Thiết kế UI/UX',
+          ],
+        },
+        {
+          title: 'Thuê ngoài CNTT',
+          items: ['Trung tâm phát triển phần mềm từ xa', 'Đội ngũ chuyên trách', 'Dịch vụ quản lý hệ thống IT'],
+        },
+      ],
+      [
+        {
+          title: 'Hệ thống doanh nghiệp và tự động hóa',
+          items: ['ERP', 'CRM', 'Marketing tự động'],
+        },
+      ],
+    ],
+  },
+  {
+    label: 'Công nghệ',
+    columns: [
+      [
+        {
+          title: 'AI & Machine Learning',
+          items: ['Generative AI', 'Computer Vision (AI nhận diện hình ảnh)', 'Chatbot AI', 'Machine Learning & Data Analytics'],
+        },
+      ],
+      [
+        { title: 'Blockchain', items: [] },
+        { title: 'Data & Analytics', items: [] },
+      ],
+    ],
+  },
+];
+
+const servicePages: Record<string, string> = {
+  'Phát triển ứng dụng di động': '/solutions/phat-trien-ung-dung-di-dong',
+  'Phát triển ứng dụng web': '/solutions/phat-trien-ung-dung-web',
+  'Kiểm thử phần mềm tự động': '/solutions/kiem-thu-phan-mem-tu-dong',
+  'Thiết kế UI/UX': '/solutions/thiet-ke-ui-ux',
+  'Trung tâm phát triển phần mềm từ xa': '/solutions/trung-tam-phat-trien-phan-mem-tu-xa',
+  'Đội ngũ chuyên trách': '/solutions/doi-ngu-chuyen-trach',
+  'Dịch vụ quản lý hệ thống IT': '/solutions/dich-vu-quan-ly-he-thong-it',
+  ERP: '/solutions/erp',
+  CRM: '/solutions/crm',
+  'Marketing tự động': '/solutions/marketing-tu-dong',
+  'Generative AI': '/solutions/generative-ai',
+  'Computer Vision (AI nhận diện hình ảnh)': '/solutions/computer-vision',
+  'Chatbot AI': '/solutions/chatbot-ai',
+  'Machine Learning & Data Analytics': '/solutions/sap-ra-mat/machine-learning-data-analytics',
+  Blockchain: '/solutions/sap-ra-mat/blockchain',
+  'Data & Analytics': '/solutions/sap-ra-mat/data-analytics',
+};
+
+const serviceLink = (service: string) =>
+  servicePages[service] || `/contact?service=${encodeURIComponent(service)}`;
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
-  const [services, setServices] = useState<ServiceData[]>([]);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [desktopServicesOpen, setDesktopServicesOpen] = useState(false);
+  const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
+  const [desktopIndustriesOpen, setDesktopIndustriesOpen] = useState(false);
 
   // Scroll to top on route change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
     setMobileOpen(false);
-    setMobileSolutionsOpen(false);
+    setMobileServicesOpen(false);
+    setDesktopServicesOpen(false);
+    setMobileIndustriesOpen(false);
+    setDesktopIndustriesOpen(false);
   }, [location.pathname]);
 
   // Add hairline / subtle shadow once the page is scrolled
@@ -27,28 +114,10 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Fetch services from DB
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/services`, { params: { limit: 20, status: 'active' } });
-        if (res.data?.success && res.data.data.docs.length > 0) {
-          const sorted = res.data.data.docs.sort((a: ServiceData, b: ServiceData) => (a.order || 0) - (b.order || 0));
-          setServices(sorted);
-        } else {
-          setServices(MOCK_SERVICES);
-        }
-      } catch {
-        setServices(MOCK_SERVICES);
-      }
-    };
-    fetchServices();
-  }, []);
-
   const links = [
     { to: '/', label: 'Trang chủ' },
-    { to: '/products', label: 'Sản phẩm' },
-    { to: '/solutions', label: 'Giải pháp' },
+    { to: '/products', label: 'Ngành nghề' },
+    { to: '/solutions', label: 'Dịch vụ' },
     { to: '/about', label: 'Về chúng tôi' },
     { to: '/news', label: 'Tin tức' },
     { to: '/contact', label: 'Liên hệ' },
@@ -61,10 +130,6 @@ export const Navbar: React.FC = () => {
         : 'text-body hover:text-ink after:w-0 hover:after:w-full'
     }`;
 
-  // Categorize services for the 2-column dropdown
-  const aiServices = services.filter((s) => s.category === 'AI');
-  const techServices = services.filter((s) => s.category !== 'AI');
-
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
@@ -74,91 +139,120 @@ export const Navbar: React.FC = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-[72px]">
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0 flex items-center gap-3 cursor-pointer group interactable">
-            <div className="size-10 text-primary transition-transform duration-700 group-hover:rotate-180 flex items-center justify-center">
-              <img src="/logo.png" alt="iGen Technology Logo" className="w-full h-full object-contain" />
+          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex-shrink-0 flex items-center cursor-pointer group interactable">
+            <div className="relative w-28 h-14 sm:w-32 sm:h-16 overflow-hidden transition-transform duration-300 group-hover:scale-105">
+              <img src="/brand-icon.png" alt="iGen Technology" width="1024" height="1024" className="absolute left-1/2 top-[58%] h-[136px] w-[136px] max-w-none -translate-x-1/2 -translate-y-1/2 sm:h-[158px] sm:w-[158px]" />
             </div>
-            <span className="text-ink text-xl font-bold tracking-tight">
-              iGen <span className="text-primary font-semibold">Technology</span>
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8 h-full">
+          <div className="hidden lg:flex items-center gap-5 xl:gap-8 h-full">
             {links.map((l) => {
-              if (l.to === '/solutions') {
+              if (l.to === '/products') {
                 return (
-                  <div key={l.to} className="group relative h-full flex items-center">
-                    <NavLink to={l.to} end className={linkClass}>
+                  <div
+                    key={l.to}
+                    className="group h-full flex items-center"
+                    onMouseEnter={() => { setDesktopIndustriesOpen(true); setDesktopServicesOpen(false); }}
+                    onMouseLeave={() => setDesktopIndustriesOpen(false)}
+                    onBlur={(event) => {
+                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDesktopIndustriesOpen(false);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Escape') setDesktopIndustriesOpen(false);
+                    }}
+                  >
+                    <button
+                      type="button"
+                      className={linkClass({ isActive: desktopIndustriesOpen })}
+                      aria-expanded={desktopIndustriesOpen}
+                      aria-controls="desktop-industries-panel"
+                      onClick={() => { setDesktopIndustriesOpen((open) => !open); setDesktopServicesOpen(false); }}
+                    >
                       <span className="flex items-center gap-1">
                         {l.label}
-                        <span className="material-symbols-outlined text-xs transition-transform duration-300 group-hover:rotate-180">
+                        <span className={`material-symbols-outlined text-xs transition-transform duration-300 ${desktopIndustriesOpen ? 'rotate-180' : ''}`}>
                           keyboard_arrow_down
                         </span>
                       </span>
-                    </NavLink>
-
-                    {/* Hover Dropdown Panel */}
-                    <div className="absolute top-[calc(100%-8px)] left-1/2 -translate-x-1/2 mt-1 w-[680px] bg-white/95 backdrop-blur-md rounded-2xl border border-line shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-3 group-hover:translate-y-0 z-50 p-6 grid grid-cols-2 gap-6">
-                      
-                      {/* Column 1: AI Solutions */}
-                      <div className="flex flex-col gap-3">
-                        <span className="text-[10px] uppercase font-bold tracking-widest text-primary border-b border-line pb-2 mb-1">
-                          Giải pháp AI & Tự động hóa
-                        </span>
-                        <div className="flex flex-col gap-1">
-                          {aiServices.map((svc) => (
-                            <Link
-                              key={svc.slug}
-                              to={`/solutions/${svc.slug}`}
-                              className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-surface-alt transition-colors group/item"
-                            >
-                              <div className="w-8 h-8 rounded-lg bg-primary-light flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors flex-shrink-0 mt-0.5">
-                                <span className="material-symbols-outlined text-base">{svc.icon}</span>
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-sm font-semibold text-ink group-hover/item:text-primary transition-colors">
-                                  {svc.title}
-                                </span>
-                                <span className="text-xs text-muted line-clamp-1 mt-0.5">
-                                  {svc.shortDesc}
-                                </span>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
+                    </button>
+                    <div
+                      id="desktop-industries-panel"
+                      className={`nav-dropdown-panel industry-menu-panel fixed top-[80px] left-1/2 z-50 w-[90vw] max-w-[1120px] -translate-x-1/2 rounded-2xl border border-line bg-white p-6 shadow-2xl transition-all duration-200 ${desktopIndustriesOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2 pointer-events-none'}`}
+                    >
+                      <div className="industry-menu-grid">
+                        {INDUSTRIES.map((industry) => (
+                          <Link key={industry.slug} to={`/industries/${industry.slug}`} className="industry-menu-card">
+                            <img src={industry.image} alt={`Minh họa ngành ${industry.name.toLowerCase()}`} loading="lazy" />
+                            <span className="industry-menu-label"><span aria-hidden="true">↗</span>{industry.name}</span>
+                          </Link>
+                        ))}
                       </div>
+                    </div>
+                  </div>
+                );
+              }
 
-                      {/* Column 2: Tech Platforms */}
-                      <div className="flex flex-col gap-3">
-                        <span className="text-[10px] uppercase font-bold tracking-widest text-primary border-b border-line pb-2 mb-1">
-                          Nền tảng Công nghệ & Số hóa
+              if (l.to === '/solutions') {
+                return (
+                  <div
+                    key={l.to}
+                    className="group h-full flex items-center"
+                    onMouseEnter={() => { setDesktopServicesOpen(true); setDesktopIndustriesOpen(false); }}
+                    onMouseLeave={() => setDesktopServicesOpen(false)}
+                    onBlur={(event) => {
+                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDesktopServicesOpen(false);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Escape') setDesktopServicesOpen(false);
+                    }}
+                  >
+                    <button
+                      type="button"
+                      className={linkClass({ isActive: desktopServicesOpen })}
+                      aria-expanded={desktopServicesOpen}
+                      aria-controls="desktop-services-panel"
+                      onClick={() => setDesktopServicesOpen(true)}
+                    >
+                      <span className="flex items-center gap-1">
+                        {l.label}
+                        <span className={`material-symbols-outlined text-xs transition-transform duration-300 ${desktopServicesOpen ? 'rotate-180' : ''}`}>
+                          keyboard_arrow_down
                         </span>
-                        <div className="flex flex-col gap-1">
-                          {techServices.map((svc) => (
-                            <Link
-                              key={svc.slug}
-                              to={`/solutions/${svc.slug}`}
-                              className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-surface-alt transition-colors group/item"
-                            >
-                              <div className="w-8 h-8 rounded-lg bg-primary-light flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors flex-shrink-0 mt-0.5">
-                                <span className="material-symbols-outlined text-base">{svc.icon}</span>
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-sm font-semibold text-ink group-hover/item:text-primary transition-colors">
-                                  {svc.title}
-                                </span>
-                                <span className="text-xs text-muted line-clamp-1 mt-0.5">
-                                  {svc.shortDesc}
-                                </span>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
+                      </span>
+                    </button>
 
+                    <div
+                      id="desktop-services-panel"
+                      className={`nav-dropdown-panel fixed top-[80px] left-1/2 z-50 w-[90vw] max-w-[1315px] xl:w-[75vw] -translate-x-1/2 rounded-2xl border border-line bg-white p-6 xl:p-[30px] shadow-2xl transition-all duration-200 ${desktopServicesOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2 pointer-events-none'}`}
+                    >
+                      <div className="grid grid-cols-4 gap-x-6 xl:gap-x-8">
+                        <span className="col-span-2 mb-5 text-sm text-muted">Chuyên môn</span>
+                        <span className="col-span-2 mb-5 text-sm text-muted">Công nghệ</span>
+                        {SERVICE_MENU.flatMap((area) => area.columns).map((column, index) => (
+                          <div key={index} className="flex flex-col gap-4">
+                            {column.map((section) => (
+                              <div key={section.title} className="flex flex-col gap-2">
+                                {section.items.length > 0 ? (
+                                  <h3 className="text-base font-bold uppercase leading-snug text-ink">{section.title}</h3>
+                                ) : (
+                                  <Link to={serviceLink(section.title)} className="text-base font-bold uppercase leading-snug text-ink transition-colors hover:text-primary">
+                                    {section.title}
+                                  </Link>
+                                )}
+                                {section.items.map((item) => (
+                                  <Link key={item} to={serviceLink(item)} className="flex min-h-[36px] items-center gap-2.5 rounded-lg text-sm leading-snug text-body transition-colors hover:text-primary focus-visible:text-primary">
+                                    <ServiceMenuIcon name={MENU_ICONS[item]} />
+                                    <span>{item}</span>
+                                  </Link>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 );
@@ -173,7 +267,7 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Action */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <Link to="/contact" className="btn-primary text-sm px-6 py-2.5">
               Liên hệ ngay
             </Link>
@@ -181,7 +275,7 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile toggle */}
           <button
-            className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-ink hover:bg-surface-alt transition-colors"
+            className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-ink hover:bg-surface-alt transition-colors"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
@@ -193,52 +287,87 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden grid bg-white transition-all duration-300 ease-in-out ${
+        className={`lg:hidden grid bg-white transition-all duration-300 ease-in-out ${
           mobileOpen ? 'grid-rows-[1fr] opacity-100 border-t border-line' : 'grid-rows-[0fr] opacity-0'
         }`}
       >
-        <div className="overflow-hidden">
+        <div className="max-h-[calc(100dvh-72px)] overflow-y-auto">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
             {links.map((l) => {
+              if (l.to === '/products') {
+                return (
+                  <div key={l.to} className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() => { setMobileIndustriesOpen((open) => !open); setMobileServicesOpen(false); }}
+                      aria-expanded={mobileIndustriesOpen}
+                      aria-controls="mobile-industries-panel"
+                      className="px-3 py-3 rounded-lg text-base font-medium text-body hover:bg-surface-alt transition-colors flex justify-between items-center w-full"
+                    >
+                      <span>{l.label}</span>
+                      <span className={`material-symbols-outlined text-xl transition-transform duration-300 ${mobileIndustriesOpen ? 'rotate-180' : ''}`}>
+                        keyboard_arrow_down
+                      </span>
+                    </button>
+                    {mobileIndustriesOpen && (
+                      <div id="mobile-industries-panel" className="industry-menu-grid industry-menu-grid--mobile px-3 pb-3">
+                        {INDUSTRIES.map((industry) => (
+                          <Link key={industry.slug} to={`/industries/${industry.slug}`} className="industry-menu-card" onClick={() => setMobileOpen(false)}>
+                            <img src={industry.image} alt={`Minh họa ngành ${industry.name.toLowerCase()}`} loading="lazy" />
+                            <span className="industry-menu-label"><span aria-hidden="true">↗</span>{industry.name}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
               if (l.to === '/solutions') {
                 return (
                   <div key={l.to} className="flex flex-col">
                     <button
-                      onClick={() => setMobileSolutionsOpen((prev) => !prev)}
+                      onClick={() => { setMobileServicesOpen((prev) => !prev); setMobileIndustriesOpen(false); }}
+                      aria-expanded={mobileServicesOpen}
+                      aria-controls="mobile-services-panel"
                       className="px-3 py-3 rounded-lg text-base font-medium text-body hover:bg-surface-alt transition-colors flex justify-between items-center w-full"
                     >
                       <span>{l.label}</span>
-                      <span className={`material-symbols-outlined text-xl transition-transform duration-300 ${mobileSolutionsOpen ? 'rotate-180' : ''}`}>
+                      <span className={`material-symbols-outlined text-xl transition-transform duration-300 ${mobileServicesOpen ? 'rotate-180' : ''}`}>
                         keyboard_arrow_down
                       </span>
                     </button>
 
                     {/* Collapsible list of services */}
                     <div
+                      id="mobile-services-panel"
                       className={`grid transition-all duration-300 ease-in-out pl-6 ${
-                        mobileSolutionsOpen ? 'grid-rows-[1fr] opacity-100 my-1' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
+                        mobileServicesOpen ? 'grid-rows-[1fr] opacity-100 my-1' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
                       }`}
                     >
                       <div className="overflow-hidden flex flex-col gap-1">
-                        {services.map((svc) => (
-                          <Link
-                            key={svc.slug}
-                            to={`/solutions/${svc.slug}`}
-                            className="px-3 py-2 rounded-lg text-sm text-body hover:text-primary hover:bg-primary-light transition-colors flex items-center gap-2"
-                            onClick={() => setMobileOpen(false)}
-                          >
-                            <span className="material-symbols-outlined text-base">{svc.icon}</span>
-                            <span>{svc.title}</span>
-                          </Link>
+                        {SERVICE_MENU.map((area) => (
+                          <div key={area.label} className="flex flex-col gap-2 py-2">
+                            <span className="px-3 text-xs font-semibold text-muted">{area.label}</span>
+                            {area.columns.flatMap((column) => column).map((section) => (
+                              <div key={section.title} className="flex flex-col gap-1">
+                                {section.items.length > 0 ? (
+                                  <span className="px-3 pt-2 text-xs font-bold uppercase text-ink">{section.title}</span>
+                                ) : (
+                                  <Link to={serviceLink(section.title)} className="px-3 py-2 text-xs font-bold uppercase text-ink" onClick={() => setMobileOpen(false)}>
+                                    {section.title}
+                                  </Link>
+                                )}
+                                {section.items.map((item) => (
+                                  <Link key={item} to={serviceLink(item)} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-body hover:bg-primary-light hover:text-primary" onClick={() => setMobileOpen(false)}>
+                                    <ServiceMenuIcon name={MENU_ICONS[item]} compact />
+                                    <span>{item}</span>
+                                  </Link>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
                         ))}
-                        <Link
-                          to="/solutions"
-                          className="px-3 py-2 rounded-lg text-sm text-primary font-semibold hover:bg-primary-light transition-colors flex items-center gap-2"
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          <span className="material-symbols-outlined text-base">arrow_forward</span>
-                          <span>Xem tất cả giải pháp</span>
-                        </Link>
                       </div>
                     </div>
                   </div>

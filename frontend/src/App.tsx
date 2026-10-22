@@ -10,6 +10,11 @@ import { Footer } from './components/Footer';
 // Pages
 import { Home } from './pages/Home';
 import { Products } from './pages/Products';
+import { IndustryComingSoon } from './pages/IndustryComingSoon';
+import { IgenERP } from './pages/IgenERP';
+import { SoftwareService } from './pages/SoftwareService';
+import { TechnologyService } from './pages/TechnologyService';
+import { ServiceComingSoon } from './pages/ServiceComingSoon';
 import { Solutions } from './pages/Solutions';
 import { ServiceDetail } from './pages/ServiceDetail';
 import { About } from './pages/About';
@@ -33,6 +38,22 @@ const AppContent: React.FC = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/industries/:slug" element={<IndustryComingSoon />} />
+          <Route path="/products/igen-erp" element={<IgenERP />} />
+          <Route path="/solutions/erp" element={<IgenERP />} />
+          <Route path="/solutions/sap-ra-mat/:slug" element={<ServiceComingSoon />} />
+          <Route path="/solutions/crm" element={<TechnologyService slug="crm" />} />
+          <Route path="/solutions/marketing-tu-dong" element={<TechnologyService slug="marketing-tu-dong" />} />
+          <Route path="/solutions/generative-ai" element={<TechnologyService slug="generative-ai" />} />
+          <Route path="/solutions/computer-vision" element={<TechnologyService slug="computer-vision" />} />
+          <Route path="/solutions/chatbot-ai" element={<TechnologyService slug="chatbot-ai" />} />
+          <Route path="/solutions/phat-trien-ung-dung-di-dong" element={<SoftwareService slug="phat-trien-ung-dung-di-dong" />} />
+          <Route path="/solutions/phat-trien-ung-dung-web" element={<SoftwareService slug="phat-trien-ung-dung-web" />} />
+          <Route path="/solutions/kiem-thu-phan-mem-tu-dong" element={<SoftwareService slug="kiem-thu-phan-mem-tu-dong" />} />
+          <Route path="/solutions/thiet-ke-ui-ux" element={<SoftwareService slug="thiet-ke-ui-ux" />} />
+          <Route path="/solutions/trung-tam-phat-trien-phan-mem-tu-xa" element={<SoftwareService slug="trung-tam-phat-trien-phan-mem-tu-xa" />} />
+          <Route path="/solutions/doi-ngu-chuyen-trach" element={<SoftwareService slug="doi-ngu-chuyen-trach" />} />
+          <Route path="/solutions/dich-vu-quan-ly-he-thong-it" element={<SoftwareService slug="dich-vu-quan-ly-he-thong-it" />} />
           <Route path="/solutions" element={<Solutions />} />
           <Route path="/solutions/:slug" element={<ServiceDetail />} />
           <Route path="/about" element={<About />} />

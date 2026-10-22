@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
 
-import erpImg from '../assets/product/erp.png';
 import luxcareImg from '../assets/product/luxcare.png';
 import marketingImg from '../assets/product/marketing.png';
 import banHangImg from '../assets/product/ban-hang.png';
@@ -34,14 +33,14 @@ interface ProductItem {
 const PRODUCTS: ProductItem[] = [
   {
     id: 'igen-erp',
-    name: 'iGen ERP Giáo Dục',
-    category: 'Quản Lý Giáo Dục & Đào Tạo',
+    name: 'iGen ERP',
+    category: 'Nền Tảng Quản Trị Doanh Nghiệp',
     icon: 'school',
-    headline: 'ERP Quản Lý Giáo Dục',
-    tagline: 'Hỗ trợ quản lý học viên, đào tạo & vận hành cho các trung tâm, trường, lớp học',
+    headline: 'Quản Trị Tập Trung Trên Một Nền Tảng',
+    tagline: 'ERP theo ngành nghề • Phân hệ linh hoạt • Mở rộng theo nhu cầu',
     description:
-      'Hệ thống ERP chuyên sâu cho ngành giáo dục: số hóa toàn diện quy trình tuyển sinh, quản lý học viên, lớp học, điểm danh, kết quả học tập và tài chính trên một nền tảng thống nhất.',
-    image: erpImg,
+      'iGen ERP tổ chức dữ liệu và quy trình theo đặc thù từng ngành nghề. Quản lý học viên, lao động, CRM và bán hàng POS là những phân hệ tiêu biểu; giải pháp có thể tiếp tục phát triển theo nhu cầu doanh nghiệp.',
+    image: '/hero-app-devices-stats.png',
     accent: {
       text: 'text-[#0088cc]',
       bg: 'bg-[#0088cc]/10',
@@ -50,17 +49,17 @@ const PRODUCTS: ProductItem[] = [
       glow: 'shadow-[0_12px_36px_rgba(0,136,204,0.28)]',
     },
     features: [
-      { icon: 'school', title: 'Quản lý học viên & Đào tạo', desc: 'Lưu trữ hồ sơ học viên, lộ trình đào tạo, điểm danh và đánh giá học tập.' },
-      { icon: 'class', title: 'Lớp học & Lịch giảng dạy', desc: 'Sắp xếp thời khóa biểu, phân bổ phòng học và theo dõi ca giảng trực quan.' },
-      { icon: 'payments', title: 'Học phí & Báo cáo thu chi', desc: 'Tự động nhắc phí, đối soát học phí, hóa đơn và báo cáo tài chính minh bạch.' },
-      { icon: 'group', title: 'Giảng viên & Nhân sự', desc: 'Tự động tính lương, tính công và quản lý hồ sơ hợp đồng giáo viên.' },
+      { icon: 'school', title: 'Quản lý học viên', desc: 'Theo dõi hồ sơ học viên, lớp học, lịch học và điểm danh.' },
+      { icon: 'engineering', title: 'Quản lý lao động', desc: 'Quản lý hồ sơ, chấm công, hợp đồng và phân công công việc.' },
+      { icon: 'contacts', title: 'CRM', desc: 'Theo dõi thông tin, tương tác và quá trình chăm sóc khách hàng.' },
+      { icon: 'point_of_sale', title: 'Bán hàng POS', desc: 'Theo dõi giao dịch tại quầy, đơn hàng và thanh toán.' },
     ],
     stats: [
-      { value: '100%', label: 'Học viên số hóa' },
-      { value: '70%', label: 'Giảm thời gian thủ tục' },
-      { value: '24/7', label: 'Tra cứu đa nền tảng' },
+      { value: 'Theo ngành', label: 'quy trình phù hợp' },
+      { value: 'Linh hoạt', label: 'phân hệ nghiệp vụ' },
+      { value: 'Mở rộng', label: 'theo nhu cầu' },
     ],
-    targetAudience: 'Trung tâm đào tạo, Trường học, Cơ sở giáo dục & Lớp học',
+    targetAudience: 'Doanh nghiệp thuộc nhiều ngành nghề cần quản trị theo quy trình riêng',
   },
   {
     id: 'luxcare-erp',
@@ -247,6 +246,7 @@ const PRODUCTS: ProductItem[] = [
 const AUTOPLAY_INTERVAL = 5000; // Default 5 seconds per slide for both main view and fullscreen
 
 export const Products: React.FC = () => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -367,7 +367,8 @@ export const Products: React.FC = () => {
                       key={prod.id}
                       onClick={() => {
                         if (isActive) {
-                          setIsModalOpen(true);
+                          if (prod.id === 'igen-erp') navigate('/solutions/erp');
+                          else setIsModalOpen(true);
                         } else {
                           goToSlide(idx);
                         }
@@ -384,7 +385,7 @@ export const Products: React.FC = () => {
                           ? 'border-line/90 shadow-[0_20px_50px_-10px_rgba(10,37,64,0.22)]'
                           : 'border-line/60 shadow-md hover:opacity-75'
                       }`}
-                      title={isActive ? 'Bấm để phóng to xem toàn màn hình' : `Xem ${prod.name}`}
+                      title={isActive ? (prod.id === 'igen-erp' ? 'Xem chi tiết iGen ERP' : 'Bấm để phóng to xem toàn màn hình') : `Xem ${prod.name}`}
                     >
                       <img
                         src={prod.image}
@@ -419,7 +420,7 @@ export const Products: React.FC = () => {
                   <button
                     key={prod.id}
                     type="button"
-                    onClick={() => goToSlide(idx)}
+                    onClick={() => prod.id === 'igen-erp' ? navigate('/solutions/erp') : goToSlide(idx)}
                     className={`px-3.5 py-1.5 rounded-full text-xs transition-all duration-300 flex items-center gap-2 ${
                       isSelected
                         ? 'bg-white text-ink font-bold border-2 border-[#00d2ff] shadow-[0_0_16px_rgba(0,210,255,0.6)] ring-2 ring-[#00d2ff]/25 scale-105'
@@ -511,22 +512,32 @@ export const Products: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-surface-alt hover:bg-white border border-line text-xs font-semibold text-ink transition-colors shadow-2xs hover:border-slate-300"
-                  >
-                    <span className="material-symbols-outlined text-sm">fullscreen</span>
-                    <span>Phóng to</span>
-                  </button>
-
-                  <Link
-                    to="/contact"
-                    className="btn-primary py-2 px-5 text-xs font-bold shadow-xs hover:shadow-md transition-all"
-                  >
-                    <span>Đăng ký tư vấn demo</span>
-                    <span className="material-symbols-outlined text-xs">arrow_forward</span>
-                  </Link>
+                  {currentProduct.id === 'igen-erp' ? (
+                    <>
+                      <Link to="/solutions/erp" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-surface-alt hover:bg-white border border-line text-xs font-semibold text-ink transition-colors shadow-2xs hover:border-slate-300">
+                        <span>Xem chi tiết iGen ERP</span>
+                        <span className="material-symbols-outlined text-sm" aria-hidden="true">arrow_forward</span>
+                      </Link>
+                      <Link to="/contact?service=iGen%20ERP" className="btn-primary py-2 px-5 text-xs font-bold shadow-xs hover:shadow-md transition-all">
+                        <span>Đăng ký tư vấn demo</span>
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setIsModalOpen(true)}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-surface-alt hover:bg-white border border-line text-xs font-semibold text-ink transition-colors shadow-2xs hover:border-slate-300"
+                      >
+                        <span className="material-symbols-outlined text-sm">fullscreen</span>
+                        <span>Phóng to</span>
+                      </button>
+                      <Link to="/contact" className="btn-primary py-2 px-5 text-xs font-bold shadow-xs hover:shadow-md transition-all">
+                        <span>Đăng ký tư vấn demo</span>
+                        <span className="material-symbols-outlined text-xs">arrow_forward</span>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

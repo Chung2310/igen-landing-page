@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+
+/* Public landing page theme, based on igen-erp/src/index.css. */
+:root {
+  --igen-blue: #00adfc;
+  --igen-blue-hover: #0095d9;
+  --igen-blue-dark: #0077b3;
+  --igen-ink: #071629;
+  --igen-copy: #475569;
+  --igen-muted: #64748b;
+  --igen-canvas: #f6f8fd;
+  --igen-soft: #f1f5fb;
+  --igen-border: #d8e2f0;
+  --igen-violet: #7567ff;
+}
+
+body,
+body.bg-white {
+  font-family: 'Inter', 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+  background: var(--igen-canvas);
+  color: var(--igen-copy);
+}
+
+body :is(h1, h2, h3, h4, h5, h6) {
+  font-family: 'Inter', 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+  color: var(--igen-ink);
+}
+
+::selection {
+  background: #00adfc33;
+  color: var(--igen-ink);
+}
+
+::-webkit-scrollbar-track { background: var(--igen-canvas); }
+::-webkit-scrollbar-thumb {
+  background: #b9c5d6;
+  border-color: var(--igen-canvas);
+}
+::-webkit-scrollbar-thumb:hover { background: #7f8da3; }
+
+/* The ERP's pale blue surfaces and fine blue-gray edges. */
+.section-alt,
+footer.bg-surface-alt { background: var(--igen-soft); }
+
+main > section.bg-white { background: #fff; }
+
+.card,
+main .bg-white.border {
+  border-color: var(--igen-border);
+  box-shadow: 0 5px 20px #14446c0d, 0 16px 38px #14446c0a;
+}
+
+.card { border-radius: 20px; }
+
+.card-hover:hover,
+main .bg-white.border:hover {
+  border-color: #80d7ff;
+  box-shadow: 0 14px 38px #14446c1c, 0 0 0 1px #00adfc1c;
+}
+
+nav.fixed {
+  background: #ffffffdc;
+  border-bottom-color: var(--igen-border);
+  box-shadow: 0 1px 0 #14446c0a, 0 8px 28px #14446c0a;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+nav a:focus-visible,
+main :is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--igen-blue-dark);
+  outline-offset: 3px;
+}
+
+.btn-primary {
+  background: var(--igen-blue);
+  border: 1px solid var(--igen-blue);
+  box-shadow: 0 5px 16px #00adfc38;
+}
+
+.btn-primary:hover {
+  background: var(--igen-blue-hover);
+  border-color: var(--igen-blue-hover);
+  box-shadow: 0 9px 25px #00adfc4a;
+}
+
+.btn-secondary {
+  color: var(--igen-ink);
+  border-color: var(--igen-border);
+  box-shadow: 0 5px 16px #14446c12;
+}
+
+.btn-secondary:hover {
+  border-color: #80d7ff;
+  box-shadow: 0 9px 24px #14446c20;
+}
+
+.link-arrow,
+.prose-igen a { color: var(--igen-blue-dark); }
+.link-arrow:hover,
+.prose-igen a:hover { color: #005d8c; }
+
+main :is(input, textarea, select) {
+  border-color: var(--igen-border);
+  color: var(--igen-ink);
+}
+
+main :is(input, textarea, select):focus {
+  border-color: var(--igen-blue);
+  box-shadow: 0 0 0 3px #00adfc26;
+}
+
+/* Recolor the existing decorative silk; no hero copy or layout changes. */
+.silk-bg {
+  background: linear-gradient(115deg, #ffffff 0%, #f0f9ff 45%, #e8f5ff 72%, #ffffff 100%);
+}
+
+.silk-layer-1 {
+  background:
+    radial-gradient(38% 52% at 20% 30%, #00adfc30 0%, transparent 55%),
+    radial-gradient(42% 48% at 72% 20%, #7567ff1c 0%, transparent 54%),
+    radial-gradient(48% 58% at 84% 70%, #00adfc2b 0%, transparent 54%),
+    radial-gradient(46% 56% at 28% 82%, #fff 0%, transparent 54%),
+    radial-gradient(40% 50% at 55% 55%, #00adfc17 0%, transparent 54%);
+}
+
+.silk-layer-2 {
+  background:
+    radial-gradient(44% 54% at 80% 25%, #00adfc26 0%, transparent 56%),
+    radial-gradient(44% 54% at 18% 62%, #7567ff14 0%, transparent 56%),
+    radial-gradient(52% 54% at 60% 90%, #fff 0%, transparent 56%),
+    radial-gradient(40% 48% at 42% 15%, #00adfc1c 0%, transparent 54%);
+}
+
+.silk-waves {
+  background: repeating-linear-gradient(108deg,
+    transparent 0%, #00adfc1c 6%, #00adfc14 12%, #7567ff0d 18%, transparent 26%);
+}
+
+.hero-ambient {
+  background:
+    radial-gradient(55% 70% at 25% 15%, #00adfc1f 0%, transparent 60%),
+    radial-gradient(45% 60% at 82% 8%, #7567ff17 0%, transparent 60%),
+    radial-gradient(50% 60% at 70% 90%, #00adfc12 0%, transparent 60%);
+}
+
+.ai-hero {
+  background: radial-gradient(ellipse at 77% 48%, #e8f5ff, transparent 44%), #f7fbff;
+}
+
+.ai-hero__eyebrow { color: #526b83; }
+.ai-hero__eyebrow i { background: var(--igen-blue); }
+.ai-hero h1 span { color: var(--igen-blue-dark); }
+.ai-hero__description { color: var(--igen-copy); }
+.ai-hero__secondary { color: #26384f; }
+.ai-hero__secondary:hover { color: var(--igen-blue-dark); }
+.ai-hero__capabilities { border-color: var(--igen-border); color: var(--igen-muted); }
+.ai-hero__capabilities span + span::before { color: var(--igen-blue); }
+.ai-processor__controls button {
+  border-color: var(--igen-border);
+  color: #26384f;
+  background: #fffffff0;
+}
+.ai-processor__controls button:hover { border-color: var(--igen-blue); background: #e0f2fe; }
+.ai-processor__controls button[aria-pressed='true'] {
+  border-color: var(--igen-blue-dark);
+  background: var(--igen-blue-dark);
+}
+
+/* The ERP's blue-to-violet accent, with a darker band behind white CTA text. */
+.gradient-hero,
+.bg-gradient-hero {
+  background: linear-gradient(105deg, #005d8c 0%, #007db8 48%, #5147b8 100%);
+  background-size: 180% 180%;
+  animation: igen-gradient-drift 14s ease-in-out infinite alternate;
+}
+
+.gradient-skew-bottom { background: var(--igen-canvas); }
+.gradient-skew-bottom.alt { background: var(--igen-soft); }
+.scroll-progress-bar { background: linear-gradient(90deg, var(--igen-blue), var(--igen-violet)); }
+.prose-igen :is(h2, h3) { color: var(--igen-ink); }
+.prose-igen :is(p, ul, ol) { color: var(--igen-copy); }
+.prose-igen blockquote { border-color: var(--igen-blue); color: var(--igen-muted); }
+
+/* Use the same animated accent ring as ERP landing cards, only on interaction. */
+@property --igen-ring-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes igen-ring-spin { to { --igen-ring-angle: 360deg; } }
+@keyframes igen-gradient-drift { to { background-position: 100% 50%; } }
+
+.card-hover:hover,
+.card-hover:focus-within {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    conic-gradient(from var(--igen-ring-angle), #ff57b3, #ff9d43, #ffe66d, #4ed9a2, #00adfc, #7567ff, #ff57b3) border-box;
+  animation: igen-ring-spin 2.2s linear infinite;
+}
+
+/* Homepage feature, process and FAQ cards share the same accent on interaction. */
+.igen-rainbow-border:hover,
+.igen-rainbow-border:focus-within,
+.igen-rainbow-border.is-active {
+  border-color: transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    conic-gradient(from var(--igen-ring-angle), #ff57b3, #ff9d43, #ffe66d, #4ed9a2, #00adfc, #7567ff, #ff57b3) border-box;
+  animation: igen-ring-spin 2.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-hero,
+  .bg-gradient-hero,
+  .card-hover:hover,
+  .card-hover:focus-within,
+  .igen-rainbow-border:hover,
+  .igen-rainbow-border:focus-within,
+  .igen-rainbow-border.is-active { animation: none; }
+}
