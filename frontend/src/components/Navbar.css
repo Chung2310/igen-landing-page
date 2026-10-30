@@ -1,12 +1,35 @@
-.service-menu-icon {
+.outline-service-icon {
   display: block;
   width: 42px;
   height: 42px;
   flex: 0 0 42px;
-  overflow: visible;
-  filter: drop-shadow(0 2px 0 #172e4926) drop-shadow(0 4px 5px #172e4926);
-  transition: transform 180ms ease, filter 180ms ease;
+  color: #008ac8;
+  transition: color 180ms ease, transform 180ms ease;
 }
+
+.outline-service-icon__frame { opacity: .28; }
+
+nav.home-hero-nav {
+  background: linear-gradient(90deg, #06283c 0%, #071c2b 52%, #07131d 100%) !important;
+  border-bottom: 0;
+  backdrop-filter: none;
+}
+
+.home-hero-nav .home-hero-brand-wordmark { filter: brightness(0) invert(1); }
+.home-hero-nav .home-hero-brand-icon {
+  filter: brightness(0) invert(1)
+    drop-shadow(1px 0 0 #010810)
+    drop-shadow(-1px 0 0 #010810)
+    drop-shadow(0 1px 0 #010810)
+    drop-shadow(0 -1px 0 #010810);
+}
+
+.home-hero-nav .home-hero-nav-link,
+.home-hero-nav .home-hero-nav-link:hover { color: #f5f3f1; }
+.home-hero-nav .home-hero-nav-link::after { background: #00adfc; }
+.home-hero-nav .btn-primary { background: linear-gradient(105deg, #00adfc, #007db8); box-shadow: none; border-radius: 9px; }
+.home-hero-nav .btn-primary:hover { background: linear-gradient(105deg, #1bc1ff, #008dcb); box-shadow: none; }
+.home-hero-nav > div button.lg\:hidden { color: #fff; }
 
 .nav-dropdown-panel::before {
   position: absolute;
@@ -17,12 +40,14 @@
   content: '';
 }
 
-.group:hover .service-menu-icon {
-  transform: translateY(-2px) scale(1.04);
-  filter: drop-shadow(0 3px 0 #172e4926) drop-shadow(0 6px 7px #172e4930);
+.group:hover .outline-service-icon,
+a:hover .outline-service-icon,
+a:focus-visible .outline-service-icon {
+  color: #006da5;
+  transform: translateX(2px);
 }
 
-.service-menu-icon--compact {
+.outline-service-icon--compact {
   width: 34px;
   height: 34px;
   flex-basis: 34px;

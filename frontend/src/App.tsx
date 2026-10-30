@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { PhoneCall } from 'lucide-react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
+import { useHeroMotion } from './hooks/useHeroMotion';
+import './styles/hero-motion.css';
 
 // Components
 import { Navbar } from './components/Navbar';
@@ -28,6 +30,7 @@ import { Login } from './pages/Login';
 const AppContent: React.FC = () => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
+  useHeroMotion(location.pathname);
 
   return (
     <>
@@ -71,7 +74,7 @@ const AppContent: React.FC = () => {
               href="tel:0353710189"
               aria-label="Gọi ngay 0353.710.189"
               title="Gọi ngay: 0353.710.189"
-              className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#00adfc] text-white shadow-lg shadow-sky-500/20 transition-transform hover:scale-110 hover:bg-[#0095d9] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0077b3]"
+              className="floating-call flex h-12 w-12 items-center justify-center rounded-full bg-[#00adfc] text-white shadow-lg shadow-sky-500/20 transition-transform hover:scale-110 hover:bg-[#0095d9] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0077b3]"
             >
               <PhoneCall size={25} strokeWidth={2.1} aria-hidden="true" />
             </a>

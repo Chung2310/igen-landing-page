@@ -20,12 +20,11 @@ export const useRevealAnimations = (...deps: unknown[]) => {
     // Respect reduced-motion: skip all animations, content stays visible
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Kill all existing ScrollTriggers before re-registering to avoid duplicates
-    ScrollTrigger.getAll().forEach((st) => st.kill());
-
     const tweens: gsap.core.Tween[] = [];
 
-    const heroEls = gsap.utils.toArray<HTMLElement>('.hero-reveal');
+    const heroEls = gsap.utils.toArray<HTMLElement>('.hero-reveal').filter((el) =>
+      !el.closest('.about-hero, .news-hero, .solutions-hero')
+    );
     if (heroEls.length) {
       tweens.push(
         gsap.fromTo(

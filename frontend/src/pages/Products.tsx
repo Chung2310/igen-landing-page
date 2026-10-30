@@ -293,10 +293,10 @@ export const Products: React.FC = () => {
   return (
     <main className="flex flex-col w-full relative bg-white">
       {/* Featured Interactive Slideshow - 3D Rotating Carousel */}
-      <section className="pt-20 pb-8 sm:pt-22 md:pb-12 relative overflow-hidden bg-gradient-to-b from-surface-alt/60 via-white to-surface-alt/30">
+      <section data-motion-hero="products" className="pt-20 pb-8 sm:pt-22 md:pb-12 relative overflow-hidden bg-gradient-to-b from-surface-alt/60 via-white to-surface-alt/30">
         <div className="container-page">
           
-          <div className="w-full max-w-6xl mx-auto">
+          <div data-motion-copy className="w-full max-w-6xl mx-auto">
             {/* Top Bar: Product Name with Icon, aligned to the left side of the slide, sleek & refined */}
             <div className="w-[76%] sm:w-[78%] md:w-[80%] mx-auto mb-2.5 flex items-center justify-start gap-2 px-1">
               <span className={`material-symbols-outlined text-lg sm:text-xl transition-colors duration-300 ${currentProduct.accent.text}`}>
@@ -308,7 +308,7 @@ export const Products: React.FC = () => {
             </div>
 
             {/* 3D Rotating Showcase Stage: Center bright & sharp, Left/Right dimmed & rotated with smooth continuous transitions */}
-            <div className="relative w-full overflow-hidden py-3 sm:py-6 [perspective:1400px] select-none">
+            <div data-motion-visual className="relative w-full overflow-hidden py-3 sm:py-6 [perspective:1400px] select-none">
               <div className="relative w-full flex items-center justify-center min-h-[220px] sm:min-h-[360px] md:min-h-[440px] lg:min-h-[490px]">
 
                 {/* Left Arrow Button */}
