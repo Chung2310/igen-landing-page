@@ -142,7 +142,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-[72px]">
           {/* Logo */}
-          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="home-hero-brand relative -left-2 flex-shrink-0 flex items-center cursor-pointer group interactable origin-left scale-[.94]">
+          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="home-hero-brand relative -left-2 lg:-left-6 flex-shrink-0 flex items-center cursor-pointer group interactable origin-left scale-[.94]">
             <img src="/icon-favicon.png" alt="" aria-hidden="true" width="40" height="40" className="home-hero-brand-icon h-8 w-8 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-9" />
             <div className="relative w-24 h-12 sm:w-28 sm:h-14 overflow-hidden transition-transform duration-300 group-hover:scale-105">
               <img src="/brand-icon.png" alt="iGen Technology" width="1024" height="1024" className="home-hero-brand-wordmark absolute left-1/2 top-[58%] h-[122px] w-[122px] max-w-none -translate-x-1/2 -translate-y-1/2 sm:h-[140px] sm:w-[140px]" />
