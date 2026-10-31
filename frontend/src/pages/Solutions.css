@@ -54,7 +54,7 @@
 .solutions-pillars__icon { display: grid; width: 70px; height: 70px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #def3ff; color: var(--igen-blue); }
 .solutions-pillars__icon svg { width: 34px; height: 34px; stroke-width: 2; }
 .solutions-pillars__text { display: grid; gap: 5px; min-width: 0; }
-.solutions-pillars__text strong { color: #12223d; font-size: 15px; font-weight: 600; line-height: 1.25; }
+.solutions-pillars__text strong { color: #12223d; font-size: 15px; font-weight: 500; line-height: 1.25; }
 .solutions-pillars__text small { color: #657791; font-size: 12px; line-height: 1.4; }
 .solutions-pillars__arrow { display: grid; width: 31px; height: 31px; flex: 0 0 auto; place-items: center; margin-left: auto; border: 1px solid #cfeaff; border-radius: 50%; color: var(--igen-blue); }
 #solutions-catalog { scroll-margin-top: 72px; }
