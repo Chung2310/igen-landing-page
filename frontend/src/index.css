@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+.floating-call { position: relative; isolation: isolate; }
+.floating-call::before {
+  position: absolute;
+  inset: -4px;
+  z-index: -1;
+  border: 2px solid #00adfc;
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+  animation: floating-call-pulse 2.2s ease-out infinite;
+}
+.floating-call > svg { animation: floating-call-ring 2.2s ease-in-out infinite; }
+@keyframes floating-call-pulse {
+  0% { transform: scale(.95); opacity: .65; }
+  75%, 100% { transform: scale(1.5); opacity: 0; }
+}
+@keyframes floating-call-ring {
+  0%, 30%, 100% { transform: rotate(0); }
+  7%, 19% { transform: rotate(-10deg); }
+  13%, 25% { transform: rotate(8deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-call::before,
+  .floating-call > svg { animation: none; }
+  .floating-call::before { display: none; }
+}
+
 /* ==========================================================================
    Base — Stripe-inspired light theme
    ========================================================================== */

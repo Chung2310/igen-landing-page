@@ -20,12 +20,11 @@ export const useRevealAnimations = (...deps: unknown[]) => {
     // Respect reduced-motion: skip all animations, content stays visible
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Kill all existing ScrollTriggers before re-registering to avoid duplicates
-    ScrollTrigger.getAll().forEach((st) => st.kill());
-
     const tweens: gsap.core.Tween[] = [];
 
-    const heroEls = gsap.utils.toArray<HTMLElement>('.hero-reveal');
+    const heroEls = gsap.utils.toArray<HTMLElement>('.hero-reveal').filter((el) =>
+      !el.closest('.about-hero, .news-hero, .solutions-hero')
+    );
     if (heroEls.length) {
       tweens.push(
         gsap.fromTo(
@@ -92,19 +91,20 @@ export const useRevealAnimations = (...deps: unknown[]) => {
     gsap.utils.toArray<HTMLElement>('.reveal-items-container').forEach((container) => {
       const items = container.querySelectorAll('.reveal-item');
       if (!items.length) return;
+      const isFaq = container.classList.contains('home-faq-list');
       tweens.push(
         gsap.fromTo(
           items,
-          { y: 30, opacity: 0 },
+          { y: isFaq ? 16 : 30, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.7,
-            stagger: 0.10,
+            duration: isFaq ? 0.42 : 0.7,
+            stagger: isFaq ? 0.04 : 0.10,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: container,
-              start: 'top 88%',
+              start: isFaq ? 'top 95%' : 'top 88%',
               toggleActions: 'play none none none',
             },
           }

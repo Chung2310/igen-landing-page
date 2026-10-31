@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
                 href="https://www.facebook.com/share/1AP8araLS4/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-white border border-line text-muted hover:text-primary hover:border-primary/30 flex items-center justify-center transition-all hover:scale-105 shadow-sm"
+                className="w-9 h-9 rounded-full bg-white border border-line text-[#1877f2] hover:border-[#1877f2]/40 flex items-center justify-center transition-all hover:scale-105 shadow-sm"
                 aria-label="Facebook"
               >
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -37,10 +37,19 @@ export const Footer: React.FC = () => {
                 href="https://www.instagram.com/igen.technology1/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-white border border-line text-muted hover:text-primary hover:border-primary/30 flex items-center justify-center transition-all hover:scale-105 shadow-sm"
+                className="w-9 h-9 rounded-full bg-white border border-line hover:border-[#e4405f]/40 flex items-center justify-center transition-all hover:scale-105 shadow-sm"
                 aria-label="Instagram"
               >
-                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="url(#footer-instagram-gradient)">
+                  <defs>
+                    <linearGradient id="footer-instagram-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#feda75" />
+                      <stop offset="25%" stopColor="#fa7e1e" />
+                      <stop offset="50%" stopColor="#d62976" />
+                      <stop offset="75%" stopColor="#962fbf" />
+                      <stop offset="100%" stopColor="#4f5bd5" />
+                    </linearGradient>
+                  </defs>
                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
                 </svg>
               </a>
@@ -48,7 +57,7 @@ export const Footer: React.FC = () => {
                 href="https://www.threads.com/@igen.technology1"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-white border border-line text-muted hover:text-primary hover:border-primary/30 flex items-center justify-center transition-all hover:scale-105 shadow-sm"
+                className="w-9 h-9 rounded-full bg-white border border-line text-[#101010] hover:border-black/30 flex items-center justify-center transition-all hover:scale-105 shadow-sm"
                 aria-label="Threads"
               >
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 192 192">
@@ -82,9 +91,11 @@ export const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold text-ink mb-5 text-sm">Liên hệ</h3>
             <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">location_on</span>
-                <span className="text-body text-sm">Lô LK3 - LK4, đường Lạc Long Quân, phường Kinh Bắc, tỉnh Bắc Ninh</span>
+              <li>
+                <a href="https://maps.app.goo.gl/uQgcErQniSdVu9cXA" target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 no-underline hover:no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                  <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">location_on</span>
+                  <span className="text-body text-sm">Lô LK3 - LK4, đường Lạc Long Quân, phường Kinh Bắc, tỉnh Bắc Ninh</span>
+                </a>
               </li>
               <li className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-primary text-[20px]">call</span>

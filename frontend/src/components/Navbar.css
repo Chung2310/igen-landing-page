@@ -1,11 +1,61 @@
-.service-menu-icon {
+.outline-service-icon {
   display: block;
   width: 42px;
   height: 42px;
   flex: 0 0 42px;
-  overflow: visible;
-  filter: drop-shadow(0 2px 0 #172e4926) drop-shadow(0 4px 5px #172e4926);
-  transition: transform 180ms ease, filter 180ms ease;
+  color: #008ac8;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.outline-service-icon__frame { opacity: .28; }
+
+nav.home-hero-nav {
+  background: linear-gradient(90deg, #06283c 0%, #071c2b 52%, #07131d 100%) !important;
+  border-bottom: 0;
+  backdrop-filter: none;
+}
+
+.home-hero-nav .home-hero-brand-wordmark { filter: brightness(0) invert(1); }
+.home-hero-nav .home-hero-brand-icon {
+  filter: brightness(0) invert(1)
+    drop-shadow(1px 0 0 #010810)
+    drop-shadow(-1px 0 0 #010810)
+    drop-shadow(0 1px 0 #010810)
+    drop-shadow(0 -1px 0 #010810);
+}
+
+.home-hero-brand { left: -8px; }
+
+@media (min-width: 1024px) {
+  .home-hero-brand { left: clamp(-195px, calc(550px - 39vw), 0px); }
+}
+
+.home-hero-nav .home-hero-nav-link,
+.home-hero-nav .home-hero-nav-link:hover { color: #f5f3f1; }
+.home-hero-nav .home-hero-nav-link::after { background: #00adfc; }
+.home-hero-contact.btn-primary { background: var(--igen-blue); border: 0; border-radius: 9px; box-shadow: none; }
+.home-hero-contact.btn-primary:hover { background: var(--igen-blue-hover); border: 0; box-shadow: none; }
+.home-mobile-menu-toggle {
+  display: none;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 10px;
+  background: #f1f5fb;
+  color: #071629;
+  cursor: pointer;
+}
+
+.home-hero-nav .home-mobile-menu-toggle {
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+}
+
+@media (max-width: 1023px) {
+  .home-mobile-menu-toggle { display: inline-flex; }
 }
 
 .nav-dropdown-panel::before {
@@ -17,12 +67,14 @@
   content: '';
 }
 
-.group:hover .service-menu-icon {
-  transform: translateY(-2px) scale(1.04);
-  filter: drop-shadow(0 3px 0 #172e4926) drop-shadow(0 6px 7px #172e4930);
+.group:hover .outline-service-icon,
+a:hover .outline-service-icon,
+a:focus-visible .outline-service-icon {
+  color: #006da5;
+  transform: translateX(2px);
 }
 
-.service-menu-icon--compact {
+.outline-service-icon--compact {
   width: 34px;
   height: 34px;
   flex-basis: 34px;

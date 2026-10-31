@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { PhoneCall } from 'lucide-react';
+import { ChevronUp, PhoneCall } from 'lucide-react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
+import { useHeroMotion } from './hooks/useHeroMotion';
+import { useMobileViewportWidth } from './hooks/useMobileViewportWidth';
+import './styles/hero-motion.css';
 
 // Components
 import { Navbar } from './components/Navbar';
@@ -25,9 +28,19 @@ import { Contact } from './pages/Contact';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Login } from './pages/Login';
 
-const AppContent: React.FC = () => {
+const AppContent: React.FC<{ scrollToTop: () => void }> = ({ scrollToTop }) => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const mobileViewportWidth = useMobileViewportWidth();
+  useHeroMotion(location.pathname);
+
+  useEffect(() => {
+    const onScroll = () => setShowBackToTop(window.scrollY > Math.max(400, window.innerHeight * .6));
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <>
@@ -66,12 +79,26 @@ const AppContent: React.FC = () => {
         </Routes>
 
         {!isAdminPage && location.pathname !== '/login' && (
-          <div className="fixed bottom-6 right-5 z-40 flex flex-col items-center gap-3">
+          <div
+            className="fixed bottom-6 right-5 z-40 flex flex-col items-center gap-3"
+            style={mobileViewportWidth === null ? undefined : { left: Math.max(12, mobileViewportWidth - 68), right: 'auto' }}
+          >
+            {showBackToTop && (
+              <button
+                type="button"
+                onClick={scrollToTop}
+                aria-label="Cuộn về đầu trang"
+                title="Về đầu trang"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-300/70 bg-slate-200/65 text-slate-500 shadow-lg shadow-slate-900/10 backdrop-blur-sm transition-all hover:scale-110 hover:border-[#00adfc] hover:bg-[#00adfc] hover:text-white hover:shadow-sky-500/25 active:scale-95 active:bg-[#008fc9] focus-visible:bg-[#00adfc] focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0077b3]"
+              >
+                <ChevronUp size={23} strokeWidth={2.2} aria-hidden="true" />
+              </button>
+            )}
             <a
               href="tel:0353710189"
               aria-label="Gọi ngay 0353.710.189"
               title="Gọi ngay: 0353.710.189"
-              className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#00adfc] text-white shadow-lg shadow-sky-500/20 transition-transform hover:scale-110 hover:bg-[#0095d9] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0077b3]"
+              className="floating-call flex h-12 w-12 items-center justify-center rounded-full bg-[#00adfc] text-white shadow-lg shadow-sky-500/20 transition-transform hover:scale-110 hover:bg-[#0095d9] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0077b3]"
             >
               <PhoneCall size={25} strokeWidth={2.1} aria-hidden="true" />
             </a>
@@ -96,6 +123,16 @@ const AppContent: React.FC = () => {
 };
 
 export const App: React.FC = () => {
+  const lenisRef = useRef<Lenis | null>(null);
+
+  const scrollToTop = () => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { duration: 1.1, force: true });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   // Initialize Lenis smooth scroll globally (gentle, Stripe-like calm)
   useEffect(() => {
     const lenis = new Lenis({
@@ -103,22 +140,26 @@ export const App: React.FC = () => {
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
+    lenisRef.current = lenis;
 
+    let animationFrame: number;
     const raf = (time: number) => {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      animationFrame = requestAnimationFrame(raf);
     };
 
-    requestAnimationFrame(raf);
+    animationFrame = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(animationFrame);
+      lenisRef.current = null;
       lenis.destroy();
     };
   }, []);
 
   return (
     <BrowserRouter>
-      <AppContent />
+      <AppContent scrollToTop={scrollToTop} />
     </BrowserRouter>
   );
 };
