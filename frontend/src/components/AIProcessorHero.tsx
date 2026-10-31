@@ -1,5 +1,5 @@
 ﻿import { ArrowUpRight } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -29,11 +29,12 @@ const renderHeroLetters = (text: string, seed: number) => Array.from(text).map((
 
 export const AIProcessorHero = () => {
   const heroRef = useRef<HTMLElement>(null);
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     const hero = heroRef.current;
     if (!hero) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)').matches) return;
 
     const scene = hero.querySelector<HTMLElement>('.ai-hero__scene');
     const video = hero.querySelector<HTMLVideoElement>('.ai-hero__video');
@@ -189,13 +190,14 @@ export const AIProcessorHero = () => {
     <div className="ai-hero__scene">
     <div className="ai-hero__video-frame" aria-hidden="true">
       <video
-        className="ai-hero__video"
+        className={`ai-hero__video${videoReady ? ' is-ready' : ''}`}
         src="/hero-video.mp4"
         autoPlay
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="auto"
+        onLoadedData={() => setVideoReady(true)}
         tabIndex={-1}
       />
     </div>

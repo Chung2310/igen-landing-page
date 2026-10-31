@@ -4,6 +4,7 @@ import { ArrowRight, GraduationCap, Megaphone, Settings, TrendingUp } from 'luci
 import axios from 'axios';
 import { useRevealAnimations } from '../hooks/useRevealAnimations';
 import { type ServiceData, MOCK_SERVICES } from '../utils/servicesData';
+import { SERVICE_COVERS } from '../utils/serviceCovers';
 import './Solutions.css';
 
 const PILLAR_SLUGS = [
@@ -117,10 +118,12 @@ export const Solutions: React.FC = () => {
               >
                 {/* Thumbnail banner at the top of the card */}
                 <div className="aspect-video w-full relative overflow-hidden bg-surface-alt border-b border-line flex-shrink-0">
-                  {svc.thumbnail ? (
+                  {SERVICE_COVERS[svc.slug] || svc.thumbnail ? (
                     <img
-                      src={svc.thumbnail}
+                      src={SERVICE_COVERS[svc.slug] || svc.thumbnail}
                       alt={svc.title}
+                      loading="lazy"
+                      decoding="async"
                       className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
@@ -142,7 +145,7 @@ export const Solutions: React.FC = () => {
                     <span className="text-xs text-muted font-medium">iGen Solution</span>
                   </div>
                   
-                  <h3 className="text-lg font-semibold text-ink mb-2 group-hover:text-primary transition-colors">{svc.title}</h3>
+                  <h3 className="text-lg font-medium text-ink mb-2 group-hover:text-primary transition-colors">{svc.title}</h3>
                   <p className="text-sm text-body leading-relaxed mb-4 line-clamp-3 flex-1">{svc.shortDesc}</p>
                   
                   <div className="flex flex-wrap gap-2 mb-5">

@@ -26,7 +26,7 @@ const heroConfigs: HeroConfig[] = [
 
 export const useHeroMotion = (pathname: string) => {
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)').matches) return;
 
     let cleanup = () => {};
     let retryTimer = 0;

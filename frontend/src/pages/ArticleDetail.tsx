@@ -208,7 +208,7 @@ export const ArticleDetail: React.FC = () => {
   }, [slug]);
 
   useEffect(() => {
-    if (article) {
+    if (article && !window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)').matches) {
       // Title reveal animation
       gsap.fromTo(
         '.article-title',

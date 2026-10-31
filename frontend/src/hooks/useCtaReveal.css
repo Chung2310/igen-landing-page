@@ -16,7 +16,7 @@
   perspective: 600px;
 }
 .home-cta__word { display: inline-block; transform-origin: center bottom; }
-@media (prefers-reduced-motion: no-preference) {
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
   .home-cta.is-revealed { animation: cta-unfold 1.05s cubic-bezier(.22,1,.36,1) both; }
   .home-cta.is-revealed::before { animation: cta-sweep 1.9s .35s ease-in-out both; }
   .home-cta.is-revealed .home-cta__word {
