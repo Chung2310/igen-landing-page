@@ -24,6 +24,12 @@ nav.home-hero-nav {
     drop-shadow(0 -1px 0 #010810);
 }
 
+.home-hero-brand { left: -8px; }
+
+@media (min-width: 1024px) {
+  .home-hero-brand { left: clamp(-150px, calc(540px - 37vw), 0px); }
+}
+
 .home-hero-nav .home-hero-nav-link,
 .home-hero-nav .home-hero-nav-link:hover { color: #f5f3f1; }
 .home-hero-nav .home-hero-nav-link::after { background: #00adfc; }
