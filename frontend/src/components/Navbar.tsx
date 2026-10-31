@@ -293,11 +293,12 @@ export const Navbar: React.FC = () => {
       {/* Mobile menu */}
       <div
         id="mobile-navigation"
-        className={`lg:hidden grid overflow-hidden bg-white transition-all duration-300 ease-in-out ${
-          mobileOpen ? 'grid-rows-[1fr] opacity-100 border-t border-line' : 'grid-rows-[0fr] opacity-0'
+        data-lenis-prevent
+        className={`lg:hidden overflow-y-auto overscroll-y-contain touch-pan-y bg-white transition-[max-height,opacity] duration-300 ease-in-out ${
+          mobileOpen ? 'max-h-[calc(100dvh-72px)] opacity-100 border-t border-line' : 'max-h-0 opacity-0 pointer-events-none'
         }`}
       >
-        <div data-lenis-prevent className="min-h-0 max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-y-contain touch-pan-y">
+        <div className="min-h-0">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
             {links.map((l) => {
               if (l.to === '/products') {
