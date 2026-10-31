@@ -4,6 +4,7 @@ import { ChevronUp, PhoneCall } from 'lucide-react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import { useHeroMotion } from './hooks/useHeroMotion';
+import { useMobileViewportWidth } from './hooks/useMobileViewportWidth';
 import './styles/hero-motion.css';
 
 // Components
@@ -31,6 +32,7 @@ const AppContent: React.FC<{ scrollToTop: () => void }> = ({ scrollToTop }) => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const mobileViewportWidth = useMobileViewportWidth();
   useHeroMotion(location.pathname);
 
   useEffect(() => {
@@ -77,7 +79,10 @@ const AppContent: React.FC<{ scrollToTop: () => void }> = ({ scrollToTop }) => {
         </Routes>
 
         {!isAdminPage && location.pathname !== '/login' && (
-          <div className="fixed bottom-6 right-5 z-40 flex flex-col items-center gap-3">
+          <div
+            className="fixed bottom-6 right-5 z-40 flex flex-col items-center gap-3"
+            style={mobileViewportWidth === null ? undefined : { left: Math.max(12, mobileViewportWidth - 68), right: 'auto' }}
+          >
             {showBackToTop && (
               <button
                 type="button"

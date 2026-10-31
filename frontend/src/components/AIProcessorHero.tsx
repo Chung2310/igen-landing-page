@@ -18,26 +18,13 @@ const featuredServices = [
 // Simplified Vietnam silhouette, normalized to a 100 × 240 SVG box.
 const VIETNAM_OUTLINE = 'M82.1 29.3 L63.4 43.2 L51.8 58.6 L48.7 69.9 L59.4 87.0 L72.5 108.3 L85.1 118.3 L93.6 131.4 L100 161.5 L98.1 190.1 L86.5 200.8 L70.5 211.3 L59.1 224.9 L41.7 240 L36.6 229.6 L40.6 218.5 L30.2 209.3 L42.3 202.8 L56.9 201.6 L50.8 191.7 L74.3 179.2 L76 159.7 L72.7 148.9 L75.3 132.6 L71.8 121.1 L61.2 109.8 L52.4 95.4 L40.8 76.2 L24.1 66.5 L28.1 60.6 L37 56.4 L31.6 42.2 L14.4 42.1 L8.2 27.3 L0 14.4 L7.5 10.5 L18.6 10.5 L32.2 8.7 L44.1 0 L50.8 6.1 L63.6 9.1 L61.4 18.4 L68 25.1 Z';
 
-const scatterText = (text: string, seed: number) => Array.from(text).map((character, index, characters) => {
-  const angle = index * 2.4 + seed * 1.15;
-  const distance = 210 + (index % 5) * 45;
+const renderHeroLetters = (text: string, seed: number) => Array.from(text).map((character, index, characters) => {
   const progress = index / Math.max(characters.length - 1, 1);
   const start = seed === 1 ? [255, 255, 255] : [201, 242, 255];
   const end = seed === 1 ? [119, 220, 255] : [0, 173, 252];
   const color = seed === 0 ? undefined : `rgb(${start.map((value, channel) => Math.round(value + (end[channel] - value) * progress)).join(', ')})`;
 
-  return (
-    <span
-      key={`${seed}-${index}`}
-      className="ai-hero__scatter-letter"
-      data-scatter-x={Math.round(Math.cos(angle) * distance)}
-      data-scatter-y={Math.round(Math.sin(angle) * distance - 25)}
-      data-scatter-rotate={Math.round((index % 2 ? 1 : -1) * (14 + (index % 4) * 7))}
-      style={{ color }}
-    >
-      {character === ' ' ? '\u00a0' : character}
-    </span>
-  );
+  return <span key={`${seed}-${index}`} className="ai-hero__scatter-letter" style={{ color }}>{character === ' ' ? '\u00a0' : character}</span>;
 });
 
 export const AIProcessorHero = () => {
@@ -60,11 +47,11 @@ export const AIProcessorHero = () => {
     const arrowShine = hero.querySelector<SVGGElement>('.ai-hero__arrow-shine');
     const eyebrow = hero.querySelector<HTMLElement>('.ai-hero__eyebrow');
     const lines = hero.querySelectorAll<HTMLElement>('h1 .ai-hero__scatter-line');
-    const letters = hero.querySelectorAll<HTMLElement>('.ai-hero__scatter-letter');
     const supporting = hero.querySelector<HTMLElement>('.ai-hero__supporting');
     const navLinks = hero.querySelectorAll<HTMLElement>('.ai-hero__service-nav a');
     if (!scene || !video || !shade || !mesh || !arrow || !arrowLead || !arrowSvg || !arrowGhost || !arrowEcho || !arrowShine || !eyebrow || !supporting) return;
 
+    let removeTextScroll = () => {};
     const context = gsap.context(() => {
       const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
       intro
@@ -107,55 +94,43 @@ export const AIProcessorHero = () => {
         .to(arrowLead, { xPercent: 0, opacity: .65, duration: .32, ease: 'none' }, .68)
         .to(arrowSvg, { xPercent: 0, yPercent: 0, scale: .82, rotation: 0, opacity: .7, duration: .32, ease: 'none' }, .68);
 
-      // Keep the letters scattered while scrolling down. A deliberate 5vh
-      // upward scroll is needed before they gather again.
-      let scattered = false;
-      let furthestDown = 0;
-      let lastGatherScroll = 0;
-      const moveLetters = (scatter: boolean) => {
-        gsap.to(letters, {
-          x: scatter ? (_index, element) => Number((element as HTMLElement).dataset.scatterX) : 0,
-          y: scatter ? (_index, element) => Number((element as HTMLElement).dataset.scatterY) : 0,
-          rotation: scatter ? (_index, element) => Number((element as HTMLElement).dataset.scatterRotate) : 0,
-          opacity: scatter ? .38 : 1,
-          duration: scatter ? 1.05 : .85,
-          stagger: { amount: .18, from: scatter ? 'center' : 'edges' },
-          ease: 'power2.out',
+      let textHidden = false;
+      const moveText = (hide: boolean) => {
+        if (hide === textHidden) return;
+        textHidden = hide;
+        gsap.to(eyebrow, {
+          y: hide ? 34 : 0,
+          clipPath: hide ? 'inset(0 0 100% 0)' : 'inset(0 0 0% 0)',
+          duration: .78,
+          ease: 'power3.out',
           overwrite: 'auto',
+          onComplete: () => { if (!hide) gsap.set(eyebrow, { clearProps: 'clipPath' }); },
+        });
+        gsap.to(lines, {
+          y: hide ? 72 : 0,
+          clipPath: hide ? 'inset(0 0 100% 0)' : 'inset(0 0 0% 0)',
+          duration: .96,
+          stagger: .14,
+          ease: 'power3.out',
+          overwrite: 'auto',
+          onComplete: () => { if (!hide) gsap.set(lines, { clearProps: 'clipPath' }); },
         });
       };
 
-      ScrollTrigger.create({
-        trigger: hero,
-        start: 'top top',
-        end: 'max',
-        onRefresh(self) {
-          if (!scattered) lastGatherScroll = self.start;
-        },
-        onLeaveBack(self) {
-          if (!scattered) return;
-          scattered = false;
-          lastGatherScroll = self.start;
-          moveLetters(false);
-        },
-        onUpdate(self) {
-          const scroll = self.scroll();
-          const threshold = window.innerHeight * .05;
+      let lastScroll = window.scrollY;
+      const onTextScroll = () => {
+        const scroll = window.scrollY;
+        const direction = Math.sign(scroll - lastScroll);
+        lastScroll = scroll;
+        if (intro.progress() < 1) return;
+        if (scroll <= window.innerHeight * .05) moveText(false);
+        else if (direction !== 0) moveText(direction > 0);
+      };
+      window.addEventListener('scroll', onTextScroll, { passive: true });
+      removeTextScroll = () => window.removeEventListener('scroll', onTextScroll);
 
-          if (self.direction > 0) {
-            if (scattered) {
-              furthestDown = Math.max(furthestDown, scroll);
-            } else if (scroll - lastGatherScroll >= threshold) {
-              scattered = true;
-              furthestDown = scroll;
-              moveLetters(true);
-            }
-          } else if (scattered && furthestDown - scroll >= threshold) {
-            scattered = false;
-            lastGatherScroll = scroll;
-            moveLetters(false);
-          }
-        },
+      intro.eventCallback('onComplete', () => {
+        if (window.scrollY > window.innerHeight * .05) moveText(true);
       });
 
       gsap.fromTo(arrowShine,
@@ -204,6 +179,7 @@ export const AIProcessorHero = () => {
 
     return () => {
       removePointer();
+      removeTextScroll();
       context.revert();
     };
   }, []);
@@ -313,11 +289,11 @@ export const AIProcessorHero = () => {
     <div className="ai-hero__inner">
       <div className="ai-hero__content">
         <p className="ai-hero__eyebrow" aria-label="Bứt phá cùng AI">
-          <span className="ai-hero__scatter-line" aria-hidden="true">{scatterText('Bứt phá cùng AI', 0)}</span>
+          <span className="ai-hero__scatter-line" aria-hidden="true">{renderHeroLetters('Bứt phá cùng AI', 0)}</span>
         </p>
         <h1 id="ai-hero-title" aria-label="Dẫn đầu kỷ nguyên số">
-          <span className="ai-hero__scatter-line" aria-hidden="true">{scatterText('Dẫn đầu', 1)}</span>
-          <span className="ai-hero__scatter-line ai-hero__scatter-line--accent" aria-hidden="true">{scatterText('kỷ nguyên số', 2)}</span>
+          <span className="ai-hero__scatter-line" aria-hidden="true">{renderHeroLetters('Dẫn đầu', 1)}</span>
+          <span className="ai-hero__scatter-line ai-hero__scatter-line--accent" aria-hidden="true">{renderHeroLetters('kỷ nguyên số', 2)}</span>
         </h1>
         <div className="ai-hero__supporting">
           <p className="ai-hero__description">

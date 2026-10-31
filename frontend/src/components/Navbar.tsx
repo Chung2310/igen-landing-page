@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { OutlineServiceIcon } from './OutlineServiceIcon';
 import { INDUSTRIES } from '../data/industries';
+import { useMobileViewportWidth } from '../hooks/useMobileViewportWidth';
 import './Navbar.css';
 
 const MENU_ICONS: Record<string, Parameters<typeof OutlineServiceIcon>[0]['name']> = {
@@ -95,7 +97,9 @@ export const Navbar: React.FC = () => {
   const [desktopServicesOpen, setDesktopServicesOpen] = useState(false);
   const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
   const [desktopIndustriesOpen, setDesktopIndustriesOpen] = useState(false);
+  const mobileViewportWidth = useMobileViewportWidth();
   const isHomeTop = location.pathname === '/' && !scrolled;
+
 
   // Scroll to top on route change
   useEffect(() => {
@@ -133,7 +137,8 @@ export const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${isHomeTop ? 'home-hero-nav' : ''} ${
+      style={mobileViewportWidth === null ? undefined : { width: mobileViewportWidth }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isHomeTop ? 'home-hero-nav' : ''} ${
         scrolled
           ? 'bg-white/85 backdrop-blur-md border-b border-line shadow-[0_1px_0_rgba(60,66,87,0.04)]'
           : 'bg-white/60 backdrop-blur-sm border-b border-transparent'
@@ -142,7 +147,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-[72px]">
           {/* Logo */}
-          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="home-hero-brand flex-shrink-0 flex items-center cursor-pointer group interactable origin-left scale-[.94]">
+          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="home-hero-brand relative flex-shrink-0 flex items-center cursor-pointer group interactable origin-left scale-[.94]">
             <img src="/icon-favicon.png" alt="" aria-hidden="true" width="40" height="40" className="home-hero-brand-icon h-8 w-8 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-9" />
             <div className="relative w-24 h-12 sm:w-28 sm:h-14 overflow-hidden transition-transform duration-300 group-hover:scale-105">
               <img src="/brand-icon.png" alt="iGen Technology" width="1024" height="1024" className="home-hero-brand-wordmark absolute left-1/2 top-[58%] h-[122px] w-[122px] max-w-none -translate-x-1/2 -translate-y-1/2 sm:h-[140px] sm:w-[140px]" />
@@ -277,23 +282,27 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile toggle */}
           <button
-            className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-ink hover:bg-surface-alt transition-colors"
+            type="button"
+            className="home-mobile-menu-toggle"
             onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Menu"
+            aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
+            aria-controls="mobile-navigation"
             aria-expanded={mobileOpen}
           >
-            <span className="material-symbols-outlined">{mobileOpen ? 'close' : 'menu'}</span>
+            {mobileOpen ? <X size={24} strokeWidth={2.3} aria-hidden="true" /> : <Menu size={24} strokeWidth={2.3} aria-hidden="true" />}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       <div
-        className={`lg:hidden grid bg-white transition-all duration-300 ease-in-out ${
-          mobileOpen ? 'grid-rows-[1fr] opacity-100 border-t border-line' : 'grid-rows-[0fr] opacity-0'
+        id="mobile-navigation"
+        data-lenis-prevent
+        className={`lg:hidden overflow-x-hidden overflow-y-auto overscroll-y-contain touch-pan-y bg-white transition-[max-height,opacity] duration-300 ease-in-out ${
+          mobileOpen ? 'max-h-[calc(100dvh-72px)] opacity-100 border-t border-line' : 'max-h-0 opacity-0 pointer-events-none'
         }`}
       >
-        <div className="max-h-[calc(100dvh-72px)] overflow-y-auto">
+        <div className="min-h-0">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
             {links.map((l) => {
               if (l.to === '/products') {
