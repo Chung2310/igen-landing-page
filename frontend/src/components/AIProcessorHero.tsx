@@ -18,6 +18,15 @@ const featuredServices = [
 // Simplified Vietnam silhouette, normalized to a 100 × 240 SVG box.
 const VIETNAM_OUTLINE = 'M82.1 29.3 L63.4 43.2 L51.8 58.6 L48.7 69.9 L59.4 87.0 L72.5 108.3 L85.1 118.3 L93.6 131.4 L100 161.5 L98.1 190.1 L86.5 200.8 L70.5 211.3 L59.1 224.9 L41.7 240 L36.6 229.6 L40.6 218.5 L30.2 209.3 L42.3 202.8 L56.9 201.6 L50.8 191.7 L74.3 179.2 L76 159.7 L72.7 148.9 L75.3 132.6 L71.8 121.1 L61.2 109.8 L52.4 95.4 L40.8 76.2 L24.1 66.5 L28.1 60.6 L37 56.4 L31.6 42.2 L14.4 42.1 L8.2 27.3 L0 14.4 L7.5 10.5 L18.6 10.5 L32.2 8.7 L44.1 0 L50.8 6.1 L63.6 9.1 L61.4 18.4 L68 25.1 Z';
 
+const renderHeroLetters = (text: string, seed: number) => Array.from(text).map((character, index, characters) => {
+  const progress = index / Math.max(characters.length - 1, 1);
+  const start = seed === 1 ? [255, 255, 255] : [201, 242, 255];
+  const end = seed === 1 ? [119, 220, 255] : [0, 173, 252];
+  const color = seed === 0 ? undefined : `rgb(${start.map((value, channel) => Math.round(value + (end[channel] - value) * progress)).join(', ')})`;
+
+  return <span key={`${seed}-${index}`} className="ai-hero__scatter-letter" style={{ color }}>{character === ' ' ? '\u00a0' : character}</span>;
+});
+
 export const AIProcessorHero = () => {
   const heroRef = useRef<HTMLElement>(null);
 
@@ -36,9 +45,11 @@ export const AIProcessorHero = () => {
     const arrowGhost = hero.querySelector<SVGGElement>('.ai-hero__arrow-ghost');
     const arrowEcho = hero.querySelector<SVGPathElement>('.ai-hero__arrow-echo');
     const arrowShine = hero.querySelector<SVGGElement>('.ai-hero__arrow-shine');
+    const eyebrow = hero.querySelector<HTMLElement>('.ai-hero__eyebrow');
+    const lines = hero.querySelectorAll<HTMLElement>('h1 .ai-hero__scatter-line');
     const supporting = hero.querySelector<HTMLElement>('.ai-hero__supporting');
     const navLinks = hero.querySelectorAll<HTMLElement>('.ai-hero__service-nav a');
-    if (!scene || !video || !shade || !mesh || !arrow || !arrowLead || !arrowSvg || !arrowGhost || !arrowEcho || !arrowShine || !supporting) return;
+    if (!scene || !video || !shade || !mesh || !arrow || !arrowLead || !arrowSvg || !arrowGhost || !arrowEcho || !arrowShine || !eyebrow || !supporting) return;
 
     const context = gsap.context(() => {
       const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -50,6 +61,19 @@ export const AIProcessorHero = () => {
           x: 0, scale: 1, rotation: 0, opacity: 1, duration: 1.25, ease: 'power2.inOut',
         }, .08)
         .fromTo(arrowLead, { x: -75, scale: .82, opacity: 0 }, { x: 0, scale: 1, opacity: .82, duration: .9, ease: 'power3.out' }, .33)
+        .fromTo(eyebrow, { y: 34, clipPath: 'inset(0 0 100% 0)' }, {
+          y: 0,
+          clipPath: 'inset(0 0 0% 0)',
+          duration: .78,
+          onComplete: () => gsap.set(eyebrow, { clearProps: 'clipPath' }),
+        }, .23)
+        .fromTo(lines, { y: 72, clipPath: 'inset(0 0 100% 0)' }, {
+          y: 0,
+          clipPath: 'inset(0 0 0% 0)',
+          duration: .96,
+          stagger: .14,
+          onComplete: () => gsap.set(lines, { clearProps: 'clipPath' }),
+        }, .36)
         .fromTo(supporting, { y: 35, opacity: 0 }, { y: 0, opacity: 1, duration: .8 }, .79)
         .fromTo(navLinks, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: .68, stagger: .07 }, .94);
 
@@ -68,6 +92,18 @@ export const AIProcessorHero = () => {
         .to(arrowSvg, { xPercent: 10, yPercent: -7, scale: .9, rotation: 5, opacity: .28, duration: .5, ease: 'none' }, 0)
         .to(arrowLead, { xPercent: 0, opacity: .65, duration: .32, ease: 'none' }, .68)
         .to(arrowSvg, { xPercent: 0, yPercent: 0, scale: .82, rotation: 0, opacity: .7, duration: .32, ease: 'none' }, .68);
+
+      ScrollTrigger.create({
+        trigger: hero,
+        start: 'top top',
+        end: 'max',
+        onUpdate(self) {
+          const triggerPoint = window.innerHeight * .05;
+          if (self.scroll() <= triggerPoint) hero.classList.remove('ai-hero--scroll-scan');
+          else if (self.direction > 0) hero.classList.add('ai-hero--scroll-scan');
+        },
+        onLeaveBack: () => hero.classList.remove('ai-hero--scroll-scan'),
+      });
 
       gsap.fromTo(arrowShine,
         { x: -340, opacity: 1 },
@@ -116,6 +152,7 @@ export const AIProcessorHero = () => {
     return () => {
       removePointer();
       context.revert();
+      hero.classList.remove('ai-hero--scroll-scan');
     };
   }, []);
 
@@ -223,12 +260,12 @@ export const AIProcessorHero = () => {
     </div>
     <div className="ai-hero__inner">
       <div className="ai-hero__content">
-        <p className="ai-hero__eyebrow">
-          <span className="ai-hero__scan-line" data-text="Bứt phá cùng AI">Bứt phá cùng AI</span>
+        <p className="ai-hero__eyebrow" aria-label="Bứt phá cùng AI">
+          <span className="ai-hero__scatter-line" data-text="Bứt phá cùng AI" aria-hidden="true">{renderHeroLetters('Bứt phá cùng AI', 0)}</span>
         </p>
-        <h1 id="ai-hero-title">
-          <span className="ai-hero__scan-line" data-text="Dẫn đầu">Dẫn đầu</span>
-          <span className="ai-hero__scan-line ai-hero__scan-line--accent" data-text="kỷ nguyên số">kỷ nguyên số</span>
+        <h1 id="ai-hero-title" aria-label="Dẫn đầu kỷ nguyên số">
+          <span className="ai-hero__scatter-line" data-text="Dẫn đầu" aria-hidden="true">{renderHeroLetters('Dẫn đầu', 1)}</span>
+          <span className="ai-hero__scatter-line ai-hero__scatter-line--accent" data-text="kỷ nguyên số" aria-hidden="true">{renderHeroLetters('kỷ nguyên số', 2)}</span>
         </h1>
         <div className="ai-hero__supporting">
           <p className="ai-hero__description">
