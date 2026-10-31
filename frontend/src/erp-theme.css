@@ -201,6 +201,37 @@ main :is(input, textarea, select):focus {
   animation: igen-ring-spin 2.2s linear infinite;
 }
 
+/* Show a thin rainbow ring only on the FAQ card under the pointer. */
+.home-faq-card {
+  position: relative;
+}
+
+.home-faq-card::before {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--igen-ring-angle), #ff2ea6, #ff8a24, #ffe436, #31e89a, #00c8ff, #855cff, #ff2ea6);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  content: '';
+}
+
+.home-faq-card:hover {
+  box-shadow: 0 0 9px rgba(0, 200, 255, .4), 0 0 20px rgba(255, 46, 166, .22);
+}
+
+.home-faq-card:hover::before {
+  opacity: 1;
+  animation: igen-ring-spin 2.4s linear infinite;
+}
+
 /* Homepage feature, process and FAQ cards share the same accent on interaction. */
 .igen-rainbow-border:hover,
 .igen-rainbow-border:focus-within,
@@ -219,5 +250,6 @@ main :is(input, textarea, select):focus {
   .card-hover:focus-within,
   .igen-rainbow-border:hover,
   .igen-rainbow-border:focus-within,
-  .igen-rainbow-border.is-active { animation: none; }
+  .igen-rainbow-border.is-active,
+  .home-faq-card:hover::before { animation: none; }
 }

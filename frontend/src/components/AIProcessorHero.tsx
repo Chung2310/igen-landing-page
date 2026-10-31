@@ -20,7 +20,7 @@ const VIETNAM_OUTLINE = 'M82.1 29.3 L63.4 43.2 L51.8 58.6 L48.7 69.9 L59.4 87.0 
 
 const scatterText = (text: string, seed: number) => Array.from(text).map((character, index, characters) => {
   const angle = index * 2.4 + seed * 1.15;
-  const distance = 110 + (index % 5) * 25;
+  const distance = 210 + (index % 5) * 45;
   const progress = index / Math.max(characters.length - 1, 1);
   const start = seed === 1 ? [255, 255, 255] : [201, 242, 255];
   const end = seed === 1 ? [119, 220, 255] : [0, 173, 252];
@@ -59,18 +59,17 @@ export const AIProcessorHero = () => {
     const arrowEcho = hero.querySelector<SVGPathElement>('.ai-hero__arrow-echo');
     const arrowShine = hero.querySelector<SVGGElement>('.ai-hero__arrow-shine');
     const eyebrow = hero.querySelector<HTMLElement>('.ai-hero__eyebrow');
-    const content = hero.querySelector<HTMLElement>('.ai-hero__content');
     const lines = hero.querySelectorAll<HTMLElement>('h1 .ai-hero__scatter-line');
     const letters = hero.querySelectorAll<HTMLElement>('.ai-hero__scatter-letter');
     const supporting = hero.querySelector<HTMLElement>('.ai-hero__supporting');
     const navLinks = hero.querySelectorAll<HTMLElement>('.ai-hero__service-nav a');
-    if (!scene || !video || !shade || !mesh || !arrow || !arrowLead || !arrowSvg || !arrowGhost || !arrowEcho || !arrowShine || !eyebrow || !content || !supporting) return;
+    if (!scene || !video || !shade || !mesh || !arrow || !arrowLead || !arrowSvg || !arrowGhost || !arrowEcho || !arrowShine || !eyebrow || !supporting) return;
 
     const context = gsap.context(() => {
       const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
       intro
         .fromTo(video, { scale: 1.12, y: 18 }, { scale: 1.04, y: 0, duration: 1.6 }, 0)
-        .fromTo(shade, { opacity: 0 }, { opacity: 1, duration: 1.25, ease: 'power2.inOut' }, 0)
+        .fromTo(shade, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 1.25, ease: 'power2.inOut', clearProps: 'clipPath' }, 0)
         .fromTo(mesh, { scale: 1.14, y: -26 }, { scale: 1, y: 0, duration: 1.55 }, .05)
         .fromTo(arrow, { x: -Math.min(window.innerWidth * .34, 580), scale: .9, rotation: -4, opacity: 0 }, {
           x: 0, scale: 1, rotation: 0, opacity: 1, duration: 1.25, ease: 'power2.inOut',
@@ -92,29 +91,21 @@ export const AIProcessorHero = () => {
         .fromTo(supporting, { y: 35, opacity: 0 }, { y: 0, opacity: 1, duration: .8 }, .79)
         .fromTo(navLinks, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: .68, stagger: .07 }, .94);
 
-      // Let the right-hand ghost move left after the main arrow lands, so its
-      // 3x faster motion is visible instead of being masked by the parent move.
+      // Let the faint arrow emerge quickly to the right after the main arrow lands.
       gsap.fromTo(arrowGhost,
-        { x: 36, opacity: 0 },
-        { x: 0, opacity: .52, duration: .31, delay: 1.35, ease: 'power3.out' },
+        { x: -130, opacity: 0 },
+        { x: 0, opacity: .52, duration: .18, delay: 1.35, ease: 'power3.out' },
       );
 
       gsap.timeline({
         scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom bottom', scrub: .65, invalidateOnRefresh: true },
       })
-        .to(supporting, { y: -32, autoAlpha: 0, duration: .04, ease: 'none' }, .92)
         .to(mesh, { scale: 1.12, yPercent: -4, duration: 1, ease: 'none' }, 0)
         .to(video, { scale: 1.1, yPercent: -2, duration: 1, ease: 'none' }, 0)
         .to(arrowLead, { xPercent: 18, opacity: .18, duration: .5, ease: 'none' }, 0)
         .to(arrowSvg, { xPercent: 10, yPercent: -7, scale: .9, rotation: 5, opacity: .28, duration: .5, ease: 'none' }, 0)
-        .to(content, {
-          scale: () => window.innerWidth <= 640 ? .94 : window.innerWidth <= 900 ? .86 : .78,
-          y: () => window.innerWidth <= 640 ? -12 : -42,
-          transformOrigin: 'left center', duration: .04, ease: 'power2.inOut',
-        }, .96)
-        .to(supporting, { y: 0, autoAlpha: 1, duration: .04, ease: 'power2.inOut' }, .96)
-        .to(arrowLead, { xPercent: 0, opacity: .65, duration: .04, ease: 'power2.inOut' }, .96)
-        .to(arrowSvg, { xPercent: 0, yPercent: 0, scale: .82, rotation: 0, opacity: .7, duration: .04, ease: 'power2.inOut' }, .96);
+        .to(arrowLead, { xPercent: 0, opacity: .65, duration: .32, ease: 'none' }, .68)
+        .to(arrowSvg, { xPercent: 0, yPercent: 0, scale: .82, rotation: 0, opacity: .7, duration: .32, ease: 'none' }, .68);
 
       // Keep the letters scattered while scrolling down. A deliberate 5vh
       // upward scroll is needed before they gather again.
@@ -126,7 +117,7 @@ export const AIProcessorHero = () => {
           x: scatter ? (_index, element) => Number((element as HTMLElement).dataset.scatterX) : 0,
           y: scatter ? (_index, element) => Number((element as HTMLElement).dataset.scatterY) : 0,
           rotation: scatter ? (_index, element) => Number((element as HTMLElement).dataset.scatterRotate) : 0,
-          opacity: scatter ? .12 : 1,
+          opacity: scatter ? .38 : 1,
           duration: scatter ? 1.05 : .85,
           stagger: { amount: .18, from: scatter ? 'center' : 'edges' },
           ease: 'power2.out',
@@ -137,9 +128,15 @@ export const AIProcessorHero = () => {
       ScrollTrigger.create({
         trigger: hero,
         start: 'top top',
-        end: 'bottom top',
+        end: 'max',
         onRefresh(self) {
           if (!scattered) lastGatherScroll = self.start;
+        },
+        onLeaveBack(self) {
+          if (!scattered) return;
+          scattered = false;
+          lastGatherScroll = self.start;
+          moveLetters(false);
         },
         onUpdate(self) {
           const scroll = self.scroll();

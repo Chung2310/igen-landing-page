@@ -251,16 +251,16 @@ export const Home: React.FC = () => {
       <section className="section">
         <div className="container-page">
           <div className="text-center mb-14 reveal-text">
-            <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-ink mb-4">
               Câu hỏi <span className="text-primary">thường gặp</span>
             </h2>
-            <p className="text-body max-w-xl mx-auto">
+            <p className="text-lg text-body max-w-2xl mx-auto">
               Giải đáp các thắc mắc phổ biến về việc ứng dụng Trí tuệ Nhân tạo vào vận hành doanh nghiệp.
             </p>
           </div>
 
           <div
-            className="max-w-3xl mx-auto space-y-4 reveal-items-container"
+            className="max-w-4xl mx-auto space-y-5 reveal-items-container"
             onPointerLeave={(event) => {
               if (event.pointerType === 'mouse') setOpenFaqIndex(null);
             }}
@@ -273,7 +273,7 @@ export const Home: React.FC = () => {
                   onPointerEnter={(event) => {
                     if (event.pointerType === 'mouse') setOpenFaqIndex(index);
                   }}
-                  className={`igen-rainbow-border border border-line rounded-2xl bg-white overflow-hidden transition-all duration-300 reveal-item shadow-sm${isOpen ? ' is-active' : ''}`}
+                  className="home-faq-card border border-line rounded-2xl bg-white overflow-hidden transition-all duration-300 reveal-item shadow-sm"
                 >
                   <button
                     type="button"
@@ -286,7 +286,7 @@ export const Home: React.FC = () => {
                     }}
                     aria-expanded={isOpen}
                     aria-controls={`home-faq-answer-${index}`}
-                    className="w-full px-6 py-5 flex items-center justify-between text-left font-semibold text-ink hover:text-primary transition-colors focus:outline-none"
+                    className="w-full px-7 py-6 flex items-center justify-between text-left text-lg font-semibold text-ink hover:text-primary transition-colors focus:outline-none"
                   >
                     <span>{item.q}</span>
                     <span className={`material-symbols-outlined transition-transform duration-300 ${isOpen ? 'rotate-180 text-primary' : 'text-muted'}`}>
@@ -301,7 +301,7 @@ export const Home: React.FC = () => {
                     }`}
                   >
                     <div className="min-h-0 overflow-hidden">
-                      <div className="p-6 text-body text-sm leading-relaxed bg-surface-alt border-t border-line">
+                      <div className="p-7 text-body text-base leading-relaxed bg-surface-alt border-t border-line">
                         {item.a}
                       </div>
                     </div>
@@ -325,8 +325,8 @@ export const Home: React.FC = () => {
             >
               <image href="/brand-icon.png" width="1024" height="1024" />
             </svg>
-            <div className="relative z-10 max-w-2xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4" aria-label="Sẵn sàng chuyển đổi cùng AI?">
+            <div className="relative z-10 max-w-4xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-bold text-ink mb-4" aria-label="Sẵn sàng chuyển đổi cùng AI?">
                 {'Sẵn sàng chuyển đổi cùng AI?'.split(' ').map((word, index) => (
                   <React.Fragment key={index}>
                     {index > 0 && ' '}
@@ -336,7 +336,7 @@ export const Home: React.FC = () => {
                   </React.Fragment>
                 ))}
               </h2>
-              <p className="text-body mb-8">
+              <p className="text-lg text-body mb-8">
                 Để iGen Technology đồng hành cùng doanh nghiệp của bạn trên hành trình ứng dụng AI hiệu quả.
               </p>
               <Link to="/contact" className="btn-primary px-7 py-3.5">

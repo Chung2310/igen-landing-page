@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ChevronUp, PhoneCall } from 'lucide-react';
 import Lenis from 'lenis';
@@ -27,7 +27,7 @@ import { Contact } from './pages/Contact';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Login } from './pages/Login';
 
-const AppContent: React.FC = () => {
+const AppContent: React.FC<{ scrollToTop: () => void }> = ({ scrollToTop }) => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -81,7 +81,7 @@ const AppContent: React.FC = () => {
             {showBackToTop && (
               <button
                 type="button"
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                onClick={scrollToTop}
                 aria-label="Cuộn về đầu trang"
                 title="Về đầu trang"
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-300/70 bg-slate-200/65 text-slate-500 shadow-lg shadow-slate-900/10 backdrop-blur-sm transition-all hover:scale-110 hover:border-[#00adfc] hover:bg-[#00adfc] hover:text-white hover:shadow-sky-500/25 active:scale-95 active:bg-[#008fc9] focus-visible:bg-[#00adfc] focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0077b3]"
@@ -118,6 +118,16 @@ const AppContent: React.FC = () => {
 };
 
 export const App: React.FC = () => {
+  const lenisRef = useRef<Lenis | null>(null);
+
+  const scrollToTop = () => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { duration: 1.1, force: true });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   // Initialize Lenis smooth scroll globally (gentle, Stripe-like calm)
   useEffect(() => {
     const lenis = new Lenis({
@@ -125,22 +135,26 @@ export const App: React.FC = () => {
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
+    lenisRef.current = lenis;
 
+    let animationFrame: number;
     const raf = (time: number) => {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      animationFrame = requestAnimationFrame(raf);
     };
 
-    requestAnimationFrame(raf);
+    animationFrame = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(animationFrame);
+      lenisRef.current = null;
       lenis.destroy();
     };
   }, []);
 
   return (
     <BrowserRouter>
-      <AppContent />
+      <AppContent scrollToTop={scrollToTop} />
     </BrowserRouter>
   );
 };
