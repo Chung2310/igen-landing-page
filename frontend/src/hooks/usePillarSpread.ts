@@ -10,7 +10,7 @@ export function usePillarSpread(gridRef: RefObject<HTMLDivElement | null>) {
     if (!grid) return;
 
     const media = gsap.matchMedia();
-    media.add('(prefers-reduced-motion: no-preference)', () => {
+    media.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => {
       const heading = grid.closest('.home-pillars')?.querySelector<HTMLElement>('.home-pillars__heading');
       if (!heading) return;
       const words = heading.querySelectorAll('.home-pillars__word-inner');
@@ -56,7 +56,7 @@ export function usePillarSpread(gridRef: RefObject<HTMLDivElement | null>) {
         });
       }
     });
-    media.add('(min-width: 681px) and (prefers-reduced-motion: no-preference)', () => {
+    media.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => {
       const cards = Array.from(grid.querySelectorAll<HTMLElement>('.home-pillars__card'));
       const rotations = [-9, -3, 3, 9];
       gsap.set(cards, { zIndex: (index) => cards.length - index });

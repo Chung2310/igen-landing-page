@@ -55,6 +55,7 @@ const DefaultServiceDetail: React.FC = () => {
   useEffect(() => {
     if (!loading && service) {
       document.title = `${service.title} | iGen Technology`;
+      if (window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)').matches) return;
       gsap.fromTo(
         '.sd-reveal',
         { opacity: 0, y: 40 },

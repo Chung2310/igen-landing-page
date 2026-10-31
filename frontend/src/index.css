@@ -337,7 +337,7 @@ section.relative.pt-40.pb-40 p {
   opacity: 0;
   animation: fade-up-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce), (max-width: 900px) {
   .fade-up-in {
     animation: none;
     opacity: 1;

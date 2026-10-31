@@ -115,7 +115,7 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     const heading = visionHeadingRef.current;
-    if (!heading || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!heading || window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)').matches) return;
     const words = heading.querySelectorAll<HTMLElement>('.home-vision__word-inner');
     let animations: Animation[] = [];
     const observer = new IntersectionObserver(([entry]) => {

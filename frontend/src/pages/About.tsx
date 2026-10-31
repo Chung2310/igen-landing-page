@@ -46,7 +46,7 @@ export const About: React.FC = () => {
   const [solutionCount, setSolutionCount] = useState(1);
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)').matches) {
       setSolutionCount(10);
       return;
     }
