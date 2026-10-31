@@ -3,6 +3,7 @@ import { NavLink, Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { OutlineServiceIcon } from './OutlineServiceIcon';
 import { INDUSTRIES } from '../data/industries';
+import { useMobileViewportWidth } from '../hooks/useMobileViewportWidth';
 import './Navbar.css';
 
 const MENU_ICONS: Record<string, Parameters<typeof OutlineServiceIcon>[0]['name']> = {
@@ -96,7 +97,9 @@ export const Navbar: React.FC = () => {
   const [desktopServicesOpen, setDesktopServicesOpen] = useState(false);
   const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
   const [desktopIndustriesOpen, setDesktopIndustriesOpen] = useState(false);
+  const mobileViewportWidth = useMobileViewportWidth();
   const isHomeTop = location.pathname === '/' && !scrolled;
+
 
   // Scroll to top on route change
   useEffect(() => {
@@ -134,7 +137,8 @@ export const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${isHomeTop ? 'home-hero-nav' : ''} ${
+      style={mobileViewportWidth === null ? undefined : { width: mobileViewportWidth }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isHomeTop ? 'home-hero-nav' : ''} ${
         scrolled
           ? 'bg-white/85 backdrop-blur-md border-b border-line shadow-[0_1px_0_rgba(60,66,87,0.04)]'
           : 'bg-white/60 backdrop-blur-sm border-b border-transparent'
@@ -294,7 +298,7 @@ export const Navbar: React.FC = () => {
       <div
         id="mobile-navigation"
         data-lenis-prevent
-        className={`lg:hidden overflow-y-auto overscroll-y-contain touch-pan-y bg-white transition-[max-height,opacity] duration-300 ease-in-out ${
+        className={`lg:hidden overflow-x-hidden overflow-y-auto overscroll-y-contain touch-pan-y bg-white transition-[max-height,opacity] duration-300 ease-in-out ${
           mobileOpen ? 'max-h-[calc(100dvh-72px)] opacity-100 border-t border-line' : 'max-h-0 opacity-0 pointer-events-none'
         }`}
       >
