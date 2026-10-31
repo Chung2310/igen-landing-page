@@ -9,7 +9,7 @@
 .software-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 42px; color: #6b7c8a; font-size: 13px; }
 .software-breadcrumb a:hover { color: #0098d5; }
 .software-breadcrumb strong { color: #284155; font-weight: 600; }
-.software-page .software-hero h1 { max-width: 690px; margin: 17px 0 22px; font-size: clamp(42px, 4vw, 62px); font-weight: 600; letter-spacing: -.025em; line-height: 1.13; }
+.software-page .software-hero h1 { max-width: 690px; margin: 17px 0 22px; font-size: clamp(42px, 4vw, 62px); font-weight: 500; letter-spacing: -.025em; line-height: 1.13; }
 .software-hero h1 span { color: #009edc; }
 .software-hero__copy > p { max-width: 610px; font-size: 17px; }
 .software-hero__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 26px; margin-top: 31px; }

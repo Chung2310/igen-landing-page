@@ -106,7 +106,7 @@ const DefaultServiceDetail: React.FC = () => {
             </span>
           </div>
 
-          <h1 className="sd-reveal text-4xl md:text-5xl font-extrabold text-ink leading-tight mb-6">
+          <h1 className="sd-reveal text-4xl md:text-5xl font-medium text-ink leading-tight mb-6">
             {service.title}
           </h1>
 
