@@ -183,7 +183,7 @@
   .home-industries__heading { display: block; margin-bottom: 30px; }
   .home-industries__heading p { margin-top: 16px; font-size: 15px; }
   .home-industries__explorer { grid-template-columns: 1fr; }
-  .home-industries__visual { min-height: 250px; aspect-ratio: 16 / 10; }
+  .home-industries__visual { width: 100%; height: clamp(250px, 62.5vw, 420px); min-height: 0; aspect-ratio: auto; }
   .home-industries__visual img { height: 100%; min-height: 250px; }
   .home-industries__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 15px; padding: 22px; }
   .home-industries__list button { padding: 7px 0; font-size: 15px; }
