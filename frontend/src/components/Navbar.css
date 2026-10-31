@@ -29,7 +29,29 @@ nav.home-hero-nav {
 .home-hero-nav .home-hero-nav-link::after { background: #00adfc; }
 .home-hero-contact.btn-primary { background: var(--igen-blue); border: 0; border-radius: 9px; box-shadow: none; }
 .home-hero-contact.btn-primary:hover { background: var(--igen-blue-hover); border: 0; box-shadow: none; }
-.home-hero-nav > div button.lg\:hidden { color: #fff; }
+.home-mobile-menu-toggle {
+  display: none;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d8e2f0;
+  border-radius: 10px;
+  background: #f1f5fb;
+  color: #071629;
+  cursor: pointer;
+}
+
+.home-hero-nav .home-mobile-menu-toggle {
+  border-color: rgba(255, 255, 255, .3);
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+}
+
+@media (max-width: 1023px) {
+  .home-mobile-menu-toggle { display: inline-flex; }
+}
 
 .nav-dropdown-panel::before {
   position: absolute;

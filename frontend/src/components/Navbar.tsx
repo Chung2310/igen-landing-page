@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { OutlineServiceIcon } from './OutlineServiceIcon';
 import { INDUSTRIES } from '../data/industries';
 import './Navbar.css';
@@ -277,19 +278,22 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile toggle */}
           <button
-            className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-ink hover:bg-surface-alt transition-colors"
+            type="button"
+            className="home-mobile-menu-toggle"
             onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Menu"
+            aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
+            aria-controls="mobile-navigation"
             aria-expanded={mobileOpen}
           >
-            <span className="material-symbols-outlined">{mobileOpen ? 'close' : 'menu'}</span>
+            {mobileOpen ? <X size={24} strokeWidth={2.3} aria-hidden="true" /> : <Menu size={24} strokeWidth={2.3} aria-hidden="true" />}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       <div
-        className={`lg:hidden grid bg-white transition-all duration-300 ease-in-out ${
+        id="mobile-navigation"
+        className={`lg:hidden grid overflow-hidden bg-white transition-all duration-300 ease-in-out ${
           mobileOpen ? 'grid-rows-[1fr] opacity-100 border-t border-line' : 'grid-rows-[0fr] opacity-0'
         }`}
       >
