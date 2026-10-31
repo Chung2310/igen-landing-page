@@ -260,7 +260,7 @@ export const Home: React.FC = () => {
           </div>
 
           <div
-            className="max-w-4xl mx-auto space-y-5 reveal-items-container"
+            className="home-faq-list max-w-4xl mx-auto space-y-5 reveal-items-container"
             onPointerLeave={(event) => {
               if (event.pointerType === 'mouse') setOpenFaqIndex(null);
             }}
