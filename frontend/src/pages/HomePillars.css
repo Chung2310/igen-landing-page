@@ -89,7 +89,9 @@
   .home-pillars__heading { margin-bottom: 30px; }
   .home-pillars__heading p { font-size: 15px; }
   .home-pillars__grid { grid-template-columns: 1fr; gap: 14px; }
-  .home-pillars__card { min-height: 0; padding: 24px; }
+  .home-pillars__card { min-height: 0; padding: 24px; transform: none !important; transition: none; }
+  .home-pillars__card:hover { box-shadow: 0 14px 34px #4c9acc12; }
+  .home-pillars__card > a:hover .home-pillars__arrow { transform: none; }
   .home-pillars__icon { width: 58px; height: 58px; }
   .home-pillars__icon svg { width: 26px; height: 26px; }
   .home-pillars .home-pillars__card h3 { font-size: 21px; }
