@@ -61,7 +61,7 @@
   letter-spacing: -.035em;
 }
 
-.service-explorer__intro h2 span {
+.service-explorer__intro h2 .is-accent {
   color: #078fe5;
   background: linear-gradient(95deg, #02a4ed, #235bdf);
   background-clip: text;
@@ -345,4 +345,169 @@
   .service-explorer__entry:hover,
   .service-explorer__entry.is-open,
   .service-explorer__entry:focus-within { animation: none; }
+}
+
+/* Compact service rows that reveal a short description on interaction. */
+.service-explorer {
+  --service-brand: #00b9f2;
+  background: #f7f7f7;
+}
+
+.service-explorer::before,
+.service-explorer::after { display: none; }
+
+.service-explorer__intro h2 { color: #191919; font-weight: 500; }
+.service-explorer__intro h2 .is-accent {
+  color: var(--service-brand);
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+.service-explorer__intro p { color: #757575; }
+
+.service-explorer__title-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-block: .12em;
+  margin-block: -.12em;
+  perspective: 700px;
+}
+
+.service-explorer__title-word {
+  display: inline-block;
+  transform-origin: 0 100%;
+}
+
+.service-explorer__tabs {
+  gap: 44px;
+  min-height: 0;
+  padding: 24px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.service-explorer__tabs button {
+  position: relative;
+  display: block;
+  min-height: 0;
+  padding: 0 0 17px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #a1a5aa;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.service-explorer__tabs button svg { display: none; }
+.service-explorer__tabs button:hover,
+.service-explorer__tabs button.is-active {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--service-brand);
+}
+.service-explorer__tabs button.is-active::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 88px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--service-brand);
+  content: '';
+}
+
+.service-explorer__list { gap: 20px; }
+.service-explorer__entry {
+  border: 1px solid #e0e0e0;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: none;
+  transition: background .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.service-explorer__entry::before { display: none; }
+.service-explorer__entry:hover,
+.service-explorer__entry:focus-within {
+  transform: none;
+  border-color: var(--service-brand);
+  background: var(--service-brand);
+  box-shadow: 0 10px 24px #00b9f23b;
+  animation: none;
+}
+
+.service-explorer__item {
+  display: block;
+  min-height: 132px;
+  padding: 28px 32px;
+  color: #171717;
+  text-decoration: none;
+}
+.service-explorer__item-heading {
+  display: flex;
+  align-items: center;
+  gap: 23px;
+  min-height: 74px;
+}
+.service-explorer__icon-box {
+  width: 58px;
+  height: 58px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: currentColor;
+}
+.service-explorer__icon-box svg { width: 56px; height: 56px; }
+.service-explorer__item-heading strong {
+  flex: 1;
+  font-size: clamp(20px, 2vw, 30px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.service-explorer__item-arrow { flex: none; margin-left: auto; }
+.service-explorer__item-description {
+  display: block;
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  opacity: 0;
+  color: currentColor;
+  font-size: 17px;
+  line-height: 1.55;
+  transition: max-height .3s ease, margin-top .3s ease, opacity .2s ease;
+}
+.service-explorer__entry:hover .service-explorer__item,
+.service-explorer__entry:focus-within .service-explorer__item { color: #fff; }
+.service-explorer__entry:hover .service-explorer__item-description,
+.service-explorer__entry:focus-within .service-explorer__item-description {
+  max-height: 110px;
+  margin-top: 12px;
+  opacity: 1;
+}
+
+@media (max-width: 760px) {
+  .service-explorer__tabs { flex-direction: row; gap: 22px; padding: 0 0 8px; }
+  .service-explorer__tabs button { width: auto; min-height: 0; padding: 0 0 12px; font-size: 12px; }
+  .service-explorer__tabs button.is-active::after { width: 60px; height: 4px; }
+  .service-explorer__item { min-height: 104px; padding: 18px; }
+  .service-explorer__item-heading { min-height: 66px; gap: 14px; }
+  .service-explorer__item-heading strong { font-size: 18px; }
+  .service-explorer__icon-box { width: 46px; height: 46px; }
+  .service-explorer__icon-box svg { width: 44px; height: 44px; }
+  .service-explorer__item-arrow { width: 25px; height: 25px; }
+  .service-explorer__item-description { font-size: 14px; }
+}
+
+@media (hover: none) {
+  .service-explorer__item-description { max-height: none; margin-top: 10px; opacity: 1; color: #656565; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-explorer__entry,
+  .service-explorer__item-description { transition: none; }
 }

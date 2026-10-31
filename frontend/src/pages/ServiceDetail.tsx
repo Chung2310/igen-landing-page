@@ -86,9 +86,9 @@ const DefaultServiceDetail: React.FC = () => {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="relative pt-36 pb-40 overflow-hidden">
+      <section data-motion-hero="service-detail" className="relative pt-36 pb-40 overflow-hidden">
         <SilkBackground />
-        <div className="relative z-10 max-w-4xl mx-auto px-6">
+        <div data-motion-copy className="relative z-10 max-w-4xl mx-auto px-6">
           <nav aria-label="Đường dẫn trang" className="sd-reveal mb-6 flex flex-wrap items-center gap-2 text-sm text-body">
             <Link to="/" className="hover:text-primary transition-colors">Trang chủ</Link>
             <span aria-hidden="true">/</span>

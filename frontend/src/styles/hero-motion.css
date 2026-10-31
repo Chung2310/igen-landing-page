@@ -1,0 +1,27 @@
+.hero-motion {
+  isolation: isolate;
+}
+
+.hero-motion--layered > :not(.hero-motion__atmosphere) {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-motion__atmosphere {
+  position: absolute;
+  inset: -8%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 48% 48% at 65% 42%, rgba(0, 173, 252, .13), transparent 78%);
+}
+
+.hero-motion [class*="__visual"],
+.hero-motion .software-visual,
+.hero-motion .erp-hero-visual {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-motion__atmosphere { display: none; }
+}

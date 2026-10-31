@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { ServiceMenuIcon } from './ServiceMenuIcon';
+import { OutlineServiceIcon } from './OutlineServiceIcon';
 import { INDUSTRIES } from '../data/industries';
 import './Navbar.css';
 
-const MENU_ICONS: Record<string, Parameters<typeof ServiceMenuIcon>[0]['name']> = {
+const MENU_ICONS: Record<string, Parameters<typeof OutlineServiceIcon>[0]['name']> = {
   'Phát triển ứng dụng di động': 'mobile',
   'Phát triển ứng dụng web': 'web',
   'Kiểm thử phần mềm tự động': 'testing',
@@ -95,6 +95,7 @@ export const Navbar: React.FC = () => {
   const [desktopServicesOpen, setDesktopServicesOpen] = useState(false);
   const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
   const [desktopIndustriesOpen, setDesktopIndustriesOpen] = useState(false);
+  const isHomeTop = location.pathname === '/' && !scrolled;
 
   // Scroll to top on route change
   useEffect(() => {
@@ -124,7 +125,7 @@ export const Navbar: React.FC = () => {
   ];
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `relative text-sm font-medium transition-colors whitespace-nowrap py-1 after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:rounded-full after:bg-primary after:transition-all after:duration-300 ${
+    `relative text-sm font-medium transition-colors whitespace-nowrap py-1 after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:rounded-full after:bg-primary after:transition-all after:duration-300 ${isHomeTop ? 'home-hero-nav-link' : ''} ${
       isActive
         ? 'text-ink after:w-full'
         : 'text-body hover:text-ink after:w-0 hover:after:w-full'
@@ -132,7 +133,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${isHomeTop ? 'home-hero-nav' : ''} ${
         scrolled
           ? 'bg-white/85 backdrop-blur-md border-b border-line shadow-[0_1px_0_rgba(60,66,87,0.04)]'
           : 'bg-white/60 backdrop-blur-sm border-b border-transparent'
@@ -141,9 +142,10 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-[72px]">
           {/* Logo */}
-          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex-shrink-0 flex items-center cursor-pointer group interactable">
-            <div className="relative w-28 h-14 sm:w-32 sm:h-16 overflow-hidden transition-transform duration-300 group-hover:scale-105">
-              <img src="/brand-icon.png" alt="iGen Technology" width="1024" height="1024" className="absolute left-1/2 top-[58%] h-[136px] w-[136px] max-w-none -translate-x-1/2 -translate-y-1/2 sm:h-[158px] sm:w-[158px]" />
+          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="home-hero-brand flex-shrink-0 flex items-center cursor-pointer group interactable">
+            <img src="/icon-favicon.png" alt="" aria-hidden="true" width="40" height="40" className="home-hero-brand-icon h-8 w-8 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-9" />
+            <div className="relative w-24 h-12 sm:w-28 sm:h-14 overflow-hidden transition-transform duration-300 group-hover:scale-105">
+              <img src="/brand-icon.png" alt="iGen Technology" width="1024" height="1024" className="home-hero-brand-wordmark absolute left-1/2 top-[58%] h-[122px] w-[122px] max-w-none -translate-x-1/2 -translate-y-1/2 sm:h-[140px] sm:w-[140px]" />
             </div>
           </Link>
 
@@ -244,7 +246,7 @@ export const Navbar: React.FC = () => {
                                 )}
                                 {section.items.map((item) => (
                                   <Link key={item} to={serviceLink(item)} className="flex min-h-[36px] items-center gap-2.5 rounded-lg text-sm leading-snug text-body transition-colors hover:text-primary focus-visible:text-primary">
-                                    <ServiceMenuIcon name={MENU_ICONS[item]} />
+                                    <OutlineServiceIcon name={MENU_ICONS[item]} />
                                     <span>{item}</span>
                                   </Link>
                                 ))}
@@ -360,7 +362,7 @@ export const Navbar: React.FC = () => {
                                 )}
                                 {section.items.map((item) => (
                                   <Link key={item} to={serviceLink(item)} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-body hover:bg-primary-light hover:text-primary" onClick={() => setMobileOpen(false)}>
-                                    <ServiceMenuIcon name={MENU_ICONS[item]} compact />
+                                    <OutlineServiceIcon name={MENU_ICONS[item]} compact />
                                     <span>{item}</span>
                                   </Link>
                                 ))}
