@@ -31,8 +31,9 @@
 .home-pillars .home-pillars__heading h2 {
   margin: 0 0 13px;
   color: #10213b;
-  font-size: clamp(32px, 3vw, 46px);
+  font-size: clamp(38px, 4.1vw, 62px);
   font-weight: 600;
+  line-height: 1.15;
   letter-spacing: -.035em;
 }
 
