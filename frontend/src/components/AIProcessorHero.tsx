@@ -51,6 +51,7 @@ export const AIProcessorHero = () => {
     const navLinks = hero.querySelectorAll<HTMLElement>('.ai-hero__service-nav a');
     if (!scene || !video || !shade || !mesh || !arrow || !arrowLead || !arrowSvg || !arrowGhost || !arrowEcho || !arrowShine || !eyebrow || !supporting) return;
 
+    let removeTextScroll = () => {};
     const context = gsap.context(() => {
       const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
       intro
@@ -93,16 +94,43 @@ export const AIProcessorHero = () => {
         .to(arrowLead, { xPercent: 0, opacity: .65, duration: .32, ease: 'none' }, .68)
         .to(arrowSvg, { xPercent: 0, yPercent: 0, scale: .82, rotation: 0, opacity: .7, duration: .32, ease: 'none' }, .68);
 
-      ScrollTrigger.create({
-        trigger: hero,
-        start: 'top top',
-        end: 'max',
-        onUpdate(self) {
-          const triggerPoint = window.innerHeight * .05;
-          if (self.scroll() <= triggerPoint) hero.classList.remove('ai-hero--scroll-scan');
-          else if (self.direction > 0) hero.classList.add('ai-hero--scroll-scan');
-        },
-        onLeaveBack: () => hero.classList.remove('ai-hero--scroll-scan'),
+      let textHidden = false;
+      const moveText = (hide: boolean) => {
+        if (hide === textHidden) return;
+        textHidden = hide;
+        gsap.to(eyebrow, {
+          y: hide ? 34 : 0,
+          clipPath: hide ? 'inset(0 0 100% 0)' : 'inset(0 0 0% 0)',
+          duration: .78,
+          ease: 'power3.out',
+          overwrite: 'auto',
+          onComplete: () => { if (!hide) gsap.set(eyebrow, { clearProps: 'clipPath' }); },
+        });
+        gsap.to(lines, {
+          y: hide ? 72 : 0,
+          clipPath: hide ? 'inset(0 0 100% 0)' : 'inset(0 0 0% 0)',
+          duration: .96,
+          stagger: .14,
+          ease: 'power3.out',
+          overwrite: 'auto',
+          onComplete: () => { if (!hide) gsap.set(lines, { clearProps: 'clipPath' }); },
+        });
+      };
+
+      let lastScroll = window.scrollY;
+      const onTextScroll = () => {
+        const scroll = window.scrollY;
+        const direction = Math.sign(scroll - lastScroll);
+        lastScroll = scroll;
+        if (intro.progress() < 1) return;
+        if (scroll <= window.innerHeight * .05) moveText(false);
+        else if (direction !== 0) moveText(direction > 0);
+      };
+      window.addEventListener('scroll', onTextScroll, { passive: true });
+      removeTextScroll = () => window.removeEventListener('scroll', onTextScroll);
+
+      intro.eventCallback('onComplete', () => {
+        if (window.scrollY > window.innerHeight * .05) moveText(true);
       });
 
       gsap.fromTo(arrowShine,
@@ -151,8 +179,8 @@ export const AIProcessorHero = () => {
 
     return () => {
       removePointer();
+      removeTextScroll();
       context.revert();
-      hero.classList.remove('ai-hero--scroll-scan');
     };
   }, []);
 
@@ -261,11 +289,11 @@ export const AIProcessorHero = () => {
     <div className="ai-hero__inner">
       <div className="ai-hero__content">
         <p className="ai-hero__eyebrow" aria-label="Bứt phá cùng AI">
-          <span className="ai-hero__scatter-line" data-text="Bứt phá cùng AI" aria-hidden="true">{renderHeroLetters('Bứt phá cùng AI', 0)}</span>
+          <span className="ai-hero__scatter-line" aria-hidden="true">{renderHeroLetters('Bứt phá cùng AI', 0)}</span>
         </p>
         <h1 id="ai-hero-title" aria-label="Dẫn đầu kỷ nguyên số">
-          <span className="ai-hero__scatter-line" data-text="Dẫn đầu" aria-hidden="true">{renderHeroLetters('Dẫn đầu', 1)}</span>
-          <span className="ai-hero__scatter-line ai-hero__scatter-line--accent" data-text="kỷ nguyên số" aria-hidden="true">{renderHeroLetters('kỷ nguyên số', 2)}</span>
+          <span className="ai-hero__scatter-line" aria-hidden="true">{renderHeroLetters('Dẫn đầu', 1)}</span>
+          <span className="ai-hero__scatter-line ai-hero__scatter-line--accent" aria-hidden="true">{renderHeroLetters('kỷ nguyên số', 2)}</span>
         </h1>
         <div className="ai-hero__supporting">
           <p className="ai-hero__description">
