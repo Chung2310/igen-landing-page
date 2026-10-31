@@ -15,9 +15,16 @@ const featuredServices = [
   { label: 'Tư vấn chuyển đổi số', to: '/contact' },
 ];
 
-const scatterText = (text: string, seed: number) => Array.from(text).map((character, index) => {
+// Simplified Vietnam silhouette, normalized to a 100 × 240 SVG box.
+const VIETNAM_OUTLINE = 'M82.1 29.3 L63.4 43.2 L51.8 58.6 L48.7 69.9 L59.4 87.0 L72.5 108.3 L85.1 118.3 L93.6 131.4 L100 161.5 L98.1 190.1 L86.5 200.8 L70.5 211.3 L59.1 224.9 L41.7 240 L36.6 229.6 L40.6 218.5 L30.2 209.3 L42.3 202.8 L56.9 201.6 L50.8 191.7 L74.3 179.2 L76 159.7 L72.7 148.9 L75.3 132.6 L71.8 121.1 L61.2 109.8 L52.4 95.4 L40.8 76.2 L24.1 66.5 L28.1 60.6 L37 56.4 L31.6 42.2 L14.4 42.1 L8.2 27.3 L0 14.4 L7.5 10.5 L18.6 10.5 L32.2 8.7 L44.1 0 L50.8 6.1 L63.6 9.1 L61.4 18.4 L68 25.1 Z';
+
+const scatterText = (text: string, seed: number) => Array.from(text).map((character, index, characters) => {
   const angle = index * 2.4 + seed * 1.15;
   const distance = 110 + (index % 5) * 25;
+  const progress = index / Math.max(characters.length - 1, 1);
+  const start = seed === 1 ? [255, 255, 255] : [201, 242, 255];
+  const end = seed === 1 ? [119, 220, 255] : [0, 173, 252];
+  const color = seed === 0 ? undefined : `rgb(${start.map((value, channel) => Math.round(value + (end[channel] - value) * progress)).join(', ')})`;
 
   return (
     <span
@@ -26,6 +33,7 @@ const scatterText = (text: string, seed: number) => Array.from(text).map((charac
       data-scatter-x={Math.round(Math.cos(angle) * distance)}
       data-scatter-y={Math.round(Math.sin(angle) * distance - 25)}
       data-scatter-rotate={Math.round((index % 2 ? 1 : -1) * (14 + (index % 4) * 7))}
+      style={{ color }}
     >
       {character === ' ' ? '\u00a0' : character}
     </span>
@@ -49,7 +57,7 @@ export const AIProcessorHero = () => {
     const arrowSvg = hero.querySelector<SVGSVGElement>('.ai-hero__arrow-svg');
     const arrowGhost = hero.querySelector<SVGGElement>('.ai-hero__arrow-ghost');
     const arrowEcho = hero.querySelector<SVGPathElement>('.ai-hero__arrow-echo');
-    const arrowShine = hero.querySelector<SVGRectElement>('.ai-hero__arrow-shine');
+    const arrowShine = hero.querySelector<SVGGElement>('.ai-hero__arrow-shine');
     const eyebrow = hero.querySelector<HTMLElement>('.ai-hero__eyebrow');
     const content = hero.querySelector<HTMLElement>('.ai-hero__content');
     const lines = hero.querySelectorAll<HTMLElement>('h1 .ai-hero__scatter-line');
@@ -62,14 +70,18 @@ export const AIProcessorHero = () => {
       const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
       intro
         .fromTo(video, { scale: 1.12, y: 18 }, { scale: 1.04, y: 0, duration: 1.6 }, 0)
-        .fromTo(shade, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 1.25, ease: 'power2.inOut' }, 0)
+        .fromTo(shade, { opacity: 0 }, { opacity: 1, duration: 1.25, ease: 'power2.inOut' }, 0)
         .fromTo(mesh, { scale: 1.14, y: -26 }, { scale: 1, y: 0, duration: 1.55 }, .05)
-        .fromTo(arrow, { x: -Math.min(window.innerWidth * .34, 580), scale: .9, rotation: -4, clipPath: 'inset(0 100% 0 0)' }, {
-          x: 0, scale: 1, rotation: 0, clipPath: 'inset(0 0% 0 0)', duration: 1.25, ease: 'power2.inOut', clearProps: 'clipPath',
+        .fromTo(arrow, { x: -Math.min(window.innerWidth * .34, 580), scale: .9, rotation: -4, opacity: 0 }, {
+          x: 0, scale: 1, rotation: 0, opacity: 1, duration: 1.25, ease: 'power2.inOut',
         }, .08)
         .fromTo(arrowLead, { x: -75, scale: .82, opacity: 0 }, { x: 0, scale: 1, opacity: .82, duration: .9, ease: 'power3.out' }, .33)
-        .fromTo(arrowGhost, { x: 36, opacity: 0 }, { x: 0, opacity: .52, duration: .92 }, .7)
-        .fromTo(eyebrow, { y: 34, clipPath: 'inset(0 0 100% 0)' }, { y: 0, clipPath: 'inset(0 0 0% 0)', duration: .78 }, .23)
+        .fromTo(eyebrow, { y: 34, clipPath: 'inset(0 0 100% 0)' }, {
+          y: 0,
+          clipPath: 'inset(0 0 0% 0)',
+          duration: .78,
+          onComplete: () => gsap.set(eyebrow, { clearProps: 'clipPath' }),
+        }, .23)
         .fromTo(lines, { y: 72, clipPath: 'inset(0 0 100% 0)' }, {
           y: 0,
           clipPath: 'inset(0 0 0% 0)',
@@ -80,29 +92,21 @@ export const AIProcessorHero = () => {
         .fromTo(supporting, { y: 35, opacity: 0 }, { y: 0, opacity: 1, duration: .8 }, .79)
         .fromTo(navLinks, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: .68, stagger: .07 }, .94);
 
+      // Let the right-hand ghost move left after the main arrow lands, so its
+      // 3x faster motion is visible instead of being masked by the parent move.
+      gsap.fromTo(arrowGhost,
+        { x: 36, opacity: 0 },
+        { x: 0, opacity: .52, duration: .31, delay: 1.35, ease: 'power3.out' },
+      );
+
       gsap.timeline({
         scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom bottom', scrub: .65, invalidateOnRefresh: true },
       })
-        .to(letters, {
-          x: (_index, element) => Number((element as HTMLElement).dataset.scatterX),
-          y: (_index, element) => Number((element as HTMLElement).dataset.scatterY),
-          rotation: (_index, element) => Number((element as HTMLElement).dataset.scatterRotate),
-          opacity: 0,
-          stagger: { amount: .01, from: 'center' },
-          duration: .04,
-          ease: 'none',
-        }, .92)
         .to(supporting, { y: -32, autoAlpha: 0, duration: .04, ease: 'none' }, .92)
         .to(mesh, { scale: 1.12, yPercent: -4, duration: 1, ease: 'none' }, 0)
         .to(video, { scale: 1.1, yPercent: -2, duration: 1, ease: 'none' }, 0)
         .to(arrowLead, { xPercent: 18, opacity: .18, duration: .5, ease: 'none' }, 0)
         .to(arrowSvg, { xPercent: 10, yPercent: -7, scale: .9, rotation: 5, opacity: .28, duration: .5, ease: 'none' }, 0)
-        .to(letters, {
-          x: 0, y: 0, rotation: 0, opacity: 1,
-          stagger: { amount: .01, from: 'edges' },
-          duration: .04,
-          ease: 'power2.inOut',
-        }, .96)
         .to(content, {
           scale: () => window.innerWidth <= 640 ? .94 : window.innerWidth <= 900 ? .86 : .78,
           y: () => window.innerWidth <= 640 ? -12 : -42,
@@ -112,14 +116,59 @@ export const AIProcessorHero = () => {
         .to(arrowLead, { xPercent: 0, opacity: .65, duration: .04, ease: 'power2.inOut' }, .96)
         .to(arrowSvg, { xPercent: 0, yPercent: 0, scale: .82, rotation: 0, opacity: .7, duration: .04, ease: 'power2.inOut' }, .96);
 
+      // Keep the letters scattered while scrolling down. A deliberate 5vh
+      // upward scroll is needed before they gather again.
+      let scattered = false;
+      let furthestDown = 0;
+      let lastGatherScroll = 0;
+      const moveLetters = (scatter: boolean) => {
+        gsap.to(letters, {
+          x: scatter ? (_index, element) => Number((element as HTMLElement).dataset.scatterX) : 0,
+          y: scatter ? (_index, element) => Number((element as HTMLElement).dataset.scatterY) : 0,
+          rotation: scatter ? (_index, element) => Number((element as HTMLElement).dataset.scatterRotate) : 0,
+          opacity: scatter ? .12 : 1,
+          duration: scatter ? 1.05 : .85,
+          stagger: { amount: .18, from: scatter ? 'center' : 'edges' },
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      };
+
+      ScrollTrigger.create({
+        trigger: hero,
+        start: 'top top',
+        end: 'bottom top',
+        onRefresh(self) {
+          if (!scattered) lastGatherScroll = self.start;
+        },
+        onUpdate(self) {
+          const scroll = self.scroll();
+          const threshold = window.innerHeight * .05;
+
+          if (self.direction > 0) {
+            if (scattered) {
+              furthestDown = Math.max(furthestDown, scroll);
+            } else if (scroll - lastGatherScroll >= threshold) {
+              scattered = true;
+              furthestDown = scroll;
+              moveLetters(true);
+            }
+          } else if (scattered && furthestDown - scroll >= threshold) {
+            scattered = false;
+            lastGatherScroll = scroll;
+            moveLetters(false);
+          }
+        },
+      });
+
       gsap.fromTo(arrowShine,
-        { x: -160, opacity: 0 },
-        { x: 900, opacity: .9, duration: .72, repeat: -1, repeatDelay: 3.5, delay: 1.45, ease: 'power2.inOut' },
+        { x: -340, opacity: 1 },
+        { x: 800, opacity: 1, duration: .8, repeat: -1, repeatDelay: 3.5, delay: 1.35, ease: 'power2.inOut' },
       );
 
-      gsap.timeline({ repeat: -1, repeatDelay: 2.64, delay: 2.1 })
-        .fromTo(arrowEcho, { x: 0, scale: 1, opacity: 0 }, { x: 34, scale: 1.02, opacity: .36, duration: .08, ease: 'power1.out' })
-        .to(arrowEcho, { x: 250, scale: 1.1, opacity: 0, duration: .28, ease: 'power4.out' });
+      gsap.timeline({ repeat: -1, repeatDelay: 1.35, delay: 1.9 })
+        .fromTo(arrowEcho, { x: -12, scale: 1, opacity: 0 }, { x: 24, scale: 1.01, opacity: .25, duration: .45, ease: 'sine.inOut' })
+        .to(arrowEcho, { x: 170, scale: 1.05, opacity: 0, duration: 1.15, ease: 'sine.out' });
     }, hero);
 
     let removePointer = () => {};
@@ -181,6 +230,7 @@ export const AIProcessorHero = () => {
     <div className="ai-hero__mesh" aria-hidden="true" />
     <div className="ai-hero__arrow-position" aria-hidden="true">
     <div className="ai-hero__arrow">
+      <div className="ai-hero__arrow-cast" />
       <svg className="ai-hero__arrow-lead" viewBox="0 0 520 720" role="presentation">
         <defs>
           <linearGradient id="igen-arrow-lead-fill" x1="0" y1="0" x2="1" y2="1">
@@ -207,7 +257,14 @@ export const AIProcessorHero = () => {
           </linearGradient>
           <linearGradient id="igen-arrow-shine" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#fff" stopOpacity="0" />
-            <stop offset=".5" stopColor="#fff" stopOpacity=".76" />
+            <stop offset=".32" stopColor="#fff" stopOpacity=".22" />
+            <stop offset=".5" stopColor="#fff" stopOpacity="1" />
+            <stop offset=".68" stopColor="#fff" stopOpacity=".22" />
+            <stop offset="1" stopColor="#fff" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="igen-arrow-shine-halo" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#fff" stopOpacity="0" />
+            <stop offset=".5" stopColor="#fff" stopOpacity=".48" />
             <stop offset="1" stopColor="#fff" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="igen-arrow-upper-edge" x1="110" y1="38" x2="354" y2="360" gradientUnits="userSpaceOnUse">
@@ -225,6 +282,7 @@ export const AIProcessorHero = () => {
           <filter id="igen-arrow-blur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="12" /></filter>
           <filter id="igen-arrow-echo-blur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7" /></filter>
           <filter id="igen-arrow-edge-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" /></filter>
+          <filter id="igen-arrow-aura" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="13" /></filter>
           <clipPath id="igen-arrow-clip"><path d="M110 38H220L464 360 220 682H110L354 360Z" /></clipPath>
         </defs>
         <g className="ai-hero__arrow-ghost">
@@ -234,13 +292,23 @@ export const AIProcessorHero = () => {
           <path d="M386 360L630 682" fill="none" stroke="url(#igen-arrow-shadow-edge)" strokeWidth="2" strokeLinecap="round" />
         </g>
         <path className="ai-hero__arrow-echo" d="M110 38H220L464 360 220 682H110L354 360Z" fill="#d5f2ff" filter="url(#igen-arrow-echo-blur)" />
+        <path d="M110 38H220L464 360 220 682H110L354 360Z" fill="none" stroke="#e8fbff" strokeWidth="17" strokeLinejoin="round" opacity=".78" filter="url(#igen-arrow-aura)" />
         <path className="ai-hero__arrow-body" d="M110 38H220L464 360 220 682H110L354 360Z" fill="url(#igen-arrow-fill)" stroke="#e6faff" strokeWidth="11" strokeLinejoin="round" />
         <path d="M110 38H220L464 360 220 682H110L354 360Z" fill="url(#igen-arrow-glass)" />
+        <g clipPath="url(#igen-arrow-clip)">
+          <g transform="translate(188 96) rotate(-36) scale(.72 .92)">
+            <path d={VIETNAM_OUTLINE} transform="translate(1.5 2)" fill="#003d70" opacity=".24" />
+            <path d={VIETNAM_OUTLINE} fill="#e9faff" fillOpacity=".22" stroke="#f4fcff" strokeOpacity=".36" strokeWidth="1.2" />
+          </g>
+        </g>
         <path d="M131 62H209L435 360 209 658H131L381 360Z" fill="none" stroke="#e6faff" strokeOpacity=".48" strokeWidth="3" strokeLinejoin="round" />
         <path d="M110 38L354 360" fill="none" stroke="url(#igen-arrow-upper-edge)" strokeWidth="10" strokeLinecap="round" filter="url(#igen-arrow-edge-glow)" />
         <path d="M110 38L354 360" fill="none" stroke="url(#igen-arrow-upper-edge)" strokeWidth="2" strokeLinecap="round" />
         <g clipPath="url(#igen-arrow-clip)">
-          <rect className="ai-hero__arrow-shine" x="-260" y="-100" width="150" height="920" fill="url(#igen-arrow-shine)" transform="skewX(-18)" />
+          <g className="ai-hero__arrow-shine">
+            <rect x="0" y="-100" width="280" height="920" fill="url(#igen-arrow-shine-halo)" transform="skewX(-12)" />
+            <rect x="87" y="-100" width="106" height="920" fill="url(#igen-arrow-shine)" transform="skewX(-12)" />
+          </g>
         </g>
       </svg>
     </div>
@@ -250,9 +318,9 @@ export const AIProcessorHero = () => {
         <p className="ai-hero__eyebrow" aria-label="Bứt phá cùng AI">
           <span className="ai-hero__scatter-line" aria-hidden="true">{scatterText('Bứt phá cùng AI', 0)}</span>
         </p>
-        <h1 id="ai-hero-title" aria-label="Dẫn đầu kỷ nguyên số.">
+        <h1 id="ai-hero-title" aria-label="Dẫn đầu kỷ nguyên số">
           <span className="ai-hero__scatter-line" aria-hidden="true">{scatterText('Dẫn đầu', 1)}</span>
-          <span className="ai-hero__scatter-line ai-hero__scatter-line--accent" aria-hidden="true">{scatterText('kỷ nguyên số.', 2)}</span>
+          <span className="ai-hero__scatter-line ai-hero__scatter-line--accent" aria-hidden="true">{scatterText('kỷ nguyên số', 2)}</span>
         </h1>
         <div className="ai-hero__supporting">
           <p className="ai-hero__description">

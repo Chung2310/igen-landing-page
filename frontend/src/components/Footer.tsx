@@ -91,9 +91,11 @@ export const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold text-ink mb-5 text-sm">Liên hệ</h3>
             <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">location_on</span>
-                <span className="text-body text-sm">Lô LK3 - LK4, đường Lạc Long Quân, phường Kinh Bắc, tỉnh Bắc Ninh</span>
+              <li>
+                <a href="https://maps.app.goo.gl/uQgcErQniSdVu9cXA" target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 no-underline hover:no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                  <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">location_on</span>
+                  <span className="text-body text-sm">Lô LK3 - LK4, đường Lạc Long Quân, phường Kinh Bắc, tỉnh Bắc Ninh</span>
+                </a>
               </li>
               <li className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-primary text-[20px]">call</span>

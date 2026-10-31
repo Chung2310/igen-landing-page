@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { PhoneCall } from 'lucide-react';
+import { ChevronUp, PhoneCall } from 'lucide-react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import { useHeroMotion } from './hooks/useHeroMotion';
@@ -30,7 +30,15 @@ import { Login } from './pages/Login';
 const AppContent: React.FC = () => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
+  const [showBackToTop, setShowBackToTop] = useState(false);
   useHeroMotion(location.pathname);
+
+  useEffect(() => {
+    const onScroll = () => setShowBackToTop(window.scrollY > Math.max(400, window.innerHeight * .6));
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <>
@@ -70,6 +78,17 @@ const AppContent: React.FC = () => {
 
         {!isAdminPage && location.pathname !== '/login' && (
           <div className="fixed bottom-6 right-5 z-40 flex flex-col items-center gap-3">
+            {showBackToTop && (
+              <button
+                type="button"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                aria-label="Cuộn về đầu trang"
+                title="Về đầu trang"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-300/70 bg-slate-200/65 text-slate-500 shadow-lg shadow-slate-900/10 backdrop-blur-sm transition-all hover:scale-110 hover:border-[#00adfc] hover:bg-[#00adfc] hover:text-white hover:shadow-sky-500/25 active:scale-95 active:bg-[#008fc9] focus-visible:bg-[#00adfc] focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0077b3]"
+              >
+                <ChevronUp size={23} strokeWidth={2.2} aria-hidden="true" />
+              </button>
+            )}
             <a
               href="tel:0353710189"
               aria-label="Gọi ngay 0353.710.189"
