@@ -18,7 +18,7 @@ gsap.registerPlugin(ScrollTrigger);
 export const useRevealAnimations = (...deps: unknown[]) => {
   useEffect(() => {
     // Respect reduced-motion: skip all animations, content stays visible
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)').matches) return;
 
     const tweens: gsap.core.Tween[] = [];
 

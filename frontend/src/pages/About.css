@@ -18,7 +18,7 @@
 .about-stat strong { width: max-content; color: #008fca; font-size: 23px; font-weight: 600; line-height: 1.2; animation: about-number-pop 170ms ease-out both; transform-origin: center bottom; }
 .about-stat small { margin-top: 3px; color: #5b7588; font-size: 13px; }
 @keyframes about-number-pop { 0% { opacity: .6; transform: translateY(9px) scale(.8); } 60% { opacity: 1; transform: translateY(-4px) scale(1.08); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-@media (prefers-reduced-motion: reduce) { .about-stat strong { animation: none; } }
+@media (prefers-reduced-motion: reduce), (max-width: 900px) { .about-stat strong { animation: none; } }
 .about-hero__visual { position: relative; height: 279px; aspect-ratio: auto; overflow: visible; border: 0; border-radius: 13px; background: none; box-shadow: none; }
 .about-hero__visual > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 56%; border-radius: inherit; box-shadow: 0 14px 32px #145a9e1b; }
 

@@ -1,0 +1,17 @@
+export const SERVICE_COVERS: Record<string, string> = {
+  'thiet-ke-website': '/service-covers/thiet-ke-website.jpg',
+  'phat-trien-ung-dung-di-dong': '/service-covers/phat-trien-ung-dung-di-dong.jpg',
+  'mini-app-zalo': '/service-covers/mini-app-zalo.jpg',
+  'giai-phap-ai-automation': '/service-covers/giai-phap-ai-automation.jpg',
+  'he-thong-e-commerce': '/service-covers/he-thong-e-commerce.jpg',
+  'tu-van-chuyen-doi-so': '/service-covers/tu-van-chuyen-doi-so.jpg',
+  'hoc-vien-doanh-nghiep-1-nguoi': '/service-covers/hoc-vien-doanh-nghiep-1-nguoi.jpg',
+  'chuyen-doi-ai-doanh-nghiep': '/service-covers/chuyen-doi-ai-doanh-nghiep.jpg',
+  'nen-tang-ai-theo-yeu-cau': '/service-covers/nen-tang-ai-theo-yeu-cau.jpg',
+  'ai-marketing-van-hanh': '/service-covers/ai-marketing-van-hanh.jpg',
+  'phat-trien-phan-mem': '/service-covers/phat-trien-phan-mem.jpg',
+  'giai-phap-doanh-nghiep-tu-dong-hoa': '/service-covers/giai-phap-doanh-nghiep-tu-dong-hoa.jpg',
+  'it-outsourcing': '/service-covers/it-outsourcing.jpg',
+  'blockchain': '/service-covers/blockchain.jpg',
+  'du-lieu-phan-tich-chuyen-sau': '/service-covers/du-lieu-phan-tich-chuyen-sau.jpg',
+};

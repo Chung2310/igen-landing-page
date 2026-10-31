@@ -8,7 +8,7 @@
 .pillar-breadcrumb a { color: inherit; text-decoration: none; }
 .pillar-breadcrumb a:hover { color: #0077b3; }
 .pillar-breadcrumb > span { overflow: hidden; color: #0077b3; text-overflow: ellipsis; white-space: nowrap; }
-.pillar-hero h1 { max-width: 670px; margin: 0 0 18px; font-size: clamp(39px, 4.2vw, 62px); font-weight: 600; line-height: 1.13; letter-spacing: -.045em; }
+.pillar-hero h1 { max-width: 670px; margin: 0 0 18px; font-size: clamp(39px, 4.2vw, 62px); font-weight: 500; line-height: 1.13; letter-spacing: -.045em; }
 .pillar-hero h1 span { color: var(--pillar-cyan); }
 .pillar-hero__copy > p { max-width: 580px; margin: 0; color: var(--pillar-copy); font-size: 18px; line-height: 1.65; }
 .pillar-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 32px; }

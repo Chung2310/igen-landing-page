@@ -94,7 +94,8 @@ export const ServiceExplorer = () => {
   useEffect(() => {
     const heading = headingRef.current;
     if (!heading) return;
-    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)');
+    if (motion.matches) return;
     let animations: Animation[] = [];
     let visible = false;
     const observer = new IntersectionObserver(([entry]) => {

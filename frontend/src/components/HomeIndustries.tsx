@@ -21,7 +21,7 @@ export function HomeIndustries() {
 
   useEffect(() => {
     const title = titleRef.current;
-    if (!title || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!title || window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)').matches) return;
     const words = Array.from(title.querySelectorAll<HTMLElement>('.home-industries__title-word'));
     let animations: Animation[] = [];
     const observer = new IntersectionObserver(([entry]) => {
