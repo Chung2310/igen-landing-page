@@ -27,7 +27,7 @@ nav.home-hero-nav {
 .home-hero-brand { left: -8px; }
 
 @media (min-width: 1024px) {
-  .home-hero-brand { left: clamp(-150px, calc(540px - 37vw), 0px); }
+  .home-hero-brand { left: clamp(-195px, calc(550px - 39vw), 0px); }
 }
 
 .home-hero-nav .home-hero-nav-link,

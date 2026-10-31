@@ -297,7 +297,7 @@ export const Navbar: React.FC = () => {
           mobileOpen ? 'grid-rows-[1fr] opacity-100 border-t border-line' : 'grid-rows-[0fr] opacity-0'
         }`}
       >
-        <div className="max-h-[calc(100dvh-72px)] overflow-y-auto">
+        <div data-lenis-prevent className="min-h-0 max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-y-contain touch-pan-y">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
             {links.map((l) => {
               if (l.to === '/products') {
